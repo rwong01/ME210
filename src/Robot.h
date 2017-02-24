@@ -33,7 +33,8 @@ public:
 /********************************  FUNCTIONS  *********************************/
   state_t getState();
   void    exitBase();
-  void    attackTower();
+  void    attackTower1();
+  void    attackTower2();
   void    returnToBase();
   void    reloadEggs();
   void    quit();
@@ -42,6 +43,8 @@ private:
 /*********************************  HELPERS  **********************************/
   void    findLine();
   void    findStart();
+
+  void    attackTower();
 
   void    turnLeft();
   void    turnRight();
@@ -52,6 +55,8 @@ private:
 
   bool    detectedT();
   void    center();
+
+  void   checkTimer();
 
 /*********************************  OBJECTS  **********************************/
   state_t state;

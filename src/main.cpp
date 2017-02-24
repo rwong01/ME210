@@ -26,11 +26,11 @@ int main(void) {
           break;
         }
         case attackTower1_s: {
-          BISCUIT.attackTower();
+          BISCUIT.attackTower1();
           break;
         }
         case attackTower2_s: {
-          BISCUIT.attackTower();
+          BISCUIT.attackTower2();
           break;
         }
         case returnToBase_s: {

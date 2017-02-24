@@ -56,7 +56,7 @@ void Robot::init() {
  * This function returns the current state.
  */
 state_t Robot::getState() {
-  if(millis() >= RUNTIME_TIMEOUT) state = quit_s;
+  checkTimer();
   return state;
 }
 
@@ -72,19 +72,22 @@ void Robot::exitBase() {
 }
 
 /*
- * Function: attackTower
+ * Function: attackTower1
  * -------------------
- * This function handles the algorythmic complexity of attacking a single tower
- * given a posotion directly before the first turn off the main road.
+ * This function handles the algorythmic complexity of attacking a the first tower.
  */
-void Robot::attackTower() {
-  moveForward();
-  turnLeft();
-  moveForward();
-  launchEgg();
-  moveBackward();
-  turnRight();
+void Robot::attackTower1() {
+  attackTower();
   state = attackTower2_s;
+}
+
+/*
+ * Function: attackTower1
+ * -------------------
+ * This function handles the algorythmic complexity of attacking a the second tower.
+ */
+void Robot::attackTower2() {
+  attackTower();
   state = returnToBase_s;
 }
 
@@ -138,6 +141,21 @@ void Robot::findLine() {
  */
 void Robot::findStart() {
 
+}
+
+/*
+ * Function: attackTower
+ * -------------------
+ * This function handles the algorythmic complexity of attacking a single tower
+ * given a posotion directly before the first turn off the main road.
+ */
+void Robot::attackTower() {
+  moveForward();
+  turnLeft();
+  moveForward();
+  launchEgg();
+  moveBackward();
+  turnRight();
 }
 
 /*
@@ -201,4 +219,14 @@ bool Robot::detectedT() {
  */
 void Robot::center() {
 
+}
+
+
+/*
+ * Function: checkTimer
+ * -------------------
+ * This function checks if the timer has expired.
+ */
+void Robot::checkTimer() {
+  if(millis() >= RUNTIME_TIMEOUT) state = quit_s;
 }
