@@ -16,14 +16,22 @@
 #include "Config.h"
 #include "Arduino.h"
 
+/***********************************  DATA  ***********************************/
+enum state_t {
+  exitBase_s,
+  attackTower1_s,
+  attackTower2_s,
+  returnToBase_s,
+  reloadEggs_s,
+  quit_s
+};
+
 class Robot {
 public:
 /**********************************  SETUP  ***********************************/
-  Robot() :
-    temp(0) {
-  }
   void    init();
 /********************************  FUNCTIONS  *********************************/
+  state_t getState();
   void    exitBase();
   void    attackTower();
   void    returnToBase();
@@ -46,7 +54,7 @@ private:
   void    center();
 
 /*********************************  OBJECTS  **********************************/
-  uint8_t temp = 0;
+  state_t state;
 };
 
 #endif

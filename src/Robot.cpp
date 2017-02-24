@@ -46,9 +46,20 @@ void Robot::init() {
   pinMode(MOTOR_LEFT_A,   OUTPUT);
   pinMode(MOTOR_LEFT_B,   OUTPUT);
   //turn on flywheel
+  state = exitBase_s;
 }
 
 /********************************  FUNCTIONS  *********************************/
+/*
+ * Function: getState
+ * -------------------
+ * This function returns the current state.
+ */
+state_t Robot::getState() {
+  if(millis() >= RUNTIME_TIMEOUT) state = quit_s;
+  return state;
+}
+
 /*
  * Function: exitBase
  * -------------------
@@ -57,6 +68,7 @@ void Robot::init() {
 void Robot::exitBase() {
   findLine();
   findStart();
+  state = attackTower1_s;
 }
 
 /*
@@ -72,6 +84,8 @@ void Robot::attackTower() {
   launchEgg();
   moveBackward();
   turnRight();
+  state = attackTower2_s;
+  state = returnToBase_s;
 }
 
 /*
@@ -83,6 +97,7 @@ void Robot::returnToBase() {
   moveBackward();
   moveBackward();
   moveBackward();
+  state = reloadEggs_s;
 }
 
 /*
@@ -92,6 +107,7 @@ void Robot::returnToBase() {
  */
 void Robot::reloadEggs() {
   //start timer
+  state = attackTower1_s;
 }
 
 /*

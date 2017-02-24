@@ -7,7 +7,7 @@
 
   File: Config.h
   --------------------------
-  Global constants specific to each launch.
+  Global constants specific to robot.
 */
 
 #ifndef CONFIG_H

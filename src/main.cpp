@@ -12,17 +12,39 @@
 
 #include "Robot.h"
 
+
 /***********************************  BOOT  ***********************************/
 Robot BISCUIT;
 int main(void) {
   BISCUIT.init();
 /***********************************  MAIN  ***********************************/
-  BISCUIT.exitBase();
   while(1) {
-    BISCUIT.attackTower();
-    BISCUIT.attackTower();
-    BISCUIT.returnToBase();
-    BISCUIT.reloadEggs();
+    state_t state = BISCUIT.getState();
+    switch(state) {
+        case exitBase_s: {
+          BISCUIT.exitBase();
+          break;
+        }
+        case attackTower1_s: {
+          BISCUIT.attackTower();
+          break;
+        }
+        case attackTower2_s: {
+          BISCUIT.attackTower();
+          break;
+        }
+        case returnToBase_s: {
+          BISCUIT.returnToBase();
+          break;
+        }
+        case reloadEggs_s: {
+          BISCUIT.reloadEggs();
+          break;
+        }
+        case quit_s: {
+          BISCUIT.quit();
+          break;
+        }
+    }
   }
-  BISCUIT.quit();
 }
