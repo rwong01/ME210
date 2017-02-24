@@ -18,9 +18,13 @@
 
 /****************************  EDITABLE CONSTANTS  ****************************/
 static const uint16_t  BLACK_THRESHOLD         =    420;
+static const uint8_t   DRIVE_SPEED             =    255;
 static const uint8_t   LAUNCHER_SPEED          =    255;
+static const uint8_t   LOADER_SPEED            =    255;
 static const uint32_t  RUNTIME_TIMEOUT         = 130000;
 static const uint32_t  TRAPPED_TIMEOUT         =  10000;
+static const uint32_t  LAUNCH_TIMEOUT          =  10000;
+static const uint32_t  RELOAD_TIMEOUT          =  10000;
 
 /*****************************  TEENSY PIN OUTS  ******************************/
 static const uint8_t   START_PIN               =     13;
@@ -47,6 +51,5 @@ static const uint8_t   MOTOR_RIGHT_A           =      9;
 static const uint8_t   MOTOR_RIGHT_B           =      9;
 static const uint8_t   MOTOR_LEFT_A            =      9;
 static const uint8_t   MOTOR_LEFT_B            =      9;
-
 
 #endif

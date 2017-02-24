@@ -32,15 +32,20 @@ public:
   void    init();
 /********************************  FUNCTIONS  *********************************/
   state_t getState();
+
   void    exitBase();
   void    attackTower1();
   void    attackTower2();
   void    returnToBase();
   void    reloadEggs();
+
   void    quit();
 
 private:
 /*********************************  HELPERS  **********************************/
+  void    setPinModes();
+  void    waitForStart();
+
   void    findLine();
   void    findStart();
 
@@ -48,18 +53,21 @@ private:
 
   void    turnLeft();
   void    turnRight();
-  void    moveForward();
-  void    moveBackward();
+  void    turnForward();
+  void    turnBackward();
 
   void    launchEgg();
 
   bool    detectedT();
   void    center();
 
-  void   checkTimer();
+  void    checkTimer();
 
 /*********************************  OBJECTS  **********************************/
   state_t state;
+  uint32_t startTime;
+  uint32_t launchTime;
+  uint32_t reloadTime;
 };
 
 #endif

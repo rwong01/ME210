@@ -20,33 +20,8 @@
  */
 void Robot::init() {
   Serial.begin(9600);
-  //start timer
-  pinMode(START_PIN,      INPUT);
-  pinMode(MULTIPLEXER_CS, INPUT);
-
-  pinMode(IR_IN_01,       INPUT);
-  pinMode(IR_IN_02,       INPUT);
-  pinMode(IR_IN_03,       INPUT);
-  pinMode(IR_IN_04,       INPUT);
-  pinMode(IR_IN_05,       INPUT);
-  pinMode(IR_IN_06,       INPUT);
-  pinMode(IR_IN_07,       INPUT);
-  pinMode(IR_IN_08,       INPUT);
-  pinMode(IR_IN_09,       INPUT);
-  pinMode(IR_IN_10,       INPUT);
-  pinMode(IR_IN_11,       INPUT);
-  pinMode(IR_IN_12,       INPUT);
-
-  pinMode(MOTOR_LOAD_A,   OUTPUT);
-  pinMode(MOTOR_LOAD_B,   OUTPUT);
-  pinMode(MOTOR_FIRE_A,   OUTPUT);
-  pinMode(MOTOR_FIRE_B,   OUTPUT);
-  pinMode(MOTOR_RIGHT_A,  OUTPUT);
-  pinMode(MOTOR_RIGHT_B,  OUTPUT);
-  pinMode(MOTOR_LEFT_A,   OUTPUT);
-  pinMode(MOTOR_LEFT_B,   OUTPUT);
-  //turn on flywheel
-  state = exitBase_s;
+  setPinModes();
+  waitForStart();
 }
 
 /********************************  FUNCTIONS  *********************************/
@@ -97,9 +72,8 @@ void Robot::attackTower2() {
  * This function handles the algorythmic complexity of returning to the base.
  */
 void Robot::returnToBase() {
-  moveBackward();
-  moveBackward();
-  moveBackward();
+  turnBackward();
+  turnBackward();
   state = reloadEggs_s;
 }
 
@@ -109,7 +83,8 @@ void Robot::returnToBase() {
  * This function handles the algorythmic complexity of getting more eggs.
  */
 void Robot::reloadEggs() {
-  //start timer
+  reloadTime = millis();
+  // while((millis() - reloadTime) < RELOAD_TIMEOUT) Serial.println("Loading...");
   state = attackTower1_s;
 }
 
@@ -119,12 +94,62 @@ void Robot::reloadEggs() {
  * This function handles the end of game shutdown.
  */
 void Robot::quit() {
-  //turn off fire
-  //turn off load
-  //turn off motors
+  analogWrite(MOTOR_FIRE_A,  0);
+  analogWrite(MOTOR_FIRE_B,  0);
+  analogWrite(MOTOR_LOAD_A,  0);
+  analogWrite(MOTOR_LOAD_B,  0);
+  analogWrite(MOTOR_LEFT_A,  0);
+  analogWrite(MOTOR_LEFT_B,  0);
+  analogWrite(MOTOR_RIGHT_A, 0);
+  analogWrite(MOTOR_RIGHT_B, 0);
 }
 
 /*********************************  HELPERS  **********************************/
+/*
+ * Function: setPinModes
+ * -------------------
+ * This function sets the appropriate pinmodes.
+ */
+void Robot::setPinModes() {
+  pinMode(START_PIN,      INPUT);
+  pinMode(MULTIPLEXER_CS, INPUT);
+
+  pinMode(IR_IN_01,       INPUT);
+  pinMode(IR_IN_02,       INPUT);
+  pinMode(IR_IN_03,       INPUT);
+  pinMode(IR_IN_04,       INPUT);
+  pinMode(IR_IN_05,       INPUT);
+  pinMode(IR_IN_06,       INPUT);
+  pinMode(IR_IN_07,       INPUT);
+  pinMode(IR_IN_08,       INPUT);
+  pinMode(IR_IN_09,       INPUT);
+  pinMode(IR_IN_10,       INPUT);
+  pinMode(IR_IN_11,       INPUT);
+  pinMode(IR_IN_12,       INPUT);
+
+  pinMode(MOTOR_LOAD_A,   OUTPUT);
+  pinMode(MOTOR_LOAD_B,   OUTPUT);
+  pinMode(MOTOR_FIRE_A,   OUTPUT);
+  pinMode(MOTOR_FIRE_B,   OUTPUT);
+  pinMode(MOTOR_RIGHT_A,  OUTPUT);
+  pinMode(MOTOR_RIGHT_B,  OUTPUT);
+  pinMode(MOTOR_LEFT_A,   OUTPUT);
+  pinMode(MOTOR_LEFT_B,   OUTPUT);
+}
+
+/*
+ * Function: waitForStart
+ * -------------------
+ * This function pauses until the start button has been pressed.
+ */
+void Robot::waitForStart() {
+  while(digitalRead(START_PIN) != LOW) Serial.println("Ready...");
+  analogWrite(MOTOR_FIRE_A, 0);
+  analogWrite(MOTOR_FIRE_B, LAUNCHER_SPEED);
+  startTime = millis();
+  state = exitBase_s;
+}
+
 /*
  * Function: findLine
  * -------------------
@@ -150,11 +175,11 @@ void Robot::findStart() {
  * given a posotion directly before the first turn off the main road.
  */
 void Robot::attackTower() {
-  moveForward();
+  turnForward();
   turnLeft();
-  moveForward();
+  turnForward();
   launchEgg();
-  moveBackward();
+  turnBackward();
   turnRight();
 }
 
@@ -177,20 +202,20 @@ void Robot::turnRight() {
 }
 
 /*
- * Function: moveForward
+ * Function: turnForward
  * -------------------
  * This function moves forward.
  */
-void Robot::moveForward() {
+void Robot::turnForward() {
 
 }
 
 /*
- * Function: moveBackward
+ * Function: turnBackward
  * -------------------
  * This function moves backward.
  */
-void Robot::moveBackward() {
+void Robot::turnBackward() {
 
 }
 
@@ -200,7 +225,12 @@ void Robot::moveBackward() {
  * This function launches eggs.
  */
 void Robot::launchEgg() {
-  //drop 6 balls
+  launchTime = millis();
+  analogWrite(MOTOR_LOAD_A, 0);
+  analogWrite(MOTOR_LOAD_B, LOADER_SPEED);
+  // while((millis() - launchTime) < LAUNCH_TIMEOUT) Serial.println("Launching...");
+  analogWrite(MOTOR_LOAD_A, 0);
+  analogWrite(MOTOR_LOAD_B, 0);
 }
 
 /*
@@ -221,12 +251,11 @@ void Robot::center() {
 
 }
 
-
 /*
  * Function: checkTimer
  * -------------------
  * This function checks if the timer has expired.
  */
 void Robot::checkTimer() {
-  if(millis() >= RUNTIME_TIMEOUT) state = quit_s;
+  if((millis() - startTime) >= RUNTIME_TIMEOUT) state = quit_s;
 }
