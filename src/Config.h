@@ -30,6 +30,9 @@ static const uint32_t  RELOAD_TIMEOUT          =  10000;
 static const uint8_t   START_PIN               =     13;
 static const uint8_t   MULTIPLEXER_CS          =     10;
 
+static const uint8_t   BUMPER_LEFT             =     69;
+static const uint8_t   BUMPER_RIGHT            =     69;
+
 static const uint8_t   IR_IN_01                =     26;
 static const uint8_t   IR_IN_02                =     26;
 static const uint8_t   IR_IN_03                =     26;

@@ -63,29 +63,16 @@ void Robot::attackTower1() {
  */
 void Robot::attackTower2() {
   attackTower();
-  state = returnToBase_s;
+  state = hitBumper_s;
 }
 
 /*
- * Function: returnToBase
+ * Function: hitBumper
  * -------------------
- * This function handles the algorythmic complexity of returning to the base.
+ * This function handles the algorythmic complexity of hitting the pressure pad.
  */
-void Robot::returnToBase() {
-  turnBackward();
-  turnBackward();
-  state = reloadEggs_s;
-}
-
-/*
- * Function: reloadEggs
- * -------------------
- * This function handles the algorythmic complexity of getting more eggs.
- */
-void Robot::reloadEggs() {
-  reloadTime = millis();
-  // while((millis() - reloadTime) < RELOAD_TIMEOUT) Serial.println("Loading...");
-  state = attackTower1_s;
+void Robot::hitBumper() {
+  state = quit_s;
 }
 
 /*
@@ -113,6 +100,9 @@ void Robot::quit() {
 void Robot::setPinModes() {
   pinMode(START_PIN,      INPUT);
   pinMode(MULTIPLEXER_CS, INPUT);
+
+  pinMode(BUMPER_LEFT,    INPUT);
+  pinMode(BUMPER_RIGHT,   INPUT);
 
   pinMode(IR_IN_01,       INPUT);
   pinMode(IR_IN_02,       INPUT);

@@ -15,35 +15,16 @@
 /***********************************  BOOT  ***********************************/
 Robot BISCUIT;
 int main(void) {
+  state_t state;
   BISCUIT.init();
+  state = BISCUIT.getState();
 /***********************************  MAIN  ***********************************/
-  while(true) {
-    state_t state = BISCUIT.getState();
-    switch(state) {
-      case exitBase_s: {
-        BISCUIT.exitBase();
-        break;
-      }
-      case attackTower1_s: {
-        BISCUIT.attackTower1();
-        break;
-      }
-      case attackTower2_s: {
-        BISCUIT.attackTower2();
-        break;
-      }
-      case returnToBase_s: {
-        BISCUIT.returnToBase();
-        break;
-      }
-      case reloadEggs_s: {
-        BISCUIT.reloadEggs();
-        break;
-      }
-      case quit_s: {
-        BISCUIT.quit();
-        break;
-      }
-    }
+  while(state != quit_s) {
+    if      (state == exitBase_s)     BISCUIT.exitBase();
+    else if (state == attackTower1_s) BISCUIT.attackTower1();
+    else if (state == attackTower2_s) BISCUIT.attackTower2();
+    else if (state == hitBumper_s)    BISCUIT.hitBumper();
+    state = BISCUIT.getState();
   }
+  BISCUIT.quit();
 }

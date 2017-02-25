@@ -21,8 +21,7 @@ enum state_t {
   exitBase_s,
   attackTower1_s,
   attackTower2_s,
-  returnToBase_s,
-  reloadEggs_s,
+  hitBumper_s,
   quit_s
 };
 
@@ -36,8 +35,7 @@ public:
   void    exitBase();
   void    attackTower1();
   void    attackTower2();
-  void    returnToBase();
-  void    reloadEggs();
+  void    hitBumper();
 
   void    quit();
 
@@ -67,7 +65,6 @@ private:
   state_t state;
   uint32_t startTime;
   uint32_t launchTime;
-  uint32_t reloadTime;
 };
 
 #endif
