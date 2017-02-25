@@ -15,16 +15,13 @@
 /***********************************  BOOT  ***********************************/
 Robot BISCUIT;
 int main(void) {
-  state_t state;
   BISCUIT.init();
-  state = BISCUIT.getState();
 /***********************************  MAIN  ***********************************/
-  while(state != quit_s) {
-    if      (state == exitBase_s)     BISCUIT.exitBase();
-    else if (state == attackTower1_s) BISCUIT.attackTower1();
-    else if (state == attackTower2_s) BISCUIT.attackTower2();
-    else if (state == hitBumper_s)    BISCUIT.hitBumper();
-    state = BISCUIT.getState();
+  while(BISCUIT.state != quit_s) {
+    if      (BISCUIT.state == exitBase_s)     BISCUIT.exitBase();
+    else if (BISCUIT.state == attackTower1_s) BISCUIT.attackTower1();
+    else if (BISCUIT.state == attackTower2_s) BISCUIT.attackTower2();
+    else if (BISCUIT.state == hitBumper_s)    BISCUIT.hitBumper();
   }
   BISCUIT.quit();
 }

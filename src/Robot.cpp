@@ -26,16 +26,6 @@ void Robot::init() {
 
 /********************************  FUNCTIONS  *********************************/
 /*
- * Function: getState
- * -------------------
- * This function returns the current state.
- */
-state_t Robot::getState() {
-  checkTimer();
-  return state;
-}
-
-/*
  * Function: exitBase
  * -------------------
  * This function handles the algorythmic complexity of exiting the base.

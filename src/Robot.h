@@ -30,8 +30,6 @@ public:
 /**********************************  SETUP  ***********************************/
   void    init();
 /********************************  FUNCTIONS  *********************************/
-  state_t getState();
-
   void    exitBase();
   void    attackTower1();
   void    attackTower2();
@@ -39,6 +37,7 @@ public:
 
   void    quit();
 
+  state_t state;
 private:
 /*********************************  HELPERS  **********************************/
   void    setPinModes();
@@ -62,7 +61,6 @@ private:
   void    checkTimer();
 
 /*********************************  OBJECTS  **********************************/
-  state_t state;
   uint32_t startTime;
   uint32_t launchTime;
 };
