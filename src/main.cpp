@@ -18,8 +18,7 @@ int main(void) {
   BISCUIT.init();
 /***********************************  MAIN  ***********************************/
   while(BISCUIT.getState() != quit_s) {
-    BISCUIT.checkTimer();
-    BISCUIT.updateSensors();
+    BISCUIT.updateState();
     if      (BISCUIT.getState() == exitBase_s)     BISCUIT.exitBase();
     else if (BISCUIT.getState() == attackTower1_s) BISCUIT.attackTower1();
     else if (BISCUIT.getState() == attackTower2_s) BISCUIT.attackTower2();

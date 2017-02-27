@@ -36,38 +36,14 @@ state_tier_1_t Robot::getState() {
 }
 
 /*
- * Function: checkTimer
+ * Function: updateState
  * -------------------
- * This function checks if the timer has expired.
+ * This function updates the values that are state indepndent.
  */
-void Robot::checkTimer() {
-  if((millis() - startTime) >= RUNTIME_TIMEOUT) state_1 = quit_s;
-}
-
-/*
- * Function: updateSensors
- * -------------------
- * This function get all the updated values for evaluating this state.
- */
-void Robot::updateSensors() {
-  frontSensorsBump[0] = readSensors_BUMP(BUMPER_LEFT);
-  frontSensorsBump[1] = readSensors_BUMP(BUMPER_RIGHT);
-
-  leftSensorIR[0]     = readSensor_IR(IR_IN_01);
-  leftSensorIR[1]     = readSensor_IR(IR_IN_02);
-  leftSensorIR[2]     = readSensor_IR(IR_IN_03);
-
-  rightSensorIR[0]    = readSensor_IR(IR_IN_04);
-  rightSensorIR[1]    = readSensor_IR(IR_IN_05);
-  rightSensorIR[2]    = readSensor_IR(IR_IN_06);
-
-  centerSensorIR[0]   = readSensor_IR(IR_IN_07);
-  centerSensorIR[1]   = readSensor_IR(IR_IN_08);
-  centerSensorIR[2]   = readSensor_IR(IR_IN_09);
-
-  backSensorIR[0]     = readSensor_IR(IR_IN_10);
-  backSensorIR[1]     = readSensor_IR(IR_IN_11);
-  backSensorIR[2]     = readSensor_IR(IR_IN_12);
+void Robot::updateState() {
+  checkTimer();
+  updateSensors();
+  printState();
 }
 
 /*
@@ -78,7 +54,9 @@ void Robot::updateSensors() {
 void Robot::exitBase() {
   findLine();
   findStart();
+
   state_1 = attackTower1_s;
+  turnForward();
 }
 
 /*
@@ -87,8 +65,10 @@ void Robot::exitBase() {
  * This function handles the algorythmic complexity of attacking a the first tower.
  */
 void Robot::attackTower1() {
-  attackTower();
-  state_1 = attackTower2_s;
+  if (attackTower()) {
+    state_1 = attackTower2_s;
+    turnForward();
+  }
 }
 
 /*
@@ -97,8 +77,10 @@ void Robot::attackTower1() {
  * This function handles the algorythmic complexity of attacking a the second tower.
  */
 void Robot::attackTower2() {
-  attackTower();
-  state_1 = hitBumper_s;
+  if (attackTower()) {
+    state_1 = hitBumper_s;
+    turnRight();
+  }
 }
 
 /*
@@ -107,7 +89,10 @@ void Robot::attackTower2() {
  * This function handles the algorythmic complexity of hitting the pressure pad.
  */
 void Robot::hitBumper() {
-  state_1 = quit_s;
+  if (state_3 == turningRight_s    && detectedT()) turnForward();
+  if (state_3 == TurningForeward_s && detectedT()) turnForward();
+  if (state_3 == TurningForeward_s &&
+    (frontSensorsBump[0] || frontSensorsBump[1])) state_1 = quit_s;
 }
 
 /*
@@ -172,6 +157,56 @@ void Robot::waitForStart() {
   state_1 = exitBase_s;
 }
 
+/*
+ * Function: checkTimer
+ * -------------------
+ * This function checks if the timer has expired.
+ */
+void Robot::checkTimer() {
+  if((millis() - startTime) >= RUNTIME_TIMEOUT) state_1 = quit_s;
+}
+
+/*
+ * Function: updateSensors
+ * -------------------
+ * This function get all the updated values for evaluating this state.
+ */
+void Robot::updateSensors() {
+  frontSensorsBump[0] = readSensors_BUMP(BUMPER_LEFT);
+  frontSensorsBump[1] = readSensors_BUMP(BUMPER_RIGHT);
+
+  leftSensorIR[0]     = readSensor_IR(IR_IN_01);
+  leftSensorIR[1]     = readSensor_IR(IR_IN_02);
+  leftSensorIR[2]     = readSensor_IR(IR_IN_03);
+
+  rightSensorIR[0]    = readSensor_IR(IR_IN_04);
+  rightSensorIR[1]    = readSensor_IR(IR_IN_05);
+  rightSensorIR[2]    = readSensor_IR(IR_IN_06);
+
+  centerSensorIR[0]   = readSensor_IR(IR_IN_07);
+  centerSensorIR[1]   = readSensor_IR(IR_IN_08);
+  centerSensorIR[2]   = readSensor_IR(IR_IN_09);
+
+  backSensorIR[0]     = readSensor_IR(IR_IN_10);
+  backSensorIR[1]     = readSensor_IR(IR_IN_11);
+  backSensorIR[2]     = readSensor_IR(IR_IN_12);
+}
+
+/*
+ * Function: printState
+ * -------------------
+ * This function provides usefull debugging information.
+ */
+void Robot::printState() {
+  Serial.print("STATE 1 : ");
+  Serial.print(state_1);
+  Serial.print("STATE 2 : ");
+  Serial.print(state_2);
+  Serial.print("STATE 3 : ");
+  Serial.print(state_3);
+  Serial.print('\n');
+}
+
 /**********************************  TODO  ************************************/
 /*
  * Function: findLine
@@ -197,7 +232,8 @@ void Robot::findStart() {
  * This function handles the algorythmic complexity of attacking a single tower
  * given a posotion directly before the first turn off the main road.
  */
-void Robot::attackTower() {
+bool Robot::attackTower() {
+  return false;
 }
 
 /*
@@ -206,7 +242,11 @@ void Robot::attackTower() {
  * This function turns left using the IR sensors.
  */
 void Robot::turnLeft() {
-
+  state_3 = turningLeft_s;
+  analogWrite(MOTOR_LEFT_A,  0);
+  analogWrite(MOTOR_LEFT_B,  DRIVE_SPEED);
+  analogWrite(MOTOR_RIGHT_A, DRIVE_SPEED);
+  analogWrite(MOTOR_RIGHT_B, 0);
 }
 
 /*
@@ -215,7 +255,11 @@ void Robot::turnLeft() {
  * This function turns Right using the IR sensors.
  */
 void Robot::turnRight() {
-
+  state_3 = turningRight_s;
+  analogWrite(MOTOR_LEFT_A,  DRIVE_SPEED);
+  analogWrite(MOTOR_LEFT_B,  0);
+  analogWrite(MOTOR_RIGHT_A, 0);
+  analogWrite(MOTOR_RIGHT_B, DRIVE_SPEED);
 }
 
 /*
@@ -224,7 +268,11 @@ void Robot::turnRight() {
  * This function moves forward.
  */
 void Robot::turnForward() {
-
+  state_3 = TurningForeward_s;
+  analogWrite(MOTOR_LEFT_A,  DRIVE_SPEED);
+  analogWrite(MOTOR_LEFT_B,  0);
+  analogWrite(MOTOR_RIGHT_A, DRIVE_SPEED);
+  analogWrite(MOTOR_RIGHT_B, 0);
 }
 
 /*
@@ -233,7 +281,11 @@ void Robot::turnForward() {
  * This function moves backward.
  */
 void Robot::turnBackward() {
-
+  state_3 = TurningBackward_s;
+  analogWrite(MOTOR_LEFT_A,  DRIVE_SPEED);
+  analogWrite(MOTOR_LEFT_B,  0);
+  analogWrite(MOTOR_RIGHT_A, DRIVE_SPEED);
+  analogWrite(MOTOR_RIGHT_B, 0);
 }
 
 /*
@@ -272,7 +324,7 @@ void Robot::center() {
 /*
  * Function: readSensor_IR
  * -------------------
- * This function handles the hardware abstraction of sensing a line
+ * This function handles the hardware abstraction of sensing a line.
  */
 bool Robot::readSensor_IR(uint8_t pinNum) {
   uint16_t value = PCB.readValue(pinNum);
@@ -284,7 +336,7 @@ bool Robot::readSensor_IR(uint8_t pinNum) {
 /*
  * Function: readSensors_BUMP
  * -------------------
- * This function handles the hardware abstraction of sensing a bump
+ * This function handles the hardware abstraction of sensing a bump.
  */
 bool Robot::readSensors_BUMP(uint8_t pinNum) {
   //TODO Comparitor BS

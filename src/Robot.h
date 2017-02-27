@@ -24,8 +24,7 @@ public:
   void           init();
 /********************************  FUNCTIONS  *********************************/
   state_tier_1_t getState();
-  void           checkTimer();
-  void           updateSensors();
+  void           updateState();
   void           exitBase();
   void           attackTower1();
   void           attackTower2();
@@ -37,10 +36,14 @@ private:
   void           setPinModes();
   void           waitForStart();
 
+  void           checkTimer();
+  void           updateSensors();
+  void           printState();
+
   void           findLine();
   void           findStart();
 
-  void           attackTower();
+  bool           attackTower();
 
   void           turnLeft();
   void           turnRight();
