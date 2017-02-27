@@ -89,9 +89,8 @@ void Robot::attackTower2() {
  * This function handles the algorythmic complexity of hitting the pressure pad.
  */
 void Robot::hitBumper() {
-  if (state_3 == turningRight_s    && detectedT()) turnForward();
-  if (state_3 == TurningForeward_s && detectedT()) turnForward();
-  if (state_3 == TurningForeward_s &&
+  if      (state_3 == turningRight_s    && detectedT()) turnForward();
+  else if (state_3 == turningForeward_s &&
     (frontSensorsBump[0] || frontSensorsBump[1])) state_1 = quit_s;
 }
 
@@ -101,10 +100,10 @@ void Robot::hitBumper() {
  * This function handles the end of game shutdown.
  */
 void Robot::quit() {
-  analogWrite(MOTOR_FIRE_SPEED,  0);
-  analogWrite(MOTOR_LOAD_SPEED,  0);
   analogWrite(MOTOR_LEFT_SPEED,  0);
   analogWrite(MOTOR_RIGHT_SPEED, 0);
+  analogWrite(MOTOR_LOAD_SPEED,  0);
+  analogWrite(MOTOR_FIRE_SPEED,  0);
 }
 
 /*********************************  HELPERS  **********************************/
@@ -132,14 +131,14 @@ void Robot::setPinModes() {
   pinMode(IR_IN_11,          INPUT);
   pinMode(IR_IN_12,          INPUT);
 
+  pinMode(MOTOR_LEFT_DIR,    OUTPUT);
+  pinMode(MOTOR_LEFT_SPEED,  OUTPUT);
+  pinMode(MOTOR_RIGHT_DIR,   OUTPUT);
+  pinMode(MOTOR_RIGHT_SPEED, OUTPUT);
   pinMode(MOTOR_LOAD_DIR,    OUTPUT);
   pinMode(MOTOR_LOAD_SPEED,  OUTPUT);
   pinMode(MOTOR_FIRE_DIR,    OUTPUT);
   pinMode(MOTOR_FIRE_SPEED,  OUTPUT);
-  pinMode(MOTOR_RIGHT_DIR,   OUTPUT);
-  pinMode(MOTOR_RIGHT_SPEED, OUTPUT);
-  pinMode(MOTOR_LEFT_DIR,    OUTPUT);
-  pinMode(MOTOR_LEFT_SPEED,  OUTPUT);
 }
 
 /*
@@ -229,7 +228,16 @@ void Robot::findStart() {
  * given a posotion directly before the first turn off the main road.
  */
 bool Robot::attackTower() {
-  return false;
+  bool done = false;
+  if      (state_3 == turningForeward_s && detectedT()) turnLeft();       //TODO
+  else if (state_3 == turningLeft_s     && detectedT()) turnForward();
+  else if (state_3 == turningForeward_s && detectedT()) launchEgg();      //TODO
+  else if (state_3 == launchingEggs_s   && launchEgg()) turnBackward();
+  else if (state_3 == turningBackward_s && detectedT()) {
+    turnRight();
+    done = true;
+  }
+  return done;
 }
 
 /*
@@ -264,7 +272,7 @@ void Robot::turnRight() {
  * This function moves forward.
  */
 void Robot::turnForward() {
-  state_3 = TurningForeward_s;
+  state_3 = turningForeward_s;
   digitalWrite(MOTOR_LEFT_DIR,   FOREWARD);
   digitalWrite(MOTOR_RIGHT_DIR,  FOREWARD);
   analogWrite(MOTOR_LEFT_SPEED,  DRIVE_SPEED);
@@ -277,7 +285,7 @@ void Robot::turnForward() {
  * This function moves backward.
  */
 void Robot::turnBackward() {
-  state_3 = TurningBackward_s;
+  state_3 = turningBackward_s;
   digitalWrite(MOTOR_LEFT_DIR,   BACKWARD);
   digitalWrite(MOTOR_RIGHT_DIR,  BACKWARD);
   analogWrite(MOTOR_LEFT_SPEED,  DRIVE_SPEED);
@@ -289,8 +297,11 @@ void Robot::turnBackward() {
  * -------------------
  * This function launches eggs.
  */
-void Robot::launchEgg() {
+bool Robot::launchEgg() {
+  bool done = false;
+  // stop, timer, launch
   launchTime = millis();
+  return done;
 }
 
 /*
@@ -320,8 +331,7 @@ void Robot::center() {
 bool Robot::readSensor_IR(uint8_t pinNum) {
   uint16_t value = PCB.readValue(pinNum);
   //TODO Comparitor BS
-  if (value >= BLACK_THRESHOLD) return true;
-  return false;
+  return (value >= BLACK_THRESHOLD);
 }
 
 /*

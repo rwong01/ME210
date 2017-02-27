@@ -50,7 +50,7 @@ private:
   void           turnForward();
   void           turnBackward();
 
-  void           launchEgg();
+  bool           launchEgg();
 
   bool           detectedT();
   void           center();

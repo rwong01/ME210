@@ -32,7 +32,8 @@ enum state_tier_2_t {
 enum state_tier_3_t {
   turningLeft_s,
   turningRight_s,
-  TurningForeward_s,
-  TurningBackward_s,
+  turningForeward_s,
+  turningBackward_s,
+  launchingEggs_s
 };
 #endif
