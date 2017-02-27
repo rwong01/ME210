@@ -31,7 +31,16 @@ void Robot::init() {
  * This function returns the current state.
  */
 state_tier_1_t Robot::getState() {
-  return state;
+  return state_1;
+}
+
+/*
+ * Function: checkTimer
+ * -------------------
+ * This function checks if the timer has expired.
+ */
+void Robot::checkTimer() {
+  if((millis() - startTime) >= RUNTIME_TIMEOUT) state_1 = quit_s;
 }
 
 /*
@@ -68,7 +77,7 @@ void Robot::updateSensors() {
 void Robot::exitBase() {
   findLine();
   findStart();
-  state = attackTower1_s;
+  state_1 = attackTower1_s;
 }
 
 /*
@@ -78,7 +87,7 @@ void Robot::exitBase() {
  */
 void Robot::attackTower1() {
   attackTower();
-  state = attackTower2_s;
+  state_1 = attackTower2_s;
 }
 
 /*
@@ -88,7 +97,7 @@ void Robot::attackTower1() {
  */
 void Robot::attackTower2() {
   attackTower();
-  state = hitBumper_s;
+  state_1 = hitBumper_s;
 }
 
 /*
@@ -97,7 +106,7 @@ void Robot::attackTower2() {
  * This function handles the algorythmic complexity of hitting the pressure pad.
  */
 void Robot::hitBumper() {
-  state = quit_s;
+  state_1 = quit_s;
 }
 
 /*
@@ -159,12 +168,11 @@ void Robot::setPinModes() {
  */
 void Robot::waitForStart() {
   while(digitalRead(START_PIN) != LOW) Serial.println("Ready...");
-  analogWrite(MOTOR_FIRE_A, 0);
-  analogWrite(MOTOR_FIRE_B, LAUNCHER_SPEED);
   startTime = millis();
-  state = exitBase_s;
+  state_1 = exitBase_s;
 }
 
+/**********************************  TODO  ************************************/
 /*
  * Function: findLine
  * -------------------
@@ -259,13 +267,14 @@ bool Robot::detectedT() {
 void Robot::center() {
 
 }
+/**********************************  TODO  ************************************/
 
 /*
  * Function: readSensor_IR
  * -------------------
  * This function handles the hardware abstraction of sensing a line
  */
-bool Robot::readSensor_IR(uint8_t sensorNum) {
+bool Robot::readSensor_IR(uint8_t pinNum) {
   //TODO
   //Comparitor BS
   return false;
@@ -276,17 +285,8 @@ bool Robot::readSensor_IR(uint8_t sensorNum) {
  * -------------------
  * This function handles the hardware abstraction of sensing a bump
  */
-bool Robot::readSensors_BUMP(uint8_t sensorNum) {
+bool Robot::readSensors_BUMP(uint8_t pinNum) {
   //TODO
   //Comparitor BS
   return false;
-}
-
-/*
- * Function: checkTimer
- * -------------------
- * This function checks if the timer has expired.
- */
-void Robot::checkTimer() {
-  if((millis() - startTime) >= RUNTIME_TIMEOUT) state = quit_s;
 }

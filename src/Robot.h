@@ -23,6 +23,7 @@ public:
   void           init();
 /********************************  FUNCTIONS  *********************************/
   state_tier_1_t getState();
+  void           checkTimer();
   void           updateSensors();
   void           exitBase();
   void           attackTower1();
@@ -50,12 +51,13 @@ private:
   bool           detectedT();
   void           center();
 
-  bool           readSensor_IR(uint8_t sensorNum);
-  bool           readSensors_BUMP(uint8_t sensorNum);
-  void           checkTimer();
+  bool           readSensor_IR(uint8_t pinNum);
+  bool           readSensors_BUMP(uint8_t pinNum);
 
 /*********************************  OBJECTS  **********************************/
-  state_tier_1_t state;
+  state_tier_1_t state_1;
+  state_tier_2_t state_2;
+  state_tier_3_t state_3;
   uint32_t       startTime;
   uint32_t       launchTime;
   bool           frontSensorsBump[2];
