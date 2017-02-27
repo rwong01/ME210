@@ -16,6 +16,7 @@
 #include "Config.h"
 #include "States.h"
 #include "Arduino.h"
+#include <Multiplexer.h>
 
 class Robot {
 public:
@@ -55,6 +56,7 @@ private:
   bool           readSensors_BUMP(uint8_t pinNum);
 
 /*********************************  OBJECTS  **********************************/
+  Multiplexer    PCB;
   state_tier_1_t state_1;
   state_tier_2_t state_2;
   state_tier_3_t state_3;

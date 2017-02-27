@@ -20,6 +20,7 @@
  */
 void Robot::init() {
   Serial.begin(9600);
+  PCB.init(MULTIPLEXER_CS);
   setPinModes();
   waitForStart();
 }
@@ -133,7 +134,6 @@ void Robot::quit() {
  */
 void Robot::setPinModes() {
   pinMode(START_PIN,      INPUT);
-  pinMode(MULTIPLEXER_CS, INPUT);
 
   pinMode(BUMPER_LEFT,    INPUT);
   pinMode(BUMPER_RIGHT,   INPUT);
@@ -275,8 +275,9 @@ void Robot::center() {
  * This function handles the hardware abstraction of sensing a line
  */
 bool Robot::readSensor_IR(uint8_t pinNum) {
-  //TODO
-  //Comparitor BS
+  uint16_t value = PCB.readValue(pinNum);
+  //TODO Comparitor BS
+  if (value >= BLACK_THRESHOLD) return true;
   return false;
 }
 
@@ -286,7 +287,6 @@ bool Robot::readSensor_IR(uint8_t pinNum) {
  * This function handles the hardware abstraction of sensing a bump
  */
 bool Robot::readSensors_BUMP(uint8_t pinNum) {
-  //TODO
-  //Comparitor BS
-  return false;
+  //TODO Comparitor BS
+  return digitalRead(pinNum);
 }
