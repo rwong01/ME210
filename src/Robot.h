@@ -51,9 +51,9 @@ private:
   void           turnForward();
   void           turnBackward();
 
+  void           center();
   bool           detectedI();
   bool           detectedT();
-  void           center();
 
   bool           readSensor_IR(uint8_t pinNum);
   bool           readSensors_BUMP(uint8_t pinNum);

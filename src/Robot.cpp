@@ -43,6 +43,7 @@ state_tier_1_t Robot::getState() {
 void Robot::updateState() {
   checkTimer();
   updateSensors();
+  center();
   printState();
 }
 
@@ -325,13 +326,33 @@ void Robot::turnBackward() {
   analogWrite(MOTOR_RIGHT_SPEED, DRIVE_SPEED);
 }
 
-/**********************************  TODO  ************************************/
+/*
+ * Function: center
+ * -------------------
+ * This function self corrects to stay on line.
+ */
+void Robot::center() {
+  if(state_3 == turningForeward_s) {
+    //TODO Robustness BS
+  }
+  if(state_3 == turningBackward_s) {
+    //TODO Robustness BS
+  }
+}
+
 /*
  * Function: detectedI
  * -------------------
  * This function returns true when reaching the start.
  */
 bool Robot::detectedI() {
+  //TODO Robustness BS
+  if (
+    (leftSensorIR[1] && rightSensorIR[1] && centerSensorIR[0] &&
+    centerSensorIR[1] && centerSensorIR[2]) &&
+    (!leftSensorIR[0] && !leftSensorIR[2] && !rightSensorIR[0] &&
+      !rightSensorIR[2] && !backSensorIR[0] && !backSensorIR[1] && !backSensorIR[2])
+  ) return true;
   return false;
 }
 /*
@@ -340,18 +361,15 @@ bool Robot::detectedI() {
  * This function returns true when reaching a junction.
  */
 bool Robot::detectedT() {
+  //TODO Robustness BS
+  if (
+    (leftSensorIR[1] && rightSensorIR[1] && centerSensorIR[0] &&
+    centerSensorIR[1] && centerSensorIR[2] &&backSensorIR[1]) &&
+    (!leftSensorIR[0] && !leftSensorIR[2] && !rightSensorIR[0] &&
+      !rightSensorIR[2] && !backSensorIR[0] && !backSensorIR[2])
+  ) return true;
   return false;
 }
-
-/*
- * Function: center
- * -------------------
- * This function self corrects to stay on line.
- */
-void Robot::center() {
-
-}
-/**********************************  TODO  ************************************/
 
 /*
  * Function: readSensor_IR
@@ -361,7 +379,7 @@ void Robot::center() {
 bool Robot::readSensor_IR(uint8_t pinNum) {
   uint16_t value = PCB.readValue(pinNum);
   //TODO Comparitor BS
-  return (value >= BLACK_THRESHOLD);
+  return value >= BLACK_THRESHOLD;
 }
 
 /*
