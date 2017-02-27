@@ -31,12 +31,24 @@ void Robot::init() {
  * This function get all the updated values for evaluating this state.
  */
 void Robot::updateSensors() {
-  for (uint8_t i = 0; i < NUM_IR_SENSORS; i++) {
-    sensorsIR[i] = readSensor_IR(i);
-  }
-  for (uint8_t i = 0; i < NUM_BUMPERS; i++) {
-    sensorsBump[i] = readSensors_BUMP(i);
-  }
+  frontSensorsBump[0] = readSensors_BUMP(BUMPER_LEFT);
+  frontSensorsBump[1] = readSensors_BUMP(BUMPER_RIGHT);
+
+  leftSensorIR[0]     = readSensor_IR(IR_IN_01);
+  leftSensorIR[1]     = readSensor_IR(IR_IN_02);
+  leftSensorIR[2]     = readSensor_IR(IR_IN_03);
+
+  rightSensorIR[0]    = readSensor_IR(IR_IN_04);
+  rightSensorIR[1]    = readSensor_IR(IR_IN_05);
+  rightSensorIR[2]    = readSensor_IR(IR_IN_06);
+
+  centerSensorIR[0]   = readSensor_IR(IR_IN_07);
+  centerSensorIR[1]   = readSensor_IR(IR_IN_08);
+  centerSensorIR[2]   = readSensor_IR(IR_IN_09);
+
+  backSensorIR[0]     = readSensor_IR(IR_IN_10);
+  backSensorIR[1]     = readSensor_IR(IR_IN_11);
+  backSensorIR[2]     = readSensor_IR(IR_IN_12);
 }
 
 /*
@@ -169,12 +181,6 @@ void Robot::findStart() {
  * given a posotion directly before the first turn off the main road.
  */
 void Robot::attackTower() {
-  turnForward();
-  turnLeft();
-  turnForward();
-  launchEgg();
-  turnBackward();
-  turnRight();
 }
 
 /*
@@ -251,6 +257,8 @@ void Robot::center() {
  * This function handles the hardware abstraction of sensing a line
  */
 bool Robot::readSensor_IR(uint8_t sensorNum) {
+  //TODO
+  //Comparitor BS
   return false;
 }
 
@@ -260,6 +268,8 @@ bool Robot::readSensor_IR(uint8_t sensorNum) {
  * This function handles the hardware abstraction of sensing a bump
  */
 bool Robot::readSensors_BUMP(uint8_t sensorNum) {
+  //TODO
+  //Comparitor BS
   return false;
 }
 

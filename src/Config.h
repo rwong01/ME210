@@ -17,8 +17,6 @@
 #include <stdint.h>
 
 /****************************  EDITABLE CONSTANTS  ****************************/
-static const uint8_t   NUM_IR_SENSORS          =     12;
-static const uint8_t   NUM_BUMPERS             =      2;
 static const uint16_t  BLACK_THRESHOLD         =    420;
 static const uint8_t   DRIVE_SPEED             =    255;
 static const uint8_t   LAUNCHER_SPEED          =    255;
