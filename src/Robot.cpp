@@ -47,21 +47,20 @@ void Robot::updateState() {
   printState();
 }
 
-/**********************************  TODO  ************************************/
 /*
  * Function: exitBase
  * -------------------
  * This function handles the algorythmic complexity of exiting the base.
  */
 void Robot::exitBase() {
-  findLine();
-  findStart();
-
-  state_1 = attackTower1_s;
-  state_2 = approaching_s;
-  turnForward();
+  if      (state_2 == searching_s && findLine()) orientLine();
+  else if ((state_2 == orientingL_s ||  state_2 == orientingR_s) && orientLine()) findStart();
+  else if (state_2 == finding_s   && findStart()) {
+    state_1 = attackTower1_s;
+    state_2 = approaching_s;
+    turnForward();
+  }
 }
-/**********************************  TODO  ************************************/
 
 /*
  * Function: attackTower1
@@ -157,6 +156,8 @@ void Robot::waitForStart() {
   while(digitalRead(START_PIN) != LOW) Serial.println("Ready...");
   startTime = millis();
   state_1 = exitBase_s;
+  state_2 = searching_s;
+  turnForward();
 }
 
 /*
@@ -209,14 +210,48 @@ void Robot::printState() {
   Serial.print('\n');
 }
 
-/**********************************  TODO  ************************************/
 /*
  * Function: findLine
  * -------------------
  * This function finds any line from the randomized start position.
  */
-void Robot::findLine() {
+bool Robot::findLine() {
+  bool done = false;
+  if      (leftSensorIR[0]) {
+    state_2 = orientingL_s;
+    done = true;
+  }
+  else if (rightSensorIR[0]) {
+    state_2 = orientingR_s;
+    done = true;
+  }
+  else if (frontSensorsBump[0] || frontSensorsBump[1]) {
+    escapeTime = millis();
+    turnBackward();
+  }
+  else if (state_3 == turningBackward_s && (millis() - escapeTime) >= ESCAPE_TIMEOUT) {
+    escapeTime = millis();
+    turnRight();
+  }
+  else if (state_3 == turningRight_s && (millis() - escapeTime) >= ESCAPE_TIMEOUT) turnForward();
+  return done;
+}
 
+/*
+ * Function: orientLine
+ * -------------------
+ * This function centers the robot onto the start line.
+ */
+bool Robot::orientLine() {
+  bool done = false;
+  if      (state_2 == orientingL_s && state_3 == turningForeward_s && centerSensorIR[1]) turnRight();
+  else if (state_2 == orientingR_s && state_3 == turningForeward_s && centerSensorIR[1]) turnLeft();
+  else if ((state_3 == turningLeft_s || state_3 == turningRight_s) && detectedI()) {
+    state_2 = finding_s;
+    turnForward();
+    done = true;
+  }
+  return done;
 }
 
 /*
@@ -224,11 +259,12 @@ void Robot::findLine() {
  * -------------------
  * This function finds the desired start position.
  */
-void Robot::findStart() {
-
+bool Robot::findStart() {
+  bool done = false;
+  if (detectedS()) done = true;
+  return done;
 }
 
-/**********************************  TODO  ************************************/
 /*
  * Function: attackTower
  * -------------------
@@ -348,6 +384,23 @@ void Robot::center() {
 bool Robot::detectedI() {
   //TODO Robustness BS
   if (
+    (centerSensorIR[1] &&backSensorIR[1]) &&
+    (!leftSensorIR[0] && !leftSensorIR[1] && !leftSensorIR[2] &&
+    !rightSensorIR[0] && !rightSensorIR[1] && !rightSensorIR[2] &&
+    !centerSensorIR[0] && !centerSensorIR[2] &&
+    !backSensorIR[0] && !backSensorIR[2])
+  ) return true;
+  return false;
+}
+
+/*
+ * Function: detectedS
+ * -------------------
+ * This function returns true when reaching the start.
+ */
+bool Robot::detectedS() {
+  //TODO Robustness BS
+  if (
     (leftSensorIR[1] && rightSensorIR[1] && centerSensorIR[0] &&
     centerSensorIR[1] && centerSensorIR[2]) &&
     (!leftSensorIR[0] && !leftSensorIR[2] && !rightSensorIR[0] &&
@@ -355,6 +408,7 @@ bool Robot::detectedI() {
   ) return true;
   return false;
 }
+
 /*
  * Function: detectedT
  * -------------------

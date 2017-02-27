@@ -40,8 +40,9 @@ private:
   void           updateSensors();
   void           printState();
 
-  void           findLine();
-  void           findStart();
+  bool           findLine();
+  bool           orientLine();
+  bool           findStart();
 
   bool           attackTower();
   bool           launchEgg(bool init);
@@ -53,6 +54,7 @@ private:
 
   void           center();
   bool           detectedI();
+  bool           detectedS();
   bool           detectedT();
 
   bool           readSensor_IR(uint8_t pinNum);
@@ -64,6 +66,7 @@ private:
   state_tier_2_t state_2;
   state_tier_3_t state_3;
   uint32_t       startTime;
+  uint32_t       escapeTime;
   uint32_t       launchTime;
   bool           frontSensorsBump[2];
   bool           leftSensorIR[3];

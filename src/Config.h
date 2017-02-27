@@ -24,6 +24,7 @@ static const uint8_t   LOADER_SPEED            =    255;
 static const uint8_t   FOREWARD                =      1;
 static const uint8_t   BACKWARD                =      0;
 static const uint32_t  RUNTIME_TIMEOUT         = 130000;
+static const uint32_t  ESCAPE_TIMEOUT          =   2000;
 static const uint32_t  LAUNCH_TIMEOUT          =  10000;
 
 /*****************************  TEENSY PIN OUTS  ******************************/

@@ -27,6 +27,10 @@ enum state_tier_1_t {
 };
 
 enum state_tier_2_t {
+  searching_s,
+  orientingL_s,
+  orientingR_s,
+  finding_s,
   approaching_s,
   attacking_s
 };
