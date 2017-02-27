@@ -26,6 +26,20 @@ void Robot::init() {
 
 /********************************  FUNCTIONS  *********************************/
 /*
+ * Function: updateSensors
+ * -------------------
+ * This function get all the updated values for evaluating this state.
+ */
+void Robot::updateSensors() {
+  for (uint8_t i = 0; i < NUM_IR_SENSORS; i++) {
+    sensorsIR[i] = readSensor_IR(i);
+  }
+  for (uint8_t i = 0; i < NUM_BUMPERS; i++) {
+    sensorsBump[i] = readSensors_BUMP(i);
+  }
+}
+
+/*
  * Function: exitBase
  * -------------------
  * This function handles the algorythmic complexity of exiting the base.
@@ -229,6 +243,24 @@ bool Robot::detectedT() {
  */
 void Robot::center() {
 
+}
+
+/*
+ * Function: readSensor_IR
+ * -------------------
+ * This function handles the hardware abstraction of sensing a line
+ */
+bool Robot::readSensor_IR(uint8_t sensorNum) {
+  return false;
+}
+
+/*
+ * Function: readSensors_BUMP
+ * -------------------
+ * This function handles the hardware abstraction of sensing a bump
+ */
+bool Robot::readSensors_BUMP(uint8_t sensorNum) {
+  return false;
 }
 
 /*

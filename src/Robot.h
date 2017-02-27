@@ -30,6 +30,7 @@ public:
 /**********************************  SETUP  ***********************************/
   void    init();
 /********************************  FUNCTIONS  *********************************/
+  void    updateSensors();
   void    exitBase();
   void    attackTower1();
   void    attackTower2();
@@ -58,11 +59,15 @@ private:
   bool    detectedT();
   void    center();
 
+  bool    readSensor_IR(uint8_t sensorNum);
+  bool    readSensors_BUMP(uint8_t sensorNum);
   void    checkTimer();
 
 /*********************************  OBJECTS  **********************************/
   uint32_t startTime;
   uint32_t launchTime;
+  bool     sensorsIR[NUM_IR_SENSORS] = {false};
+  bool     sensorsBump[NUM_BUMPERS]  = {false};
 };
 
 #endif
