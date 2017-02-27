@@ -26,6 +26,15 @@ void Robot::init() {
 
 /********************************  FUNCTIONS  *********************************/
 /*
+ * Function: getState
+ * -------------------
+ * This function returns the current state.
+ */
+state_tier_1_t Robot::getState() {
+  return state;
+}
+
+/*
  * Function: updateSensors
  * -------------------
  * This function get all the updated values for evaluating this state.

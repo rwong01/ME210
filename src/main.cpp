@@ -17,12 +17,12 @@ Robot BISCUIT;
 int main(void) {
   BISCUIT.init();
 /***********************************  MAIN  ***********************************/
-  while(BISCUIT.state != quit_s) {
+  while(BISCUIT.getState() != quit_s) {
     BISCUIT.updateSensors();
-    if      (BISCUIT.state == exitBase_s)     BISCUIT.exitBase();
-    else if (BISCUIT.state == attackTower1_s) BISCUIT.attackTower1();
-    else if (BISCUIT.state == attackTower2_s) BISCUIT.attackTower2();
-    else if (BISCUIT.state == hitBumper_s)    BISCUIT.hitBumper();
+    if      (BISCUIT.getState() == exitBase_s)     BISCUIT.exitBase();
+    else if (BISCUIT.getState() == attackTower1_s) BISCUIT.attackTower1();
+    else if (BISCUIT.getState() == attackTower2_s) BISCUIT.attackTower2();
+    else if (BISCUIT.getState() == hitBumper_s)    BISCUIT.hitBumper();
   }
   BISCUIT.quit();
 }

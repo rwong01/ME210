@@ -14,63 +14,55 @@
 #define ROBOT_H
 
 #include "Config.h"
+#include "States.h"
 #include "Arduino.h"
-
-/***********************************  DATA  ***********************************/
-enum state_t {
-  exitBase_s,
-  attackTower1_s,
-  attackTower2_s,
-  hitBumper_s,
-  quit_s
-};
 
 class Robot {
 public:
 /**********************************  SETUP  ***********************************/
-  void    init();
+  void           init();
 /********************************  FUNCTIONS  *********************************/
-  void    updateSensors();
-  void    exitBase();
-  void    attackTower1();
-  void    attackTower2();
-  void    hitBumper();
+  state_tier_1_t getState();
+  void           updateSensors();
+  void           exitBase();
+  void           attackTower1();
+  void           attackTower2();
+  void           hitBumper();
+  void           quit();
 
-  void    quit();
-
-  state_t state;
 private:
 /*********************************  HELPERS  **********************************/
-  void    setPinModes();
-  void    waitForStart();
+  void           setPinModes();
+  void           waitForStart();
 
-  void    findLine();
-  void    findStart();
+  void           findLine();
+  void           findStart();
 
-  void    attackTower();
+  void           attackTower();
 
-  void    turnLeft();
-  void    turnRight();
-  void    turnForward();
-  void    turnBackward();
+  void           turnLeft();
+  void           turnRight();
+  void           turnForward();
+  void           turnBackward();
 
-  void    launchEgg();
+  void           launchEgg();
 
-  bool    detectedT();
-  void    center();
+  bool           detectedT();
+  void           center();
 
-  bool    readSensor_IR(uint8_t sensorNum);
-  bool    readSensors_BUMP(uint8_t sensorNum);
-  void    checkTimer();
+  bool           readSensor_IR(uint8_t sensorNum);
+  bool           readSensors_BUMP(uint8_t sensorNum);
+  void           checkTimer();
 
 /*********************************  OBJECTS  **********************************/
-  uint32_t startTime;
-  uint32_t launchTime;
-  bool     frontSensorsBump[2] = {false};
-  bool     leftSensorIR[3]     = {false};
-  bool     rightSensorIR[3]    = {false};
-  bool     centerSensorIR[3]   = {false};
-  bool     backSensorIR[3]     = {false};
+  state_tier_1_t state;
+  uint32_t       startTime;
+  uint32_t       launchTime;
+  bool           frontSensorsBump[2];
+  bool           leftSensorIR[3];
+  bool           rightSensorIR[3];
+  bool           centerSensorIR[3];
+  bool           backSensorIR[3];
 };
 
 #endif
