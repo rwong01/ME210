@@ -20,6 +20,8 @@
 static const uint16_t  BLACK_THRESHOLD         =    420;
 static const uint8_t   DRIVE_SPEED             =    255;
 static const uint8_t   LAUNCHER_SPEED          =    255;
+static const uint8_t   FOREWARD                =      1;
+static const uint8_t   BACKWARD                =      0;
 static const uint8_t   LOADER_SPEED            =    255;
 static const uint32_t  RUNTIME_TIMEOUT         = 130000;
 static const uint32_t  LAUNCH_TIMEOUT          =  10000;
@@ -44,13 +46,13 @@ static const uint8_t   IR_IN_10                =     26;
 static const uint8_t   IR_IN_11                =     26;
 static const uint8_t   IR_IN_12                =     26;
 
-static const uint8_t   MOTOR_LOAD_A            =      9;
-static const uint8_t   MOTOR_LOAD_B            =      9;
-static const uint8_t   MOTOR_FIRE_A            =      9;
-static const uint8_t   MOTOR_FIRE_B            =      9;
-static const uint8_t   MOTOR_RIGHT_A           =      9;
-static const uint8_t   MOTOR_RIGHT_B           =      9;
-static const uint8_t   MOTOR_LEFT_A            =      9;
-static const uint8_t   MOTOR_LEFT_B            =      9;
+static const uint8_t   MOTOR_LOAD_DIR          =      9;
+static const uint8_t   MOTOR_LOAD_SPEED        =      9;
+static const uint8_t   MOTOR_FIRE_DIR          =      9;
+static const uint8_t   MOTOR_FIRE_SPEED        =      9;
+static const uint8_t   MOTOR_RIGHT_DIR         =      9;
+static const uint8_t   MOTOR_RIGHT_SPEED       =      9;
+static const uint8_t   MOTOR_LEFT_DIR          =      9;
+static const uint8_t   MOTOR_LEFT_SPEED        =      9;
 
 #endif

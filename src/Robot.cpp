@@ -101,14 +101,10 @@ void Robot::hitBumper() {
  * This function handles the end of game shutdown.
  */
 void Robot::quit() {
-  analogWrite(MOTOR_FIRE_A,  0);
-  analogWrite(MOTOR_FIRE_B,  0);
-  analogWrite(MOTOR_LOAD_A,  0);
-  analogWrite(MOTOR_LOAD_B,  0);
-  analogWrite(MOTOR_LEFT_A,  0);
-  analogWrite(MOTOR_LEFT_B,  0);
-  analogWrite(MOTOR_RIGHT_A, 0);
-  analogWrite(MOTOR_RIGHT_B, 0);
+  analogWrite(MOTOR_FIRE_SPEED,  0);
+  analogWrite(MOTOR_LOAD_SPEED,  0);
+  analogWrite(MOTOR_LEFT_SPEED,  0);
+  analogWrite(MOTOR_RIGHT_SPEED, 0);
 }
 
 /*********************************  HELPERS  **********************************/
@@ -118,32 +114,32 @@ void Robot::quit() {
  * This function sets the appropriate pinmodes.
  */
 void Robot::setPinModes() {
-  pinMode(START_PIN,      INPUT);
+  pinMode(START_PIN,         INPUT);
 
-  pinMode(BUMPER_LEFT,    INPUT);
-  pinMode(BUMPER_RIGHT,   INPUT);
+  pinMode(BUMPER_LEFT,       INPUT);
+  pinMode(BUMPER_RIGHT,      INPUT);
 
-  pinMode(IR_IN_01,       INPUT);
-  pinMode(IR_IN_02,       INPUT);
-  pinMode(IR_IN_03,       INPUT);
-  pinMode(IR_IN_04,       INPUT);
-  pinMode(IR_IN_05,       INPUT);
-  pinMode(IR_IN_06,       INPUT);
-  pinMode(IR_IN_07,       INPUT);
-  pinMode(IR_IN_08,       INPUT);
-  pinMode(IR_IN_09,       INPUT);
-  pinMode(IR_IN_10,       INPUT);
-  pinMode(IR_IN_11,       INPUT);
-  pinMode(IR_IN_12,       INPUT);
+  pinMode(IR_IN_01,          INPUT);
+  pinMode(IR_IN_02,          INPUT);
+  pinMode(IR_IN_03,          INPUT);
+  pinMode(IR_IN_04,          INPUT);
+  pinMode(IR_IN_05,          INPUT);
+  pinMode(IR_IN_06,          INPUT);
+  pinMode(IR_IN_07,          INPUT);
+  pinMode(IR_IN_08,          INPUT);
+  pinMode(IR_IN_09,          INPUT);
+  pinMode(IR_IN_10,          INPUT);
+  pinMode(IR_IN_11,          INPUT);
+  pinMode(IR_IN_12,          INPUT);
 
-  pinMode(MOTOR_LOAD_A,   OUTPUT);
-  pinMode(MOTOR_LOAD_B,   OUTPUT);
-  pinMode(MOTOR_FIRE_A,   OUTPUT);
-  pinMode(MOTOR_FIRE_B,   OUTPUT);
-  pinMode(MOTOR_RIGHT_A,  OUTPUT);
-  pinMode(MOTOR_RIGHT_B,  OUTPUT);
-  pinMode(MOTOR_LEFT_A,   OUTPUT);
-  pinMode(MOTOR_LEFT_B,   OUTPUT);
+  pinMode(MOTOR_LOAD_DIR,    OUTPUT);
+  pinMode(MOTOR_LOAD_SPEED,  OUTPUT);
+  pinMode(MOTOR_FIRE_DIR,    OUTPUT);
+  pinMode(MOTOR_FIRE_SPEED,  OUTPUT);
+  pinMode(MOTOR_RIGHT_DIR,   OUTPUT);
+  pinMode(MOTOR_RIGHT_SPEED, OUTPUT);
+  pinMode(MOTOR_LEFT_DIR,    OUTPUT);
+  pinMode(MOTOR_LEFT_SPEED,  OUTPUT);
 }
 
 /*
@@ -243,10 +239,10 @@ bool Robot::attackTower() {
  */
 void Robot::turnLeft() {
   state_3 = turningLeft_s;
-  analogWrite(MOTOR_LEFT_A,  0);
-  analogWrite(MOTOR_LEFT_B,  DRIVE_SPEED);
-  analogWrite(MOTOR_RIGHT_A, DRIVE_SPEED);
-  analogWrite(MOTOR_RIGHT_B, 0);
+  digitalWrite(MOTOR_LEFT_DIR,   BACKWARD);
+  digitalWrite(MOTOR_RIGHT_DIR,  FOREWARD);
+  analogWrite(MOTOR_LEFT_SPEED,  DRIVE_SPEED);
+  analogWrite(MOTOR_RIGHT_SPEED, DRIVE_SPEED);
 }
 
 /*
@@ -256,10 +252,10 @@ void Robot::turnLeft() {
  */
 void Robot::turnRight() {
   state_3 = turningRight_s;
-  analogWrite(MOTOR_LEFT_A,  DRIVE_SPEED);
-  analogWrite(MOTOR_LEFT_B,  0);
-  analogWrite(MOTOR_RIGHT_A, 0);
-  analogWrite(MOTOR_RIGHT_B, DRIVE_SPEED);
+  digitalWrite(MOTOR_LEFT_DIR,   FOREWARD);
+  digitalWrite(MOTOR_RIGHT_DIR,  BACKWARD);
+  analogWrite(MOTOR_LEFT_SPEED,  DRIVE_SPEED);
+  analogWrite(MOTOR_RIGHT_SPEED, DRIVE_SPEED);
 }
 
 /*
@@ -269,10 +265,10 @@ void Robot::turnRight() {
  */
 void Robot::turnForward() {
   state_3 = TurningForeward_s;
-  analogWrite(MOTOR_LEFT_A,  DRIVE_SPEED);
-  analogWrite(MOTOR_LEFT_B,  0);
-  analogWrite(MOTOR_RIGHT_A, DRIVE_SPEED);
-  analogWrite(MOTOR_RIGHT_B, 0);
+  digitalWrite(MOTOR_LEFT_DIR,   FOREWARD);
+  digitalWrite(MOTOR_RIGHT_DIR,  FOREWARD);
+  analogWrite(MOTOR_LEFT_SPEED,  DRIVE_SPEED);
+  analogWrite(MOTOR_RIGHT_SPEED, DRIVE_SPEED);
 }
 
 /*
@@ -282,10 +278,10 @@ void Robot::turnForward() {
  */
 void Robot::turnBackward() {
   state_3 = TurningBackward_s;
-  analogWrite(MOTOR_LEFT_A,  DRIVE_SPEED);
-  analogWrite(MOTOR_LEFT_B,  0);
-  analogWrite(MOTOR_RIGHT_A, DRIVE_SPEED);
-  analogWrite(MOTOR_RIGHT_B, 0);
+  digitalWrite(MOTOR_LEFT_DIR,   BACKWARD);
+  digitalWrite(MOTOR_RIGHT_DIR,  BACKWARD);
+  analogWrite(MOTOR_LEFT_SPEED,  DRIVE_SPEED);
+  analogWrite(MOTOR_RIGHT_SPEED, DRIVE_SPEED);
 }
 
 /*
@@ -295,11 +291,6 @@ void Robot::turnBackward() {
  */
 void Robot::launchEgg() {
   launchTime = millis();
-  analogWrite(MOTOR_LOAD_A, 0);
-  analogWrite(MOTOR_LOAD_B, LOADER_SPEED);
-  // while((millis() - launchTime) < LAUNCH_TIMEOUT) Serial.println("Launching...");
-  analogWrite(MOTOR_LOAD_A, 0);
-  analogWrite(MOTOR_LOAD_B, 0);
 }
 
 /*
@@ -308,7 +299,7 @@ void Robot::launchEgg() {
  * This function returns true when reaching a junction.
  */
 bool Robot::detectedT() {
-  return true;
+  return false;
 }
 
 /*
