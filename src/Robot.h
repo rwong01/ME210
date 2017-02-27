@@ -54,6 +54,8 @@ private:
 
   void           center();
   bool           detectedI();
+  bool           detectedLeft();
+  bool           detectedRight();
   bool           detectedS();
   bool           detectedT();
 
