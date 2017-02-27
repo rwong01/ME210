@@ -44,14 +44,14 @@ private:
   void           findStart();
 
   bool           attackTower();
+  bool           launchEgg(bool init);
 
   void           turnLeft();
   void           turnRight();
   void           turnForward();
   void           turnBackward();
 
-  bool           launchEgg();
-
+  bool           detectedI();
   bool           detectedT();
   void           center();
 

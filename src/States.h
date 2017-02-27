@@ -27,6 +27,8 @@ enum state_tier_1_t {
 };
 
 enum state_tier_2_t {
+  approaching_s,
+  attacking_s
 };
 
 enum state_tier_3_t {

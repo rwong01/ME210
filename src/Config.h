@@ -19,7 +19,7 @@
 /****************************  EDITABLE CONSTANTS  ****************************/
 static const uint16_t  BLACK_THRESHOLD         =    420;
 static const uint8_t   DRIVE_SPEED             =    255;
-static const uint8_t   LAUNCHER_SPEED          =    255;
+static const uint8_t   LAUNCH_SPEED            =    255;
 static const uint8_t   LOADER_SPEED            =    255;
 static const uint8_t   FOREWARD                =      1;
 static const uint8_t   BACKWARD                =      0;

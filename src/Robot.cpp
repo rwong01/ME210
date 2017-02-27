@@ -46,6 +46,7 @@ void Robot::updateState() {
   printState();
 }
 
+/**********************************  TODO  ************************************/
 /*
  * Function: exitBase
  * -------------------
@@ -56,8 +57,10 @@ void Robot::exitBase() {
   findStart();
 
   state_1 = attackTower1_s;
+  state_2 = approaching_s;
   turnForward();
 }
+/**********************************  TODO  ************************************/
 
 /*
  * Function: attackTower1
@@ -67,6 +70,7 @@ void Robot::exitBase() {
 void Robot::attackTower1() {
   if (attackTower()) {
     state_1 = attackTower2_s;
+    state_2 = approaching_s;
     turnForward();
   }
 }
@@ -113,32 +117,34 @@ void Robot::quit() {
  * This function sets the appropriate pinmodes.
  */
 void Robot::setPinModes() {
-  pinMode(START_PIN,         INPUT);
+  pinMode(START_PIN,            INPUT);
 
-  pinMode(BUMPER_LEFT,       INPUT);
-  pinMode(BUMPER_RIGHT,      INPUT);
+  pinMode(BUMPER_LEFT,          INPUT);
+  pinMode(BUMPER_RIGHT,         INPUT);
 
-  pinMode(IR_IN_01,          INPUT);
-  pinMode(IR_IN_02,          INPUT);
-  pinMode(IR_IN_03,          INPUT);
-  pinMode(IR_IN_04,          INPUT);
-  pinMode(IR_IN_05,          INPUT);
-  pinMode(IR_IN_06,          INPUT);
-  pinMode(IR_IN_07,          INPUT);
-  pinMode(IR_IN_08,          INPUT);
-  pinMode(IR_IN_09,          INPUT);
-  pinMode(IR_IN_10,          INPUT);
-  pinMode(IR_IN_11,          INPUT);
-  pinMode(IR_IN_12,          INPUT);
+  pinMode(IR_IN_01,             INPUT);
+  pinMode(IR_IN_02,             INPUT);
+  pinMode(IR_IN_03,             INPUT);
+  pinMode(IR_IN_04,             INPUT);
+  pinMode(IR_IN_05,             INPUT);
+  pinMode(IR_IN_06,             INPUT);
+  pinMode(IR_IN_07,             INPUT);
+  pinMode(IR_IN_08,             INPUT);
+  pinMode(IR_IN_09,             INPUT);
+  pinMode(IR_IN_10,             INPUT);
+  pinMode(IR_IN_11,             INPUT);
+  pinMode(IR_IN_12,             INPUT);
 
-  pinMode(MOTOR_LEFT_DIR,    OUTPUT);
-  pinMode(MOTOR_LEFT_SPEED,  OUTPUT);
-  pinMode(MOTOR_RIGHT_DIR,   OUTPUT);
-  pinMode(MOTOR_RIGHT_SPEED, OUTPUT);
-  pinMode(MOTOR_LOAD_DIR,    OUTPUT);
-  pinMode(MOTOR_LOAD_SPEED,  OUTPUT);
-  pinMode(MOTOR_FIRE_DIR,    OUTPUT);
-  pinMode(MOTOR_FIRE_SPEED,  OUTPUT);
+  pinMode(MOTOR_LEFT_DIR,       OUTPUT);
+  pinMode(MOTOR_LEFT_SPEED,     OUTPUT);
+  pinMode(MOTOR_RIGHT_DIR,      OUTPUT);
+  pinMode(MOTOR_RIGHT_SPEED,    OUTPUT);
+  pinMode(MOTOR_LOAD_DIR,       OUTPUT);
+  pinMode(MOTOR_LOAD_SPEED,     OUTPUT);
+  pinMode(MOTOR_FIRE_DIR,       OUTPUT);
+  pinMode(MOTOR_FIRE_SPEED,     OUTPUT);
+  digitalWrite(MOTOR_LOAD_DIR,  FOREWARD);
+  digitalWrite(MOTOR_FIRE_DIR,  FOREWARD);
 }
 
 /*
@@ -221,6 +227,7 @@ void Robot::findStart() {
 
 }
 
+/**********************************  TODO  ************************************/
 /*
  * Function: attackTower
  * -------------------
@@ -229,12 +236,38 @@ void Robot::findStart() {
  */
 bool Robot::attackTower() {
   bool done = false;
-  if      (state_3 == turningForeward_s && detectedT()) turnLeft();       //TODO
-  else if (state_3 == turningLeft_s     && detectedT()) turnForward();
-  else if (state_3 == turningForeward_s && detectedT()) launchEgg();      //TODO
-  else if (state_3 == launchingEggs_s   && launchEgg()) turnBackward();
+  if      (state_3 == turningForeward_s && state_2 == approaching_s && detectedT()) turnLeft();
+  else if (state_3 == turningLeft_s     && detectedT()) {
+    state_2 = attacking_s;
+    turnForward();
+  }
+  else if (state_3 == turningForeward_s && state_2 == attacking_s   && detectedT()) launchEgg(true);
+  else if (state_3 == launchingEggs_s   && launchEgg(false)) turnBackward();
   else if (state_3 == turningBackward_s && detectedT()) {
     turnRight();
+    done = true;
+  }
+  return done;
+}
+
+/*
+ * Function: launchEgg
+ * -------------------
+ * This function launches eggs.
+ */
+bool Robot::launchEgg(bool init) {
+  bool done = false;
+  if (init) {
+    launchTime = millis();
+    state_3 = launchingEggs_s;
+    analogWrite(MOTOR_LEFT_SPEED,  0);
+    analogWrite(MOTOR_RIGHT_SPEED, 0);
+    analogWrite(MOTOR_LOAD_SPEED, LOADER_SPEED);
+    analogWrite(MOTOR_FIRE_SPEED, LAUNCH_SPEED);
+  }
+  if((millis() - launchTime) >= LAUNCH_TIMEOUT) {
+    analogWrite(MOTOR_LOAD_SPEED, 0);
+    analogWrite(MOTOR_FIRE_SPEED, 0);
     done = true;
   }
   return done;
@@ -292,18 +325,15 @@ void Robot::turnBackward() {
   analogWrite(MOTOR_RIGHT_SPEED, DRIVE_SPEED);
 }
 
+/**********************************  TODO  ************************************/
 /*
- * Function: launchEgg
+ * Function: detectedI
  * -------------------
- * This function launches eggs.
+ * This function returns true when reaching the start.
  */
-bool Robot::launchEgg() {
-  bool done = false;
-  // stop, timer, launch
-  launchTime = millis();
-  return done;
+bool Robot::detectedI() {
+  return false;
 }
-
 /*
  * Function: detectedT
  * -------------------
