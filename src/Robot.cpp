@@ -471,7 +471,6 @@ bool Robot::detectedT() {
  */
 bool Robot::readSensor_IR(uint8_t pinNum) {
   uint16_t value = PCB.readValue(pinNum);
-  //TODO Comparitor BS
   return value >= BLACK_THRESHOLD;
 }
 
@@ -481,6 +480,5 @@ bool Robot::readSensor_IR(uint8_t pinNum) {
  * This function handles the hardware abstraction of sensing a bump.
  */
 bool Robot::readSensors_BUMP(uint8_t pinNum) {
-  //TODO Comparitor BS
   return digitalRead(pinNum);
 }
