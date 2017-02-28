@@ -284,11 +284,11 @@ bool Robot::attackTower() {
   bool done = false;
   if      (state_3 == turningForeward_s && state_2 == approaching_s && detectedT()) turnLeft();
   else if (state_3 == turningLeft_s     && detectedT()) {
-    state_2 = attacking_s;
+    state_2 = loading_s;
     turnForward();
   }
-  else if (state_3 == turningForeward_s && state_2 == attacking_s   && detectedT()) launchEgg(true);
-  else if (state_3 == launchingEggs_s   && launchEgg(false)) turnBackward();
+  else if (state_3 == turningForeward_s && state_2 == loading_s   && detectedT()) launchEgg();
+  else if (state_3 == launchingEggs_s   && launchEgg()) turnBackward();
   else if (state_3 == turningBackward_s && detectedT()) {
     turnRight();
     done = true;
@@ -301,11 +301,12 @@ bool Robot::attackTower() {
  * -------------------
  * This function launches eggs.
  */
-bool Robot::launchEgg(bool init) {
+bool Robot::launchEgg() {
   bool done = false;
-  if (init) {
+  if (state_2 == loading_s) {
     launchTime = millis();
     state_3 = launchingEggs_s;
+    state_2 = attacking_s;
     analogWrite(MOTOR_LEFT_SPEED,  0);
     analogWrite(MOTOR_RIGHT_SPEED, 0);
     analogWrite(MOTOR_LOAD_SPEED, LOADER_SPEED);
@@ -393,11 +394,10 @@ void Robot::center() {
 bool Robot::detectedI() {
   //TODO Robustness BS
   if (
-    (centerSensorIR[1] &&backSensorIR[1]) &&
-    (!leftSensorIR[0] && !leftSensorIR[1] && !leftSensorIR[2] &&
-    !rightSensorIR[0] && !rightSensorIR[1] && !rightSensorIR[2] &&
-    !centerSensorIR[0] && !centerSensorIR[2] &&
-    !backSensorIR[0] && !backSensorIR[2])
+    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
+    !leftSensorIR[1] && !centerSensorIR[0] &&  centerSensorIR[1] && !centerSensorIR[2] && !rightSensorIR[1] &&
+    !leftSensorIR[2] &&                                                                   !rightSensorIR[2] &&
+                        !backSensorIR[0]   &&  backSensorIR[1]   && !backSensorIR[2]
   ) return true;
   return false;
 }
@@ -410,11 +410,9 @@ bool Robot::detectedI() {
 bool Robot::detectedLeft() {
   //TODO Robustness BS
   if (
-    (leftSensorIR[1] &&
-      centerSensorIR[0] && centerSensorIR[1]) &&
-    (!leftSensorIR[0] && !rightSensorIR[1] && !leftSensorIR[2] &&
-      !centerSensorIR[2] &&
-      !rightSensorIR[0] && !rightSensorIR[2])
+    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
+     leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] && !centerSensorIR[2] && !rightSensorIR[1] &&
+    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
   ) return true;
   return false;
 }
@@ -427,11 +425,9 @@ bool Robot::detectedLeft() {
 bool Robot::detectedRight() {
   //TODO Robustness BS
   if (
-    (rightSensorIR[1] &&
-      centerSensorIR[1] && centerSensorIR[2]) &&
-    (!leftSensorIR[0] && !leftSensorIR[1] && !leftSensorIR[2] &&
-      !centerSensorIR[0] &&
-      !rightSensorIR[0] && !rightSensorIR[2])
+    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
+    !leftSensorIR[1] && !centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
+    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
   ) return true;
   return false;
 }
@@ -444,11 +440,10 @@ bool Robot::detectedRight() {
 bool Robot::detectedS() {
   //TODO Robustness BS
   if (
-    (leftSensorIR[1] && rightSensorIR[1] &&
-      centerSensorIR[0] && centerSensorIR[1] && centerSensorIR[2]) &&
-    (!leftSensorIR[0] && !leftSensorIR[2] &&
-      !rightSensorIR[0] &&!rightSensorIR[2] &&
-      !backSensorIR[0] && !backSensorIR[1] && !backSensorIR[2])
+    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
+     leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
+    !leftSensorIR[2] &&                                                                   !rightSensorIR[2] &&
+                        !backSensorIR[0]   && !backSensorIR[1]   && !backSensorIR[2]
   ) return true;
   return false;
 }
@@ -461,12 +456,10 @@ bool Robot::detectedS() {
 bool Robot::detectedT() {
   //TODO Robustness BS
   if (
-    (leftSensorIR[1] && rightSensorIR[1] &&
-      centerSensorIR[0] && centerSensorIR[1] && centerSensorIR[2] &&
-      backSensorIR[1]) &&
-    (!leftSensorIR[0] && !leftSensorIR[2] &&
-      !rightSensorIR[0] && !rightSensorIR[2] &&
-      !backSensorIR[0] && !backSensorIR[2])
+    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
+     leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
+    !leftSensorIR[2] &&                                                                   !rightSensorIR[2] &&
+                        !backSensorIR[0]   &&  backSensorIR[1]   && !backSensorIR[2]
   ) return true;
   return false;
 }

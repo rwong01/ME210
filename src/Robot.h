@@ -45,7 +45,7 @@ private:
   bool           findStart();
 
   bool           attackTower();
-  bool           launchEgg(bool init);
+  bool           launchEgg();
 
   void           turnLeft();
   void           turnRight();

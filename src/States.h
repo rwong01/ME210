@@ -32,6 +32,7 @@ enum state_tier_2_t {
   orientingR_s,
   finding_s,
   approaching_s,
+  loading_s,
   attacking_s
 };
 
