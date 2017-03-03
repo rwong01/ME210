@@ -14,6 +14,9 @@
 #define MULTIPLEXER_H
 
 #include "Arduino.h"
+#include "SPI.h"
+
+//10MHz
 
 class Multiplexer {
 public:

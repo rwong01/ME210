@@ -29,7 +29,7 @@ void Multiplexer::init(uint8_t chipSelect) {
  * This function returns the analog voltage of the specific channel.
  */
 uint16_t Multiplexer::readValue(uint8_t channel) {
-  return 0;
+  return analogRead(channel);
 }
 
 /*********************************  HELPERS  **********************************/

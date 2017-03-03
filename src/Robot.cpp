@@ -519,10 +519,8 @@ bool Robot::detectedT() {
  * This function handles the hardware abstraction of sensing a line.
  */
 bool Robot::readSensor_IR(uint8_t pinNum) {
-  // uint16_t value = PCB.readValue(pinNum);
-  uint16_t value = analogRead(pinNum);
-  // Serial.println(value);
-  return value >= BLACK_THRESHOLD;
+  uint16_t value = PCB.readValue(pinNum);
+  return value <= BLACK_THRESHOLD;
 }
 
 /*

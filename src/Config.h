@@ -17,7 +17,7 @@
 #include <stdint.h>
 
 /****************************  EDITABLE CONSTANTS  ****************************/
-static const uint16_t  BLACK_THRESHOLD         =    420;
+static const uint16_t  BLACK_THRESHOLD         =    100;
 static const uint8_t   DRIVE_SPEED             =    255;
 static const uint8_t   LAUNCH_SPEED            =    255;
 static const uint8_t   LOADER_SPEED            =    255;
@@ -41,8 +41,8 @@ static const uint8_t   IR_IN_04                =     69;
 static const uint8_t   IR_IN_05                =     69;
 static const uint8_t   IR_IN_06                =     69;
 static const uint8_t   IR_IN_07                =     14;
-static const uint8_t   IR_IN_08                =     15;
-static const uint8_t   IR_IN_09                =     16;
+static const uint8_t   IR_IN_08                =     69;
+static const uint8_t   IR_IN_09                =     69;
 static const uint8_t   IR_IN_10                =     69;
 static const uint8_t   IR_IN_11                =     69;
 static const uint8_t   IR_IN_12                =     69;
