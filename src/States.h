@@ -25,6 +25,13 @@ enum state_tier_1_t {
   hitBumper_s,
   quit_s
 };
+static const char* states_teir_1_names[] = {
+  "exitBase_s",
+  "attackTower1_s",
+  "attackTower2_s",
+  "hitBumper_s",
+  "quit_s"
+};
 
 enum state_tier_2_t {
   searching_s,
@@ -34,6 +41,15 @@ enum state_tier_2_t {
   approaching_s,
   loading_s,
   attacking_s
+};
+static const char* states_teir_2_names[] = {
+  "searching_s",
+  "orientingL_s",
+  "orientingR_s",
+  "finding_s",
+  "approaching_s",
+  "loading_s",
+  "attacking_s"
 };
 
 enum state_tier_3_t {
@@ -45,4 +61,14 @@ enum state_tier_3_t {
   turningBackward_s,
   launchingEggs_s
 };
+static const char* states_teir_3_names[] = {
+  "turningLeftOne_s",
+  "turningLeftTwo_s",
+  "turningRightOne_s",
+  "turningRightTwo_s",
+  "turningForeward_s",
+  "turningBackward_s",
+  "launchingEggs_s"
+};
+
 #endif

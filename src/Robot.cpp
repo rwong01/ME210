@@ -202,11 +202,11 @@ void Robot::updateSensors() {
  */
 void Robot::printState() {
   Serial.print("STATE 1 : ");
-  Serial.print(state_1);
-  Serial.print("STATE 2 : ");
-  Serial.print(state_2);
-  Serial.print("STATE 3 : ");
-  Serial.print(state_3);
+  Serial.print(states_teir_1_names[state_1]);
+  Serial.print(" STATE 2 : ");
+  Serial.print(states_teir_2_names[state_2]);
+  Serial.print(" STATE 3 : ");
+  Serial.print(states_teir_3_names[state_3]);
   Serial.print('\n');
 }
 
