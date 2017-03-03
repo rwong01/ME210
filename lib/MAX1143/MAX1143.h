@@ -5,29 +5,31 @@
   Sasha Maldonado | amaldona@stanford.edu
   Jake Hillard | jhillard@stanford.edu
 
-  File: Multiplexer.h
+  File: MAX1143.h
   --------------------------
-  Library for interfacing with analog multiplexer.
+  Library for interfacing with the MAX1143 analog multiplexer.
 */
 
-#ifndef MULTIPLEXER_H
-#define MULTIPLEXER_H
+#ifndef MAX1143_H
+#define MAX1143_H
 
 #include "Arduino.h"
 #include "SPI.h"
 
-//10MHz
-
-class Multiplexer {
+class MAX1143 {
 public:
 /**********************************  SETUP  ***********************************/
-  void     init(uint8_t chipSelect);
+  MAX1143(uint8_t cs) :
+    chipSelect(cs) {
+  }
+  void     init();
 /********************************  FUNCTIONS  *********************************/
   uint16_t readValue(uint8_t channel);
 
 private:
 /*********************************  HELPERS  **********************************/
 /*********************************  OBJECTS  **********************************/
+  uint8_t chipSelect;
 };
 
 #endif

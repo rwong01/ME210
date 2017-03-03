@@ -20,7 +20,7 @@
  */
 void Robot::init() {
   Serial.begin(9600);
-  PCB.init(MULTIPLEXER_CS);
+  PCB.init();
   setPinModes();
   waitForStart();
 }

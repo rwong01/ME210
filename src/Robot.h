@@ -16,11 +16,14 @@
 #include "Config.h"
 #include "States.h"
 #include "Arduino.h"
-#include <Multiplexer.h>
+#include <MAX1143.h>
 
 class Robot {
 public:
 /**********************************  SETUP  ***********************************/
+  Robot() :
+    PCB(MULTIPLEXER_CS) {
+  }
   void           init();
 /********************************  FUNCTIONS  *********************************/
   state_tier_1_t getState();
@@ -65,7 +68,7 @@ private:
   bool           readSensors_BUMP(uint8_t pinNum);
 
 /*********************************  OBJECTS  **********************************/
-  Multiplexer    PCB;
+  MAX1143        PCB;
   state_tier_1_t state_1;
   state_tier_2_t state_2;
   state_tier_3_t state_3;

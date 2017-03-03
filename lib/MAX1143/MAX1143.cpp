@@ -5,12 +5,12 @@
   Sasha Maldonado | amaldona@stanford.edu
   Jake Hillard | jhillard@stanford.edu
 
-  File: Multiplexer.cpp
+  File: MAX1143.cpp
   --------------------------
-  Implementation of Multiplexer.h
+  Implementation of MAX1143.h
 */
 
-#include "Multiplexer.h"
+#include "MAX1143.h"
 
 /**********************************  SETUP  ***********************************/
 /*
@@ -18,7 +18,7 @@
  * -------------------
  * This function initializes the main multiplexer.
  */
-void Multiplexer::init(uint8_t chipSelect) {
+void MAX1143::init() {
   pinMode(chipSelect, OUTPUT);
 }
 
@@ -28,8 +28,14 @@ void Multiplexer::init(uint8_t chipSelect) {
  * -------------------
  * This function returns the analog voltage of the specific channel.
  */
-uint16_t Multiplexer::readValue(uint8_t channel) {
-  return analogRead(channel);
+uint16_t MAX1143::readValue(uint8_t channel) {
+  SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
+  digitalWrite(chipSelect, LOW);
+  SPI.transfer(0x00);
+  SPI.endTransaction();
+  uint16_t value = analogRead(channel);;
+  digitalWrite(chipSelect, HIGH);
+  return value;
 }
 
 /*********************************  HELPERS  **********************************/
