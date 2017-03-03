@@ -56,6 +56,8 @@ private:
   bool           detectedI();
   bool           detectedLeft();
   bool           detectedRight();
+  bool           detectedLeftOff();
+  bool           detectedRightOff();
   bool           detectedS();
   bool           detectedT();
 

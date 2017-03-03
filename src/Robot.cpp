@@ -92,7 +92,8 @@ void Robot::attackTower2() {
  * This function handles the algorythmic complexity of hitting the pressure pad.
  */
 void Robot::hitBumper() {
-  if      (state_3 == turningRight_s    && detectedT()) turnForward();
+  if      (state_3 == turningRightOne_s && detectedRightOff()) state_3 = turningRightTwo_s;
+  else if (state_3 == turningRightTwo_s && detectedT()) turnForward();
   else if (state_3 == turningForeward_s &&
     (frontSensorsBump[0] || frontSensorsBump[1])) state_1 = quit_s;
 }
@@ -232,7 +233,7 @@ bool Robot::findLine() {
     escapeTime = millis();
     turnRight();
   }
-  else if (state_3 == turningRight_s && (millis() - escapeTime) >= ESCAPE_TIMEOUT) turnForward();
+  else if (state_3 == turningRightOne_s && (millis() - escapeTime) >= ESCAPE_TIMEOUT) turnForward();
   return done;
 }
 
@@ -245,7 +246,7 @@ bool Robot::orientLine() {
   bool done = false;
   if      (state_2 == orientingL_s && state_3 == turningForeward_s && centerSensorIR[1]) turnRight();
   else if (state_2 == orientingR_s && state_3 == turningForeward_s && centerSensorIR[1]) turnLeft();
-  else if ((state_3 == turningLeft_s || state_3 == turningRight_s) && detectedI()) {
+  else if ((state_3 == turningLeftOne_s || state_3 == turningRightOne_s) && detectedI()) {
     state_2 = finding_s;
     turnForward();
     done = true;
@@ -266,11 +267,16 @@ bool Robot::findStart() {
     turnBackward();
   }
   else if (state_3 == turningBackward_s && (millis() - escapeTime) >= ESCAPE_TIMEOUT) turnRight();
-  else if (state_3 == turningRight_s && detectedI()) turnForward();
+  else if (state_3 == turningRightOne_s && detectedRightOff()) state_3 = turningRightTwo_s;
+  else if (state_3 == turningRightTwo_s && detectedI()) turnForward();
+
   else if (state_3 == turningForeward_s && detectedLeft()) turnLeft();
+  else if (state_3 == turningLeftOne_s  && detectedLeftOff()) state_3 = turningLeftTwo_s;
+  else if (state_3 == turningLeftTwo_s && detectedLeft()) turnForward();
+
   else if (state_3 == turningForeward_s && detectedRight()) turnRight();
-  else if (state_3 == turningLeft_s && detectedLeft()) turnForward();
-  else if (state_3 == turningRight_s && detectedRight()) turnForward();
+  else if (state_3 == turningRightOne_s && detectedRightOff()) state_3 = turningRightTwo_s;
+  else if (state_3 == turningRightTwo_s && detectedRight()) turnForward();
   return done;
 }
 
@@ -283,7 +289,8 @@ bool Robot::findStart() {
 bool Robot::attackTower() {
   bool done = false;
   if      (state_3 == turningForeward_s && state_2 == approaching_s && detectedT()) turnLeft();
-  else if (state_3 == turningLeft_s     && detectedT()) {
+  else if (state_3 == turningLeftOne_s  && detectedLeftOff()) state_3 = turningLeftTwo_s;
+  else if (state_3 == turningLeftTwo_s  && detectedT()) {
     state_2 = loading_s;
     turnForward();
   }
@@ -326,7 +333,7 @@ bool Robot::launchEgg() {
  * This function turns left using the IR sensors.
  */
 void Robot::turnLeft() {
-  state_3 = turningLeft_s;
+  state_3 = turningLeftOne_s;
   digitalWrite(MOTOR_LEFT_DIR,   BACKWARD);
   digitalWrite(MOTOR_RIGHT_DIR,  FOREWARD);
   analogWrite(MOTOR_LEFT_SPEED,  DRIVE_SPEED);
@@ -339,7 +346,7 @@ void Robot::turnLeft() {
  * This function turns Right using the IR sensors.
  */
 void Robot::turnRight() {
-  state_3 = turningRight_s;
+  state_3 = turningRightOne_s;
   digitalWrite(MOTOR_LEFT_DIR,   FOREWARD);
   digitalWrite(MOTOR_RIGHT_DIR,  BACKWARD);
   analogWrite(MOTOR_LEFT_SPEED,  DRIVE_SPEED);
@@ -378,21 +385,20 @@ void Robot::turnBackward() {
  * This function self corrects to stay on line.
  */
 void Robot::center() {
-  if(state_3 == turningForeward_s) {
-    //TODO Robustness BS
-  }
-  if(state_3 == turningBackward_s) {
-    //TODO Robustness BS
-  }
+  if (detectedI()) return;
+  Serial.println("Uh oh spagetti O");
+  if     (state_3 == turningLeftOne_s) {}
+  else if(state_3 == turningRightOne_s) {}
+  else if(state_3 == turningForeward_s) {}
+  else if(state_3 == turningBackward_s) {}
 }
 
 /*
  * Function: detectedI
  * -------------------
- * This function returns true when reaching the start.
+ * This function returns true when centered on a line.
  */
 bool Robot::detectedI() {
-  //TODO Robustness BS
   if (
     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
     !leftSensorIR[1] && !centerSensorIR[0] &&  centerSensorIR[1] && !centerSensorIR[2] && !rightSensorIR[1] &&
@@ -408,7 +414,6 @@ bool Robot::detectedI() {
  * This function returns true when reaching a left junction.
  */
 bool Robot::detectedLeft() {
-  //TODO Robustness BS
   if (
     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] && !centerSensorIR[2] && !rightSensorIR[1] &&
@@ -423,11 +428,38 @@ bool Robot::detectedLeft() {
  * This function returns true when reaching a right junction.
  */
 bool Robot::detectedRight() {
-  //TODO Robustness BS
   if (
     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
     !leftSensorIR[1] && !centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
     !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
+  ) return true;
+  return false;
+}
+
+/*
+ * Function: detectedLeftOff
+ * -------------------
+ * This function returns true when at the midpoint of a left turn.
+ */
+bool Robot::detectedLeftOff() {
+  if (
+     leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
+    !leftSensorIR[1] &&                        centerSensorIR[1] &&                       !rightSensorIR[1] &&
+    !leftSensorIR[2] &&                                                                    rightSensorIR[2]
+  ) return true;
+  return false;
+}
+
+/*
+ * Function: detectedRightOff
+ * -------------------
+ * This function returns true when at the midpoint of a right turn.
+ */
+bool Robot::detectedRightOff() {
+  if (
+    !leftSensorIR[0] &&                                                                    rightSensorIR[0] &&
+    !leftSensorIR[1] &&                        centerSensorIR[1] &&                       !rightSensorIR[1] &&
+     leftSensorIR[2] &&                                                                   !rightSensorIR[2]
   ) return true;
   return false;
 }
@@ -438,7 +470,6 @@ bool Robot::detectedRight() {
  * This function returns true when reaching the start.
  */
 bool Robot::detectedS() {
-  //TODO Robustness BS
   if (
     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
@@ -454,7 +485,6 @@ bool Robot::detectedS() {
  * This function returns true when reaching a junction.
  */
 bool Robot::detectedT() {
-  //TODO Robustness BS
   if (
     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
