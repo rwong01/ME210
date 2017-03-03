@@ -207,6 +207,26 @@ void Robot::printState() {
   Serial.print(states_teir_2_names[state_2]);
   Serial.print(" STATE 3 : ");
   Serial.print(states_teir_3_names[state_3]);
+
+  Serial.print('\n');
+  Serial.print(leftSensorIR[0]);
+  Serial.print("   ");
+  Serial.print(rightSensorIR[0]);
+  Serial.print('\n');
+  Serial.print(leftSensorIR[1]);
+  Serial.print(centerSensorIR[0]);
+  Serial.print(centerSensorIR[1]);
+  Serial.print(centerSensorIR[2]);
+  Serial.print(rightSensorIR[1]);
+  Serial.print('\n');
+  Serial.print(leftSensorIR[2]);
+  Serial.print("   ");
+  Serial.print(rightSensorIR[2]);
+  Serial.print('\n');
+  Serial.print(" ");
+  Serial.print(backSensorIR[0]);
+  Serial.print(backSensorIR[1]);
+  Serial.print(backSensorIR[2]);
   Serial.print('\n');
 }
 
@@ -386,7 +406,6 @@ void Robot::turnBackward() {
  */
 void Robot::center() {
   if (detectedI()) return;
-  Serial.println("Uh oh spagetti O");
   if     (state_3 == turningLeftOne_s) {}
   else if(state_3 == turningRightOne_s) {}
   else if(state_3 == turningForeward_s) {}
@@ -500,7 +519,9 @@ bool Robot::detectedT() {
  * This function handles the hardware abstraction of sensing a line.
  */
 bool Robot::readSensor_IR(uint8_t pinNum) {
-  uint16_t value = PCB.readValue(pinNum);
+  // uint16_t value = PCB.readValue(pinNum);
+  uint16_t value = analogRead(pinNum);
+  // Serial.println(value);
   return value >= BLACK_THRESHOLD;
 }
 

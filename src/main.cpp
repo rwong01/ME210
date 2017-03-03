@@ -23,6 +23,7 @@ int main(void) {
     else if (BISCUIT.getState() == attackTower1_s) BISCUIT.attackTower1();
     else if (BISCUIT.getState() == attackTower2_s) BISCUIT.attackTower2();
     else if (BISCUIT.getState() == hitBumper_s)    BISCUIT.hitBumper();
+    delay(50);//so that serial buffer doesnt get flooded
   }
   BISCUIT.quit();
 }
