@@ -31,9 +31,10 @@ void MAX1143::init() {
 uint16_t MAX1143::readValue(uint8_t channel) {
   SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
   digitalWrite(chipSelect, LOW);
-  SPI.transfer(0x00);
+  SPI.transfer(0x00);// send changel num
+  // read back two bytes
+  uint16_t value = analogRead(channel);
   SPI.endTransaction();
-  uint16_t value = analogRead(channel);;
   digitalWrite(chipSelect, HIGH);
   return value;
 }
