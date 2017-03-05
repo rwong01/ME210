@@ -122,19 +122,6 @@ void Robot::setPinModes() {
   pinMode(BUMPER_LEFT,          INPUT_PULLUP);
   pinMode(BUMPER_RIGHT,         INPUT_PULLUP);
 
-  pinMode(IR_IN_01,             INPUT);
-  pinMode(IR_IN_02,             INPUT);
-  pinMode(IR_IN_03,             INPUT);
-  pinMode(IR_IN_04,             INPUT);
-  pinMode(IR_IN_05,             INPUT);
-  pinMode(IR_IN_06,             INPUT);
-  pinMode(IR_IN_07,             INPUT);
-  pinMode(IR_IN_08,             INPUT);
-  pinMode(IR_IN_09,             INPUT);
-  pinMode(IR_IN_10,             INPUT);
-  pinMode(IR_IN_11,             INPUT);
-  pinMode(IR_IN_12,             INPUT);
-
   pinMode(MOTOR_LEFT_DIR,       OUTPUT);
   pinMode(MOTOR_LEFT_SPEED,     OUTPUT);
   pinMode(MOTOR_RIGHT_DIR,      OUTPUT);
@@ -178,21 +165,21 @@ void Robot::updateSensors() {
   frontSensorsBump[0] = readSensors_BUMP(BUMPER_LEFT);
   frontSensorsBump[1] = readSensors_BUMP(BUMPER_RIGHT);
 
-  leftSensorIR[0]     = readSensor_IR(IR_IN_01);
-  leftSensorIR[1]     = readSensor_IR(IR_IN_02);
-  leftSensorIR[2]     = readSensor_IR(IR_IN_03);
+  leftSensorIR[0]     = readSensor_IR(0);
+  leftSensorIR[1]     = readSensor_IR(1);
+  leftSensorIR[2]     = readSensor_IR(2);
 
-  rightSensorIR[0]    = readSensor_IR(IR_IN_04);
-  rightSensorIR[1]    = readSensor_IR(IR_IN_05);
-  rightSensorIR[2]    = readSensor_IR(IR_IN_06);
+  rightSensorIR[0]    = readSensor_IR(3);
+  rightSensorIR[1]    = readSensor_IR(4);
+  rightSensorIR[2]    = readSensor_IR(5);
 
-  centerSensorIR[0]   = readSensor_IR(IR_IN_07);
-  centerSensorIR[1]   = readSensor_IR(IR_IN_08);
-  centerSensorIR[2]   = readSensor_IR(IR_IN_09);
+  centerSensorIR[0]   = readSensor_IR(6);
+  centerSensorIR[1]   = readSensor_IR(7);
+  centerSensorIR[2]   = readSensor_IR(8);
 
-  backSensorIR[0]     = readSensor_IR(IR_IN_10);
-  backSensorIR[1]     = readSensor_IR(IR_IN_11);
-  backSensorIR[2]     = readSensor_IR(IR_IN_12);
+  backSensorIR[0]     = readSensor_IR(9);
+  backSensorIR[1]     = readSensor_IR(10);
+  backSensorIR[2]     = readSensor_IR(11);
 }
 
 /*

@@ -34,19 +34,6 @@ static const uint8_t   MULTIPLEXER_CS          =     69;
 static const uint8_t   BUMPER_LEFT             =     69;
 static const uint8_t   BUMPER_RIGHT            =     69;
 
-static const uint8_t   IR_IN_01                =     69;
-static const uint8_t   IR_IN_02                =     69;
-static const uint8_t   IR_IN_03                =     69;
-static const uint8_t   IR_IN_04                =     69;
-static const uint8_t   IR_IN_05                =     69;
-static const uint8_t   IR_IN_06                =     69;
-static const uint8_t   IR_IN_07                =     14;
-static const uint8_t   IR_IN_08                =     69;
-static const uint8_t   IR_IN_09                =     69;
-static const uint8_t   IR_IN_10                =     69;
-static const uint8_t   IR_IN_11                =     69;
-static const uint8_t   IR_IN_12                =     69;
-
 static const uint8_t   MOTOR_LEFT_DIR          =     69;
 static const uint8_t   MOTOR_LEFT_SPEED        =     69;
 static const uint8_t   MOTOR_RIGHT_DIR         =     69;
