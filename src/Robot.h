@@ -1,5 +1,5 @@
 /*
-  ME210 | Febuary 2017
+  ME210 | March 2017
   Davy Ragland | dragland@stanford.edu
   Rebecca Wong | rwong01@stanford.edu
   Sasha Maldonado | amaldona@stanford.edu
@@ -17,6 +17,7 @@
 #include "States.h"
 #include "Arduino.h"
 #include <MAX1143.h>
+// #include <Pulse.h>
 
 class Robot {
 public:
@@ -80,6 +81,7 @@ private:
   bool           rightSensorIR[3];
   bool           centerSensorIR[3];
   bool           backSensorIR[3];
+  // pulse_t        pulse = 0;
 };
 
 #endif

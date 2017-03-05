@@ -1,5 +1,5 @@
 /*
-  ME210 | Febuary 2017
+  ME210 | March 2017
   Davy Ragland | dragland@stanford.edu
   Rebecca Wong | rwong01@stanford.edu
   Sasha Maldonado | amaldona@stanford.edu
@@ -23,6 +23,7 @@ void Robot::init() {
   PCB.init();
   setPinModes();
   waitForStart();
+  // pulse = InitPulse(MOTOR_LOAD_SPEED, 50);
 }
 
 /********************************  FUNCTIONS  *********************************/
@@ -153,6 +154,7 @@ void Robot::waitForStart() {
  * This function checks if the timer has expired.
  */
 void Robot::checkTimer() {
+  // Pulse(32);
   if((millis() - startTime) >= RUNTIME_TIMEOUT) state_1 = quit_s;
 }
 
@@ -323,12 +325,12 @@ bool Robot::launchEgg() {
     state_2 = attacking_s;
     analogWrite(MOTOR_LEFT_SPEED,  0);
     analogWrite(MOTOR_RIGHT_SPEED, 0);
-    analogWrite(MOTOR_LOAD_SPEED, LOADER_SPEED);
     analogWrite(MOTOR_FIRE_SPEED, LAUNCH_SPEED);
+    // pulse = InitPulse(MOTOR_LOAD_SPEED, 1023 - LAUNCH_SPEED);
   }
   if((millis() - launchTime) >= LAUNCH_TIMEOUT) {
-    analogWrite(MOTOR_LOAD_SPEED, 0);
     analogWrite(MOTOR_FIRE_SPEED, 0);
+    // pulse = InitPulse(MOTOR_LOAD_SPEED, 1023);
     done = true;
   }
   return done;

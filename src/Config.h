@@ -1,5 +1,5 @@
 /*
-  ME210 | Febuary 2017
+  ME210 | March 2017
   Davy Ragland | dragland@stanford.edu
   Rebecca Wong | rwong01@stanford.edu
   Sasha Maldonado | amaldona@stanford.edu
@@ -18,9 +18,9 @@
 
 /****************************  EDITABLE CONSTANTS  ****************************/
 static const uint16_t  BLACK_THRESHOLD         =    100;
-static const uint8_t   DRIVE_SPEED             =    255;
-static const uint8_t   LAUNCH_SPEED            =    255;
-static const uint8_t   LOADER_SPEED            =    255;
+static const uint16_t  DRIVE_SPEED             =   1023;
+static const uint16_t  LAUNCH_SPEED            =   1023;
+static const uint16_t  LOADER_SPEED            =    255;
 static const uint8_t   FOREWARD                =      1;
 static const uint8_t   BACKWARD                =      0;
 static const uint32_t  RUNTIME_TIMEOUT         = 130000;
