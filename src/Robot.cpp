@@ -119,8 +119,8 @@ void Robot::quit() {
 void Robot::setPinModes() {
   pinMode(START_PIN,            INPUT_PULLUP);
 
-  pinMode(BUMPER_LEFT,          INPUT);
-  pinMode(BUMPER_RIGHT,         INPUT);
+  pinMode(BUMPER_LEFT,          INPUT_PULLUP);
+  pinMode(BUMPER_RIGHT,         INPUT_PULLUP);
 
   pinMode(IR_IN_01,             INPUT);
   pinMode(IR_IN_02,             INPUT);
