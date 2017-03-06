@@ -5,21 +5,21 @@
   Sasha Maldonado | amaldona@stanford.edu
   Jake Hillard | jhillard@stanford.edu
 
-  File: MAX1143.h
+  File: MAX11329.h
   --------------------------
-  Library for interfacing with the MAX1143 analog multiplexer.
+  Library for interfacing with the MAX11329 analog multiplexer.
 */
 
-#ifndef MAX1143_H
-#define MAX1143_H
+#ifndef MAX11329_H
+#define MAX11329_H
 
 #include "Arduino.h"
 #include "SPI.h"
 
-class MAX1143 {
+class MAX11329 {
 public:
 /**********************************  SETUP  ***********************************/
-  MAX1143(uint8_t cs) :
+  MAX11329(uint8_t cs) :
     chipSelect(cs) {
   }
   void     init();

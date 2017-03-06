@@ -5,12 +5,12 @@
   Sasha Maldonado | amaldona@stanford.edu
   Jake Hillard | jhillard@stanford.edu
 
-  File: MAX1143.cpp
+  File: MAX11329.cpp
   --------------------------
-  Implementation of MAX1143.h
+  Implementation of MAX11329.h
 */
 
-#include "MAX1143.h"
+#include "MAX11329.h"
 
 /**********************************  SETUP  ***********************************/
 /*
@@ -18,7 +18,7 @@
  * -------------------
  * This function initializes the main multiplexer.
  */
-void MAX1143::init() {
+void MAX11329::init() {
   pinMode(chipSelect, OUTPUT);
 }
 
@@ -28,7 +28,7 @@ void MAX1143::init() {
  * -------------------
  * This function returns the analog voltage of the specific channel.
  */
-uint16_t MAX1143::readValue(uint8_t channel) {
+uint16_t MAX11329::readValue(uint8_t channel) {
   SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
   digitalWrite(chipSelect, LOW);
   SPI.transfer(0x00);// send changel num
