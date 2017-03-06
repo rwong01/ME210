@@ -16,7 +16,7 @@
 #include "Config.h"
 #include "States.h"
 #include "Arduino.h"
-#include <MAX11329.h>
+#include <MAX11643.h>
 // #include <Pulse.h>
 
 class Robot {
@@ -69,7 +69,7 @@ private:
   bool           readSensors_BUMP(uint8_t pinNum);
 
 /*********************************  OBJECTS  **********************************/
-  MAX11329       PCB;
+  MAX11643       PCB;
   state_tier_1_t state_1;
   state_tier_2_t state_2;
   state_tier_3_t state_3;

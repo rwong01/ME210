@@ -5,12 +5,12 @@
   Sasha Maldonado | amaldona@stanford.edu
   Jake Hillard | jhillard@stanford.edu
 
-  File: MAX11329.cpp
+  File: MAX11643.cpp
   --------------------------
-  Implementation of MAX11329.h
+  Implementation of MAX11643.h
 */
 
-#include "MAX11329.h"
+#include "MAX11643.h"
 
 /**********************************  SETUP  ***********************************/
 /*
@@ -18,7 +18,7 @@
  * -------------------
  * This function initializes the main multiplexer.
  */
-void MAX11329::init() {
+void MAX11643::init() {
   pinMode(chipSelect, OUTPUT);
 }
 
@@ -28,8 +28,8 @@ void MAX11329::init() {
  * -------------------
  * This function returns the analog voltage of the specific channel.
  */
-uint16_t MAX11329::readValue(uint8_t channel) {
-  //The MAX11329–MAX11332 operate with SCLK idling high, and thus operate with CPOL = CPHA = 1.
+uint16_t MAX11643::readValue(uint8_t channel) {
+  //The MAX11643–MAX11332 operate with SCLK idling high, and thus operate with CPOL = CPHA = 1.
   SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
   digitalWrite(chipSelect, LOW);
   SPI.transfer(0x00);// send changel num
