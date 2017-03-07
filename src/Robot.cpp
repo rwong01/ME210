@@ -509,7 +509,6 @@ bool Robot::detectedT() {
  */
 bool Robot::readSensor_IR(uint8_t pinNum) {
   uint16_t value = PCB.readValue(pinNum);
-  Serial.println(value);
   return value <= BLACK_THRESHOLD;
 }
 
