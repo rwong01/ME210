@@ -23,7 +23,8 @@ void Robot::init() {
   PCB.init();
   setPinModes();
   waitForStart();
-  // pulse = InitPulse(MOTOR_LOAD_SPEED, 50);
+  stepper.setRPM(1);
+  stepper.setMicrostep(1);
 }
 
 /********************************  FUNCTIONS  *********************************/
@@ -111,7 +112,6 @@ void Robot::quit() {
   analogWrite(MOTOR_RIGHT_REV,  0);
   analogWrite(MOTOR_FIRE_FWD,   0);
   analogWrite(MOTOR_FIRE_REV,   0);
-  analogWrite(MOTOR_LOAD_SPEED, 0);
 }
 
 /*********************************  HELPERS  **********************************/
@@ -130,10 +130,10 @@ void Robot::setPinModes() {
   pinMode(MOTOR_LEFT_REV,   OUTPUT);
   pinMode(MOTOR_RIGHT_FWD,  OUTPUT);
   pinMode(MOTOR_RIGHT_REV,  OUTPUT);
-  pinMode(MOTOR_LOAD_DIR,   OUTPUT);
-  pinMode(MOTOR_LOAD_SPEED, OUTPUT);
   pinMode(MOTOR_FIRE_FWD,   OUTPUT);
   pinMode(MOTOR_FIRE_REV,   OUTPUT);
+  pinMode(MOTOR_STEP_DIR,   OUTPUT);
+  pinMode(MOTOR_STEP_STEP,  OUTPUT);
 }
 
 /*
@@ -158,7 +158,6 @@ void Robot::waitForStart() {
  * This function checks if the timer has expired.
  */
 void Robot::checkTimer() {
-  // Pulse(32);
   if((millis() - startTime) >= RUNTIME_TIMEOUT) state_1 = quit_s;
 }
 
@@ -337,12 +336,11 @@ bool Robot::launchEgg() {
     analogWrite(MOTOR_RIGHT_REV, 0);
     analogWrite(MOTOR_FIRE_FWD, LAUNCH_SPEED);
     analogWrite(MOTOR_FIRE_REV, 0);
-    // pulse = InitPulse(MOTOR_LOAD_SPEED, 1023 - LAUNCH_SPEED);
+    stepper.rotate(120);
   }
   if((millis() - launchTime) >= LAUNCH_TIMEOUT) {
     analogWrite(MOTOR_FIRE_FWD, 0);
     analogWrite(MOTOR_FIRE_REV, 0);
-    // pulse = InitPulse(MOTOR_LOAD_SPEED, 1023);
     done = true;
   }
   return done;

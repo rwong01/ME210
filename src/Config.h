@@ -26,6 +26,11 @@ static const uint32_t  ESCAPE_TIMEOUT          =   2000;
 static const uint32_t  LAUNCH_TIMEOUT          =  10000;
 static const uint32_t  BUFFER_CLEAR_TIME       =     50;
 
+static const uint8_t   MOTOR_STEP_STEPS        =    200;
+static const uint8_t   MOTOR_STEP_MODE0        =     10;
+static const uint8_t   MOTOR_STEP_MODE1        =     11;
+static const uint8_t   MOTOR_STEP_MODE2        =     12;
+
 /*****************************  TEENSY PIN OUTS  ******************************/
 static const uint8_t   START_PIN               =     23;
 static const uint8_t   MULTIPLEXER_CS          =     10;
@@ -37,9 +42,9 @@ static const uint8_t   MOTOR_LEFT_FWD          =      5;
 static const uint8_t   MOTOR_LEFT_REV          =      6;
 static const uint8_t   MOTOR_RIGHT_FWD         =      3;
 static const uint8_t   MOTOR_RIGHT_REV         =      4;
-static const uint8_t   MOTOR_LOAD_DIR          =     69;
-static const uint8_t   MOTOR_LOAD_SPEED        =     69;
 static const uint8_t   MOTOR_FIRE_FWD          =     69;
 static const uint8_t   MOTOR_FIRE_REV          =     69;
+static const uint8_t   MOTOR_STEP_DIR          =      8;
+static const uint8_t   MOTOR_STEP_STEP         =      9;
 
 #endif

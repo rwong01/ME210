@@ -17,13 +17,14 @@
 #include "States.h"
 #include "Arduino.h"
 #include <MAX11643.h>
-// #include <Pulse.h>
+#include <DRV8825.h>
 
 class Robot {
 public:
 /**********************************  SETUP  ***********************************/
   Robot() :
-    PCB(MULTIPLEXER_CS) {
+    PCB(MULTIPLEXER_CS),
+    stepper(MOTOR_STEP_STEPS, MOTOR_STEP_DIR, MOTOR_STEP_STEP, MOTOR_STEP_MODE0, MOTOR_STEP_MODE1, MOTOR_STEP_MODE2) {
   }
   void           init();
 /********************************  FUNCTIONS  *********************************/
@@ -69,7 +70,6 @@ private:
   bool           readSensors_BUMP(uint8_t pinNum);
 
 /*********************************  OBJECTS  **********************************/
-  MAX11643       PCB;
   state_tier_1_t state_1;
   state_tier_2_t state_2;
   state_tier_3_t state_3;
@@ -81,7 +81,8 @@ private:
   bool           rightSensorIR[3];
   bool           centerSensorIR[3];
   bool           backSensorIR[3];
-  // pulse_t        pulse = 0;
+  MAX11643       PCB;
+  DRV8825        stepper;
 };
 
 #endif
