@@ -39,7 +39,6 @@ uint16_t MAX11643::readValue(uint8_t channel) {
   uint8_t converstionRegisterByte = 0B10000110 | (channel << 3);
   SPI.beginTransaction(SPISettings(4800000, MSBFIRST, SPI_MODE0));
   digitalWrite(chipSelect, LOW);
-
   SPI.transfer(converstionRegisterByte);
   uint8_t retByte1 = SPI.transfer(0B00000000);
   uint8_t retByte2 = SPI.transfer(0B00000000);
