@@ -24,6 +24,7 @@ public:
   }
   void     init();
 /********************************  FUNCTIONS  *********************************/
+  void     reset();
   uint16_t readValue(uint8_t channel);
 
 private:

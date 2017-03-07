@@ -25,6 +25,7 @@ void Robot::init() {
   waitForStart();
   stepper.setRPM(1);
   stepper.setMicrostep(1);
+  PCB.reset();
 }
 
 /********************************  FUNCTIONS  *********************************/
@@ -539,9 +540,9 @@ bool Robot::detectedT() {
 bool Robot::detectedLeftDiagonal() {
   if (
 
-                         centerSensorIR[0] &&                       !centerSensorIR[2] &&
+                         centerSensorIR[0] ||
 
-                        !backSensorIR[0]   &&                        backSensorIR[2]
+                                                                     backSensorIR[2]
   ) return true;
   return false;
 }
@@ -555,9 +556,9 @@ bool Robot::detectedLeftDiagonal() {
 bool Robot::detectedRightDiagonal() {
   if (
 
-                        !centerSensorIR[0] &&                         centerSensorIR[2] &&
+                                                                     centerSensorIR[2]||
 
-                         backSensorIR[0]   &&                        !backSensorIR[2]
+                         backSensorIR[0]
   ) return true;
   return false;
 }
@@ -570,7 +571,10 @@ bool Robot::detectedRightDiagonal() {
 bool Robot::readSensor_IR(uint8_t pinNum) {
   uint16_t value = PCB.readValue(pinNum);
   Serial.println(value);
-  if ((value == 0) || (value == 1020)) digitalWrite(FAULT_LED, HIGH);
+  if ((value == 0) || (value == 1020)) {
+    digitalWrite(FAULT_LED, HIGH);
+    PCB.reset();
+  }
   else digitalWrite(FAULT_LED, LOW);
   return value <= BLACK_THRESHOLD;
 }

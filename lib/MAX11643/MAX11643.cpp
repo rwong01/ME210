@@ -25,10 +25,25 @@ void MAX11643::init() {
 
 /********************************  FUNCTIONS  *********************************/
 /*
- * Function: readValue
+ * Function: reset
  * -------------------
- * This function returns the analog voltage of the specific channel.
+ * This function resets the multiplexer
  */
+ void MAX11643::reset() {
+   uint8_t resetRegisterByte = 0B00010000;
+   SPI.beginTransaction(SPISettings(4800000, MSBFIRST, SPI_MODE0));
+   digitalWrite(chipSelect, LOW);
+   SPI.transfer(resetRegisterByte);
+   SPI.endTransaction();
+   digitalWrite(chipSelect, HIGH);
+ }
+
+
+ /*
+  * Function: readValue
+  * -------------------
+  * This function returns the analog voltage of the specific channel.
+  */
 uint16_t MAX11643::readValue(uint8_t channel) {
   uint8_t settingsRegisterByte = 0B01111000;
   uint8_t converstionRegisterByte = 0B10000110 | (channel << 3);
