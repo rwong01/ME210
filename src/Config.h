@@ -33,6 +33,7 @@ static const uint8_t   MOTOR_STEP_MODE2        =     12;
 
 /*****************************  TEENSY PIN OUTS  ******************************/
 static const uint8_t   START_PIN               =     23;
+static const uint8_t   FAULT_LED               =     22;
 static const uint8_t   MULTIPLEXER_CS          =     10;
 
 static const uint8_t   BUMPER_LEFT             =      9;

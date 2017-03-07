@@ -122,6 +122,7 @@ void Robot::quit() {
  */
 void Robot::setPinModes() {
   pinMode(START_PIN,        INPUT_PULLUP);
+  pinMode(FAULT_LED,        OUTPUT);
 
   pinMode(BUMPER_LEFT,      INPUT_PULLUP);
   pinMode(BUMPER_RIGHT,     INPUT_PULLUP);
@@ -569,6 +570,8 @@ bool Robot::detectedRightDiagonal() {
 bool Robot::readSensor_IR(uint8_t pinNum) {
   uint16_t value = PCB.readValue(pinNum);
   Serial.println(value);
+  if ((value == 0) || (value == 1020)) digitalWrite(FAULT_LED, HIGH);
+  else digitalWrite(FAULT_LED, LOW);
   return value <= BLACK_THRESHOLD;
 }
 
