@@ -142,7 +142,10 @@ void Robot::setPinModes() {
  * This function pauses until the start button has been pressed.
  */
 void Robot::waitForStart() {
-  while(digitalRead(START_PIN) != LOW) Serial.println("Ready...");
+  while(digitalRead(START_PIN) != LOW) {
+    Serial.println("Ready...");
+    delay(BUFFER_CLEAR_TIME);
+  }
   startTime = millis();
   state_1 = exitBase_s;
   state_2 = searching_s;
@@ -353,8 +356,8 @@ bool Robot::launchEgg() {
 void Robot::turnLeft() {
   state_3 = turningLeftOne_s;
   analogWrite(MOTOR_LEFT_FWD,  0);
-  analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
   analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
+  analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
   analogWrite(MOTOR_RIGHT_REV, 0);
 }
 
@@ -366,8 +369,8 @@ void Robot::turnLeft() {
 void Robot::turnRight() {
   state_3 = turningRightOne_s;
   analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
-  analogWrite(MOTOR_RIGHT_FWD, 0);
   analogWrite(MOTOR_LEFT_REV,  0);
+  analogWrite(MOTOR_RIGHT_FWD, 0);
   analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
 }
 
@@ -379,8 +382,8 @@ void Robot::turnRight() {
 void Robot::turnForward() {
   state_3 = turningForeward_s;
   analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
-  analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
   analogWrite(MOTOR_LEFT_REV,  0);
+  analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
   analogWrite(MOTOR_RIGHT_REV, 0);
 }
 
@@ -392,8 +395,8 @@ void Robot::turnForward() {
 void Robot::turnBackward() {
   state_3 = turningBackward_s;
   analogWrite(MOTOR_LEFT_FWD,  0);
-  analogWrite(MOTOR_RIGHT_FWD, 0);
   analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
+  analogWrite(MOTOR_RIGHT_FWD, 0);
   analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
 }
 
@@ -518,7 +521,7 @@ bool Robot::detectedT() {
  */
 bool Robot::readSensor_IR(uint8_t pinNum) {
   uint16_t value = PCB.readValue(pinNum);
-  // Serial.println(value);
+  Serial.println(value);
   return value <= BLACK_THRESHOLD;
 }
 
@@ -529,6 +532,5 @@ bool Robot::readSensor_IR(uint8_t pinNum) {
  */
 bool Robot::readSensors_BUMP(uint8_t pinNum) {
   uint16_t value = digitalRead(pinNum);
-  // Serial.println(value);
   return (!value);
 }

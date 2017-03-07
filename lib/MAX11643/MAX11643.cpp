@@ -21,12 +21,6 @@
 void MAX11643::init() {
   pinMode(chipSelect, OUTPUT);
   SPI.begin();
-  uint8_t settingsRegisterByte = 0B01111000;
-  SPI.beginTransaction(SPISettings(4800000, MSBFIRST, SPI_MODE0));
-  digitalWrite(chipSelect, LOW);
-  SPI.transfer(settingsRegisterByte);
-  SPI.endTransaction();
-  digitalWrite(chipSelect, HIGH);
 }
 
 /********************************  FUNCTIONS  *********************************/
@@ -36,9 +30,11 @@ void MAX11643::init() {
  * This function returns the analog voltage of the specific channel.
  */
 uint16_t MAX11643::readValue(uint8_t channel) {
+  uint8_t settingsRegisterByte = 0B01111000;
   uint8_t converstionRegisterByte = 0B10000110 | (channel << 3);
   SPI.beginTransaction(SPISettings(4800000, MSBFIRST, SPI_MODE0));
   digitalWrite(chipSelect, LOW);
+  SPI.transfer(settingsRegisterByte);
   SPI.transfer(converstionRegisterByte);
   uint8_t retByte1 = SPI.transfer(0B00000000);
   uint8_t retByte2 = SPI.transfer(0B00000000);
