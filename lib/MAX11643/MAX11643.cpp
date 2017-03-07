@@ -30,7 +30,7 @@ void MAX11643::init() {
  * This function returns the analog voltage of the specific channel.
  */
 uint16_t MAX11643::readValue(uint8_t channel) {
-  uint8_t settingsRegisterByte    = 0B01110100;
+  uint8_t settingsRegisterByte    = 0B01111000;
   uint8_t averagingRegisterByte   = 0B00100000;
   uint8_t converstionRegisterByte = 0B10000110 | (channel << 3);
   SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
