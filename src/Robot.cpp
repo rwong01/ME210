@@ -199,6 +199,8 @@ void Robot::printState() {
   Serial.print(states_teir_2_names[state_2]);
   Serial.print(" STATE 3 : ");
   Serial.print(states_teir_3_names[state_3]);
+  Serial.print(" STATE 4 : ");
+  Serial.print(states_teir_4_names[state_4]);
 
   Serial.print('\n');
   Serial.print(frontSensorsBump[0]);
@@ -404,11 +406,26 @@ void Robot::turnBackward() {
  * This function self corrects to stay on line.
  */
 void Robot::center() {
-  if (detectedI()) return;
-  if     (state_3 == turningLeftOne_s) {}
-  else if(state_3 == turningRightOne_s) {}
-  else if(state_3 == turningForeward_s) {}
-  else if(state_3 == turningBackward_s) {}
+  if      ((state_4 == centered_s) && detectedI()) return;
+  else if ((state_4 == centering_s) && detectedI()) {
+    state_4 = centered_s;
+    if (state_3 == turningForeward_s) turnForward();
+    if (state_3 == turningBackward_s) turnBackward();
+  }
+  else if (detectedLeftDiagonal()) {
+    state_4 = centering_s;
+    analogWrite(MOTOR_LEFT_FWD,  0);
+    analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_REV, 0);
+  }
+  else if (detectedRightDiagonal()) {
+    state_4 = centering_s;
+    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, 0);
+    analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
+  }
 }
 
 /*
@@ -508,6 +525,38 @@ bool Robot::detectedT() {
      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
     !leftSensorIR[2] &&                                                                   !rightSensorIR[2] &&
                         !backSensorIR[0]   &&  backSensorIR[1]   && !backSensorIR[2]
+  ) return true;
+  return false;
+}
+
+/*
+ * Function: detectedLeftDiagonal
+ * -------------------
+ * This function returns true when the left diagonal has been
+ * offset to the center.
+ */
+bool Robot::detectedLeftDiagonal() {
+  if (
+
+                         centerSensorIR[0] &&                       !centerSensorIR[2] &&
+
+                        !backSensorIR[0]   &&                        backSensorIR[2]
+  ) return true;
+  return false;
+}
+
+/*
+ * Function: detectedRightDiagonal
+ * -------------------
+ * This function returns true when the right diagonal has been
+ * offset to the center.
+ */
+bool Robot::detectedRightDiagonal() {
+  if (
+
+                        !centerSensorIR[0] &&                         centerSensorIR[2] &&
+
+                         backSensorIR[0]   &&                        !backSensorIR[2]
   ) return true;
   return false;
 }

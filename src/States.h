@@ -71,4 +71,13 @@ static const char* states_teir_3_names[] = {
   "launchingEggs_s"
 };
 
+enum state_tier_4_t {
+  centering_s,
+  centered_s
+};
+static const char* states_teir_4_names[] = {
+  "centering_s",
+  "centered_s"
+};
+
 #endif

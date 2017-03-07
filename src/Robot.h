@@ -66,6 +66,9 @@ private:
   bool           detectedS();
   bool           detectedT();
 
+  bool           detectedLeftDiagonal();
+  bool           detectedRightDiagonal();
+
   bool           readSensor_IR(uint8_t pinNum);
   bool           readSensors_BUMP(uint8_t pinNum);
 
@@ -73,6 +76,7 @@ private:
   state_tier_1_t state_1;
   state_tier_2_t state_2;
   state_tier_3_t state_3;
+  state_tier_4_t state_4;
   uint32_t       startTime;
   uint32_t       escapeTime;
   uint32_t       launchTime;

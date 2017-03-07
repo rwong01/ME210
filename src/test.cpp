@@ -18,13 +18,9 @@
 //   pinMode(MOTOR_LEFT_REV,   OUTPUT);
 //   pinMode(MOTOR_RIGHT_FWD,  OUTPUT);
 //   pinMode(MOTOR_RIGHT_REV,  OUTPUT);
-//   pinMode(MOTOR_LOAD_DIR,   OUTPUT);
-//   pinMode(MOTOR_LOAD_SPEED, OUTPUT);
-//   pinMode(MOTOR_FIRE_FWD,   OUTPUT);
-//   pinMode(MOTOR_FIRE_REV,   OUTPUT);
-//   analogWrite(MOTOR_LEFT_FWD,  0);
+//   analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+//   analogWrite(MOTOR_LEFT_REV,  0);
 //   analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
-//   analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
 //   analogWrite(MOTOR_RIGHT_REV, 0);
 //   Serial.begin(9600);
 //   while(true) {
