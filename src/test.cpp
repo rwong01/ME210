@@ -10,20 +10,19 @@
   Unit test suite.
 */
 
-#include "Arduino.h"
-#include "Config.h"
+#include "Robot.h"
 
+// /***********************************  BOOT  ***********************************/
+// Robot BISCUIT;
 // int main(void) {
-//   pinMode(MOTOR_LEFT_FWD,   OUTPUT);
-//   pinMode(MOTOR_LEFT_REV,   OUTPUT);
-//   pinMode(MOTOR_RIGHT_FWD,  OUTPUT);
-//   pinMode(MOTOR_RIGHT_REV,  OUTPUT);
+//   BISCUIT.init();
 //   analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
 //   analogWrite(MOTOR_LEFT_REV,  0);
 //   analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
 //   analogWrite(MOTOR_RIGHT_REV, 0);
-//   Serial.begin(9600);
+// /***********************************  MAIN  ***********************************/
 //   while(true) {
-//     delay(300);
+//     BISCUIT.updateState();
+//     delay(BUFFER_CLEAR_TIME);
 //   }
 // }
