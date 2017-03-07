@@ -20,12 +20,10 @@
  */
 void Robot::init() {
   Serial.begin(9600);
-  PCB.init();
   setPinModes();
   waitForStart();
   stepper.setRPM(1);
   stepper.setMicrostep(1);
-  PCB.reset();
 }
 
 /********************************  FUNCTIONS  *********************************/
@@ -128,6 +126,18 @@ void Robot::setPinModes() {
   pinMode(BUMPER_LEFT,      INPUT_PULLUP);
   pinMode(BUMPER_RIGHT,     INPUT_PULLUP);
 
+  pinMode(IR_IN_01,         INPUT);
+  pinMode(IR_IN_02,         INPUT);
+  pinMode(IR_IN_03,         INPUT);
+  pinMode(IR_IN_04,         INPUT);
+  pinMode(IR_IN_05,         INPUT);
+  pinMode(IR_IN_06,         INPUT);
+  pinMode(IR_IN_07,         INPUT);
+  pinMode(IR_IN_08,         INPUT);
+  pinMode(IR_IN_09,         INPUT);
+  pinMode(IR_IN_10,         INPUT);
+  pinMode(IR_IN_11,         INPUT);
+
   pinMode(MOTOR_LEFT_FWD,   OUTPUT);
   pinMode(MOTOR_LEFT_REV,   OUTPUT);
   pinMode(MOTOR_RIGHT_FWD,  OUTPUT);
@@ -172,21 +182,20 @@ void Robot::updateSensors() {
   frontSensorsBump[0] = readSensors_BUMP(BUMPER_LEFT);
   frontSensorsBump[1] = readSensors_BUMP(BUMPER_RIGHT);
 
-  leftSensorIR[0]     = readSensor_IR(0);
-  leftSensorIR[1]     = readSensor_IR(1);
-  leftSensorIR[2]     = readSensor_IR(2);
+  leftSensorIR[0]     = readSensor_IR(IR_IN_01);
+  leftSensorIR[1]     = readSensor_IR(IR_IN_02);
+  leftSensorIR[2]     = readSensor_IR(IR_IN_03);
 
-  rightSensorIR[0]    = readSensor_IR(3);
-  rightSensorIR[1]    = readSensor_IR(4);
-  rightSensorIR[2]    = readSensor_IR(5);
+  rightSensorIR[0]    = readSensor_IR(IR_IN_04);
+  rightSensorIR[1]    = readSensor_IR(IR_IN_05);
+  rightSensorIR[2]    = readSensor_IR(IR_IN_06);
 
-  centerSensorIR[0]   = readSensor_IR(6);
-  centerSensorIR[1]   = readSensor_IR(7);
-  centerSensorIR[2]   = readSensor_IR(8);
+  centerSensorIR[0]   = readSensor_IR(IR_IN_07);
+  centerSensorIR[1]   = readSensor_IR(IR_IN_08);
+  centerSensorIR[2]   = readSensor_IR(IR_IN_09);
 
-  backSensorIR[0]     = readSensor_IR(9);
-  backSensorIR[1]     = readSensor_IR(10);
-  backSensorIR[2]     = readSensor_IR(11);
+  backSensorIR[0]     = readSensor_IR(IR_IN_10);
+  backSensorIR[1]     = readSensor_IR(IR_IN_11);
 }
 
 /*
@@ -225,8 +234,8 @@ void Robot::printState() {
   Serial.print('\n');
   Serial.print(" ");
   Serial.print(backSensorIR[0]);
+  Serial.print(" ");
   Serial.print(backSensorIR[1]);
-  Serial.print(backSensorIR[2]);
   Serial.print('\n');
 }
 
@@ -440,7 +449,7 @@ bool Robot::detectedI() {
     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
     !leftSensorIR[1] && !centerSensorIR[0] &&  centerSensorIR[1] && !centerSensorIR[2] && !rightSensorIR[1] &&
     !leftSensorIR[2] &&                                                                   !rightSensorIR[2] &&
-                        !backSensorIR[0]   &&  backSensorIR[1]   && !backSensorIR[2]
+                        !backSensorIR[0]   &&                       !backSensorIR[1]
   ) return true;
   return false;
 }
@@ -511,7 +520,7 @@ bool Robot::detectedS() {
     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
     !leftSensorIR[2] &&                                                                   !rightSensorIR[2] &&
-                        !backSensorIR[0]   && !backSensorIR[1]   && !backSensorIR[2]
+                        !backSensorIR[0]   &&                       !backSensorIR[1]
   ) return true;
   return false;
 }
@@ -526,7 +535,7 @@ bool Robot::detectedT() {
     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
     !leftSensorIR[2] &&                                                                   !rightSensorIR[2] &&
-                        !backSensorIR[0]   &&  backSensorIR[1]   && !backSensorIR[2]
+                        !backSensorIR[0]   &&                       !backSensorIR[1]
   ) return true;
   return false;
 }
@@ -542,7 +551,7 @@ bool Robot::detectedLeftDiagonal() {
 
                          centerSensorIR[0] ||
 
-                                                                     backSensorIR[2]
+                                                                     backSensorIR[1]
   ) return true;
   return false;
 }
@@ -569,12 +578,9 @@ bool Robot::detectedRightDiagonal() {
  * This function handles the hardware abstraction of sensing a line.
  */
 bool Robot::readSensor_IR(uint8_t pinNum) {
-  uint16_t value = PCB.readValue(pinNum);
+  uint16_t value = analogRead(pinNum);
   Serial.println(value);
-  if ((value == 0) || (value == 1020)) {
-    digitalWrite(FAULT_LED, HIGH);
-    PCB.reset();
-  }
+  if ((value == 0) || (value == 1020)) digitalWrite(FAULT_LED, HIGH);
   else digitalWrite(FAULT_LED, LOW);
   return value <= BLACK_THRESHOLD;
 }

@@ -23,7 +23,6 @@ class Robot {
 public:
 /**********************************  SETUP  ***********************************/
   Robot() :
-    PCB(MULTIPLEXER_CS),
     stepper(MOTOR_STEP_STEPS, MOTOR_STEP_DIR, MOTOR_STEP_STEP, MOTOR_STEP_MODE0, MOTOR_STEP_MODE1, MOTOR_STEP_MODE2) {
   }
   void           init();
@@ -84,8 +83,7 @@ private:
   bool           leftSensorIR[3];
   bool           rightSensorIR[3];
   bool           centerSensorIR[3];
-  bool           backSensorIR[3];
-  MAX11643       PCB;
+  bool           backSensorIR[2];
   DRV8825        stepper;
 };
 
