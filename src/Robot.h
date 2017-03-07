@@ -79,6 +79,7 @@ private:
   uint32_t       startTime;
   uint32_t       escapeTime;
   uint32_t       launchTime;
+  uint32_t       centerTime;
   bool           frontSensorsBump[2];
   bool           leftSensorIR[3];
   bool           rightSensorIR[3];

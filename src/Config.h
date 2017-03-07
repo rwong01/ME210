@@ -17,46 +17,48 @@
 #include <stdint.h>
 
 /****************************  EDITABLE CONSTANTS  ****************************/
-static const uint16_t  BLACK_THRESHOLD         =    600;
-static const uint16_t  DRIVE_SPEED             =    400;
-static const uint16_t  LAUNCH_SPEED            =   1023;
-static const uint16_t  LOADER_SPEED            =    255;
-static const uint32_t  RUNTIME_TIMEOUT         = 130000;
-static const uint32_t  ESCAPE_TIMEOUT          =   2000;
-static const uint32_t  LAUNCH_TIMEOUT          =  10000;
-static const uint32_t  BUFFER_CLEAR_TIME       =     50;
+static const uint16_t  BLACK_THRESHOLD         =               650;
+static const uint16_t  DRIVE_SPEED             =               200;
+static const uint16_t  TURN_SPEED              =   DRIVE_SPEED / 4;
+static const uint16_t  LAUNCH_SPEED            =              1023;
+static const uint16_t  LOADER_SPEED            =               255;
+static const uint32_t  RUNTIME_TIMEOUT         =            130000;
+static const uint32_t  ESCAPE_TIMEOUT          =              2000;
+static const uint32_t  LAUNCH_TIMEOUT          =             10000;
+static const uint32_t  CENTER_TIMEOUT          =               100;
+static const uint32_t  BUFFER_CLEAR_TIME       =                50;
 
-static const uint8_t   MOTOR_STEP_STEPS        =    200;
-static const uint8_t   MOTOR_STEP_MODE0        =     10;
-static const uint8_t   MOTOR_STEP_MODE1        =     11;
-static const uint8_t   MOTOR_STEP_MODE2        =     12;
+static const uint8_t   MOTOR_STEP_STEPS        =               200;
+static const uint8_t   MOTOR_STEP_MODE0        =                10;
+static const uint8_t   MOTOR_STEP_MODE1        =                11;
+static const uint8_t   MOTOR_STEP_MODE2        =                12;
 
 /*****************************  TEENSY PIN OUTS  ******************************/
-static const uint8_t   START_PIN               =      1;
-static const uint8_t   FAULT_LED               =      2;
+static const uint8_t   START_PIN               =                 1;
+static const uint8_t   FAULT_LED               =                 2;
 
-static const uint8_t   BUMPER_LEFT             =      8;
-static const uint8_t   BUMPER_RIGHT            =      7;
+static const uint8_t   BUMPER_LEFT             =                 8;
+static const uint8_t   BUMPER_RIGHT            =                 7;
 
-static const uint8_t   IR_IN_01                =     A5;
-static const uint8_t   IR_IN_02                =     A4;
-static const uint8_t   IR_IN_03                =     A3;
-static const uint8_t   IR_IN_04                =     A6;
-static const uint8_t   IR_IN_05                =     A7;
-static const uint8_t   IR_IN_06                =     A8;
-static const uint8_t   IR_IN_07                =     A2;
-static const uint8_t   IR_IN_08                =     A1;
-static const uint8_t   IR_IN_09                =     A0;
-static const uint8_t   IR_IN_10                =     A9;
-static const uint8_t   IR_IN_11                =    A14;
+static const uint8_t   IR_IN_01                =                A5;
+static const uint8_t   IR_IN_02                =                A4;
+static const uint8_t   IR_IN_03                =                A3;
+static const uint8_t   IR_IN_04                =                A6;
+static const uint8_t   IR_IN_05                =                A7;
+static const uint8_t   IR_IN_06                =                A8;
+static const uint8_t   IR_IN_07                =                A2;
+static const uint8_t   IR_IN_08                =                A1;
+static const uint8_t   IR_IN_09                =                A0;
+static const uint8_t   IR_IN_10                =                A9;
+static const uint8_t   IR_IN_11                =               A14;
 
-static const uint8_t   MOTOR_LEFT_FWD          =      5;
-static const uint8_t   MOTOR_LEFT_REV          =      6;
-static const uint8_t   MOTOR_RIGHT_FWD         =      3;
-static const uint8_t   MOTOR_RIGHT_REV         =      4;
-static const uint8_t   MOTOR_FIRE_FWD          =     69;
-static const uint8_t   MOTOR_FIRE_REV          =     69;
-static const uint8_t   MOTOR_STEP_DIR          =     69;
-static const uint8_t   MOTOR_STEP_STEP         =     69;
+static const uint8_t   MOTOR_LEFT_FWD          =                5;
+static const uint8_t   MOTOR_LEFT_REV          =                6;
+static const uint8_t   MOTOR_RIGHT_FWD         =                3;
+static const uint8_t   MOTOR_RIGHT_REV         =                4;
+static const uint8_t   MOTOR_FIRE_FWD          =               69;
+static const uint8_t   MOTOR_FIRE_REV          =               69;
+static const uint8_t   MOTOR_STEP_DIR          =               69;
+static const uint8_t   MOTOR_STEP_STEP         =               69;
 
 #endif

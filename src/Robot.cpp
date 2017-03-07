@@ -111,6 +111,8 @@ void Robot::quit() {
   analogWrite(MOTOR_RIGHT_REV,  0);
   analogWrite(MOTOR_FIRE_FWD,   0);
   analogWrite(MOTOR_FIRE_REV,   0);
+  Serial.print("Done...");
+  Serial.print('\n');
 }
 
 /*********************************  HELPERS  **********************************/
@@ -379,6 +381,7 @@ void Robot::turnLeft() {
  */
 void Robot::turnRight() {
   state_3 = turningRightOne_s;
+  state_4 = centered_s;
   analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
   analogWrite(MOTOR_LEFT_REV,  0);
   analogWrite(MOTOR_RIGHT_FWD, 0);
@@ -392,6 +395,7 @@ void Robot::turnRight() {
  */
 void Robot::turnForward() {
   state_3 = turningForeward_s;
+  state_4 = centered_s;
   analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
   analogWrite(MOTOR_LEFT_REV,  0);
   analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
@@ -405,6 +409,7 @@ void Robot::turnForward() {
  */
 void Robot::turnBackward() {
   state_3 = turningBackward_s;
+  state_4 = centered_s;
   analogWrite(MOTOR_LEFT_FWD,  0);
   analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
   analogWrite(MOTOR_RIGHT_FWD, 0);
@@ -417,25 +422,29 @@ void Robot::turnBackward() {
  * This function self corrects to stay on line.
  */
 void Robot::center() {
+  if      (state_4 == centered_s) digitalWrite(FAULT_LED, HIGH);
+  if      (state_4 != centered_s) digitalWrite(FAULT_LED, LOW);
+  // if((millis() - centerTime) < CENTER_TIMEOUT) return;
+  // else centerTime = millis();
   if      ((state_4 == centered_s) && detectedI()) return;
   else if ((state_4 == centering_s) && detectedI()) {
     state_4 = centered_s;
     if (state_3 == turningForeward_s) turnForward();
     if (state_3 == turningBackward_s) turnBackward();
   }
-  else if (detectedLeftDiagonal()) {
+  else if ((state_4 == centered_s) && detectedLeftDiagonal()) {
     state_4 = centering_s;
     analogWrite(MOTOR_LEFT_FWD,  0);
-    analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
-    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+    analogWrite(MOTOR_LEFT_REV,  TURN_SPEED);
+    analogWrite(MOTOR_RIGHT_FWD, TURN_SPEED);
     analogWrite(MOTOR_RIGHT_REV, 0);
   }
-  else if (detectedRightDiagonal()) {
+  else if ((state_4 == centered_s) && detectedRightDiagonal()) {
     state_4 = centering_s;
-    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+    analogWrite(MOTOR_LEFT_FWD,  TURN_SPEED);
     analogWrite(MOTOR_LEFT_REV,  0);
     analogWrite(MOTOR_RIGHT_FWD, 0);
-    analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_REV, TURN_SPEED);
   }
 }
 
@@ -549,9 +558,10 @@ bool Robot::detectedT() {
 bool Robot::detectedLeftDiagonal() {
   if (
 
-                         centerSensorIR[0] ||
+                       (centerSensorIR[0] ||
 
-                                                                     backSensorIR[1]
+                                                                     backSensorIR[1]) &&
+                                             !centerSensorIR[1]
   ) return true;
   return false;
 }
@@ -564,10 +574,10 @@ bool Robot::detectedLeftDiagonal() {
  */
 bool Robot::detectedRightDiagonal() {
   if (
+                                             !centerSensorIR[1] &&
+                                                                    (centerSensorIR[2] ||
 
-                                                                     centerSensorIR[2]||
-
-                         backSensorIR[0]
+                         backSensorIR[0])
   ) return true;
   return false;
 }
@@ -580,8 +590,6 @@ bool Robot::detectedRightDiagonal() {
 bool Robot::readSensor_IR(uint8_t pinNum) {
   uint16_t value = analogRead(pinNum);
   Serial.println(value);
-  if ((value == 0) || (value == 1020)) digitalWrite(FAULT_LED, HIGH);
-  else digitalWrite(FAULT_LED, LOW);
   return value <= BLACK_THRESHOLD;
 }
 
