@@ -18,7 +18,7 @@ int main() {
   BISCUIT.init();
 /***********************************  MAIN  ***********************************/
   while(true) {
-    // BISCUIT.updateState();
-    // delay(BUFFER_CLEAR_TIME);
+    BISCUIT.updateState();
+    delay(BUFFER_CLEAR_TIME);
   }
 }

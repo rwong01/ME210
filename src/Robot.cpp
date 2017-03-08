@@ -45,7 +45,7 @@ void Robot::updateState() {
   checkTimer();
   updateSensors();
   center();
-  // printState();
+  printState();
 }
 
 /*
@@ -158,6 +158,7 @@ void Robot::setPinModes() {
 void Robot::waitForStart() {
   while(digitalRead(START_PIN) != LOW) {
     Serial.print("Ready...\n");
+    updateSensors();
     printState();
     delay(BUFFER_CLEAR_TIME);
   }
@@ -426,12 +427,12 @@ void Robot::center() {
   if      ((state_4 == centered_s) && detectedI()) return;
   else if ((state_4 == centering_s) && detectedI()) {
     Serial.print("Found I\n");
-    printState();
+    // printState();
     state_4 = centered_s;
     turnForward();
   }
   else if ((state_4 == centered_s) && (detectedLeftDiagonal() || detectedRightDiagonal())) {
-    printState();
+    // printState();
     analogWrite(MOTOR_LEFT_FWD,  0);
     analogWrite(MOTOR_LEFT_REV,  TURN_SPEED);
     analogWrite(MOTOR_RIGHT_FWD, 0);
