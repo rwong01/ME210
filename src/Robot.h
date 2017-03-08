@@ -65,9 +65,6 @@ private:
   bool           detectedS();
   bool           detectedT();
 
-  bool           detectedLeftDiagonal();
-  bool           detectedRightDiagonal();
-
   bool           readSensor_IR(uint8_t pinNum);
   bool           readSensors_BUMP(uint8_t pinNum);
 
@@ -81,10 +78,10 @@ private:
   uint32_t       launchTime;
   uint32_t       centerTime;
   bool           frontSensorsBump[2];
+  bool           frontSensorIR[2];
   bool           leftSensorIR[3];
   bool           rightSensorIR[3];
   bool           centerSensorIR[3];
-  bool           backSensorIR[2];
   DRV8825        stepper;
 };
 

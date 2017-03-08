@@ -185,20 +185,21 @@ void Robot::updateSensors() {
   frontSensorsBump[0] = readSensors_BUMP(BUMPER_LEFT);
   frontSensorsBump[1] = readSensors_BUMP(BUMPER_RIGHT);
 
-  leftSensorIR[0]     = readSensor_IR(IR_IN_01);
-  leftSensorIR[1]     = readSensor_IR(IR_IN_02);
-  leftSensorIR[2]     = readSensor_IR(IR_IN_03);
+  frontSensorIR[0]     = readSensor_IR(IR_IN_01);
+  frontSensorIR[1]     = readSensor_IR(IR_IN_02);
 
-  rightSensorIR[0]    = readSensor_IR(IR_IN_04);
-  rightSensorIR[1]    = readSensor_IR(IR_IN_05);
-  rightSensorIR[2]    = readSensor_IR(IR_IN_06);
+  leftSensorIR[0]     = readSensor_IR(IR_IN_03);
+  leftSensorIR[1]     = readSensor_IR(IR_IN_04);
+  leftSensorIR[2]     = readSensor_IR(IR_IN_05);
 
-  centerSensorIR[0]   = readSensor_IR(IR_IN_07);
-  centerSensorIR[1]   = readSensor_IR(IR_IN_08);
-  centerSensorIR[2]   = readSensor_IR(IR_IN_09);
+  rightSensorIR[0]    = readSensor_IR(IR_IN_06);
+  rightSensorIR[1]    = readSensor_IR(IR_IN_07);
+  rightSensorIR[2]    = readSensor_IR(IR_IN_08);
 
-  backSensorIR[0]     = readSensor_IR(IR_IN_10);
-  backSensorIR[1]     = readSensor_IR(IR_IN_11);
+  centerSensorIR[0]   = readSensor_IR(IR_IN_09);
+  centerSensorIR[1]   = readSensor_IR(IR_IN_10);
+  centerSensorIR[2]   = readSensor_IR(IR_IN_11);
+
 }
 
 /*
@@ -221,6 +222,11 @@ void Robot::printState() {
   Serial.print("   ");
   Serial.print(frontSensorsBump[1]);
   Serial.print('\n');
+  Serial.print(" ");
+  Serial.print(frontSensorIR[0]);
+  Serial.print(" ");
+  Serial.print(frontSensorIR[1]);
+  Serial.print('\n');
   Serial.print(leftSensorIR[0]);
   Serial.print("   ");
   Serial.print(rightSensorIR[0]);
@@ -234,11 +240,6 @@ void Robot::printState() {
   Serial.print(leftSensorIR[2]);
   Serial.print("   ");
   Serial.print(rightSensorIR[2]);
-  Serial.print('\n');
-  Serial.print(" ");
-  Serial.print(backSensorIR[0]);
-  Serial.print(" ");
-  Serial.print(backSensorIR[1]);
   Serial.print('\n');
 }
 
@@ -423,18 +424,18 @@ void Robot::turnBackward() {
  * This function self corrects to stay on line.
  */
 void Robot::center() {
-  if      ((state_4 == inchLeft_s) && centerSensorIR[0]) {
+  if      ((state_4 == inchLeft_s) && frontSensorIR[1]) {
     state_4 = inchRight_s;
     analogWrite(MOTOR_LEFT_FWD,  0);
     analogWrite(MOTOR_LEFT_REV,  0);
-    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
-    analogWrite(MOTOR_RIGHT_REV, 0);
+    analogWrite(MOTOR_RIGHT_FWD, 0);
+    analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
   }
-  else if ((state_4 == inchRight_s) && centerSensorIR[2]) {
+  else if ((state_4 == inchRight_s) && !frontSensorIR[1]) {
       state_3 = turningForeward_s;
       state_4 = inchLeft_s;
-      analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
-      analogWrite(MOTOR_LEFT_REV,  0);
+      analogWrite(MOTOR_LEFT_FWD,  0);
+      analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
       analogWrite(MOTOR_RIGHT_FWD, 0);
       analogWrite(MOTOR_RIGHT_REV, 0);
   }
@@ -447,10 +448,10 @@ void Robot::center() {
  */
 bool Robot::detectedI() {
   if (
+                        !frontSensorIR[0]  &&                       !frontSensorIR[1]  &&
     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
     !leftSensorIR[1] && !centerSensorIR[0] &&  centerSensorIR[1] && !centerSensorIR[2] && !rightSensorIR[1] &&
-    !leftSensorIR[2] &&                                                                   !rightSensorIR[2] &&
-                        !backSensorIR[0]   &&                       !backSensorIR[1]
+    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
   ) return true;
   return false;
 }
@@ -462,6 +463,7 @@ bool Robot::detectedI() {
  */
 bool Robot::detectedLeft() {
   if (
+
     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] && !centerSensorIR[2] && !rightSensorIR[1] &&
     !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
@@ -476,6 +478,7 @@ bool Robot::detectedLeft() {
  */
 bool Robot::detectedRight() {
   if (
+
     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
     !leftSensorIR[1] && !centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
     !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
@@ -490,6 +493,7 @@ bool Robot::detectedRight() {
  */
 bool Robot::detectedLeftOff() {
   if (
+
      leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
     !leftSensorIR[1] &&                        centerSensorIR[1] &&                       !rightSensorIR[1] &&
     !leftSensorIR[2] &&                                                                    rightSensorIR[2]
@@ -504,6 +508,7 @@ bool Robot::detectedLeftOff() {
  */
 bool Robot::detectedRightOff() {
   if (
+
     !leftSensorIR[0] &&                                                                    rightSensorIR[0] &&
     !leftSensorIR[1] &&                        centerSensorIR[1] &&                       !rightSensorIR[1] &&
      leftSensorIR[2] &&                                                                   !rightSensorIR[2]
@@ -518,10 +523,10 @@ bool Robot::detectedRightOff() {
  */
 bool Robot::detectedS() {
   if (
+                        !frontSensorIR[0]  &&                      !frontSensorIR[1]   &&
     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
-    !leftSensorIR[2] &&                                                                   !rightSensorIR[2] &&
-                        !backSensorIR[0]   &&                       !backSensorIR[1]
+    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
   ) return true;
   return false;
 }
@@ -533,43 +538,10 @@ bool Robot::detectedS() {
  */
 bool Robot::detectedT() {
   if (
+                        !frontSensorIR[0]  &&                       !frontSensorIR[1]  &&
     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
-    !leftSensorIR[2] &&                                                                   !rightSensorIR[2] &&
-                        !backSensorIR[0]   &&                       !backSensorIR[1]
-  ) return true;
-  return false;
-}
-
-/*
- * Function: detectedLeftDiagonal
- * -------------------
- * This function returns true when the left diagonal has been
- * offset to the center.
- */
-bool Robot::detectedLeftDiagonal() {
-  if (
-
-                       (centerSensorIR[0] ||
-
-                                                                     backSensorIR[1]) &&
-                                             !centerSensorIR[1]
-  ) return true;
-  return false;
-}
-
-/*
- * Function: detectedRightDiagonal
- * -------------------
- * This function returns true when the right diagonal has been
- * offset to the center.
- */
-bool Robot::detectedRightDiagonal() {
-  if (
-                                             !centerSensorIR[1] &&
-                                                                    (centerSensorIR[2] ||
-
-                         backSensorIR[0])
+    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
   ) return true;
   return false;
 }

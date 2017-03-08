@@ -34,25 +34,25 @@ static const uint8_t   MOTOR_STEP_MODE2        =                12;
 /*****************************  TEENSY PIN OUTS  ******************************/
 static const uint8_t   START_PIN               =                 1;
 
-static const uint8_t   BUMPER_LEFT             =                 8;
-static const uint8_t   BUMPER_RIGHT            =                 7;
+static const uint8_t   BUMPER_LEFT             =                 7;
+static const uint8_t   BUMPER_RIGHT            =                 8;
 
-static const uint8_t   IR_IN_01                =                A5;
-static const uint8_t   IR_IN_02                =                A4;
-static const uint8_t   IR_IN_03                =                A3;
-static const uint8_t   IR_IN_04                =                A6;
-static const uint8_t   IR_IN_05                =                A7;
-static const uint8_t   IR_IN_06                =                A8;
-static const uint8_t   IR_IN_07                =                A2;
-static const uint8_t   IR_IN_08                =                A1;
+static const uint8_t   IR_IN_01                =               A14;
+static const uint8_t   IR_IN_02                =                A9;
+static const uint8_t   IR_IN_03                =                A8;
+static const uint8_t   IR_IN_04                =                A7;
+static const uint8_t   IR_IN_05                =                A6;
+static const uint8_t   IR_IN_06                =                A3;
+static const uint8_t   IR_IN_07                =                A4;
+static const uint8_t   IR_IN_08                =                A5;
 static const uint8_t   IR_IN_09                =                A0;
-static const uint8_t   IR_IN_10                =                A9;
-static const uint8_t   IR_IN_11                =               A14;
+static const uint8_t   IR_IN_10                =                A1;
+static const uint8_t   IR_IN_11                =                A2;
 
-static const uint8_t   MOTOR_LEFT_FWD          =                5;
-static const uint8_t   MOTOR_LEFT_REV          =                6;
-static const uint8_t   MOTOR_RIGHT_FWD         =                3;
-static const uint8_t   MOTOR_RIGHT_REV         =                4;
+static const uint8_t   MOTOR_LEFT_FWD          =                4;
+static const uint8_t   MOTOR_LEFT_REV          =                3;
+static const uint8_t   MOTOR_RIGHT_FWD         =                6;
+static const uint8_t   MOTOR_RIGHT_REV         =                5;
 static const uint8_t   MOTOR_FIRE_FWD          =               69;
 static const uint8_t   MOTOR_FIRE_REV          =               69;
 static const uint8_t   MOTOR_STEP_DIR          =               10;
