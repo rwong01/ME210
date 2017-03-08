@@ -122,8 +122,7 @@ void Robot::quit() {
  * This function sets the appropriate pinmodes.
  */
 void Robot::setPinModes() {
-  pinMode(START_PIN,        INPUT_PULLUP);
-  pinMode(FAULT_LED,        OUTPUT);
+  pinMode(START_PIN,        INPUT_PULLUP);;
 
   pinMode(BUMPER_LEFT,      INPUT_PULLUP);
   pinMode(BUMPER_RIGHT,     INPUT_PULLUP);
@@ -163,8 +162,8 @@ void Robot::waitForStart() {
     delay(BUFFER_CLEAR_TIME);
   }
   startTime = millis();
-  state_1 = exitBase_s;
-  state_2 = searching_s;
+  state_1 = attackTower1_s;
+  state_2 = approaching_s;
   turnForward();
 }
 
@@ -371,8 +370,8 @@ bool Robot::launchEgg() {
 void Robot::turnLeft() {
   state_3 = turningLeftOne_s;
   analogWrite(MOTOR_LEFT_FWD,  0);
-  analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED_LEFT);
-  analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED_RIGHT);
+  analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
+  analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
   analogWrite(MOTOR_RIGHT_REV, 0);
 }
 
@@ -383,11 +382,11 @@ void Robot::turnLeft() {
  */
 void Robot::turnRight() {
   state_3 = turningRightOne_s;
-  state_4 = centered_s;
-  analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT);
+  state_4 = inchLeft_s;
+  analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
   analogWrite(MOTOR_LEFT_REV,  0);
   analogWrite(MOTOR_RIGHT_FWD, 0);
-  analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED_RIGHT);
+  analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
 }
 
 /*
@@ -397,10 +396,10 @@ void Robot::turnRight() {
  */
 void Robot::turnForward() {
   state_3 = turningForeward_s;
-  state_4 = centered_s;
-  analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT);
+  state_4 = inchLeft_s;
+  analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
   analogWrite(MOTOR_LEFT_REV,  0);
-  analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED_RIGHT);
+  analogWrite(MOTOR_RIGHT_FWD, 0);
   analogWrite(MOTOR_RIGHT_REV, 0);
 }
 
@@ -411,11 +410,11 @@ void Robot::turnForward() {
  */
 void Robot::turnBackward() {
   state_3 = turningBackward_s;
-  state_4 = centered_s;
+  state_4 = noLine_s;
   analogWrite(MOTOR_LEFT_FWD,  0);
-  analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED_LEFT);
+  analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
   analogWrite(MOTOR_RIGHT_FWD, 0);
-  analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED_RIGHT);
+  analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
 }
 
 /*
@@ -424,45 +423,20 @@ void Robot::turnBackward() {
  * This function self corrects to stay on line.
  */
 void Robot::center() {
-  if      ((state_4 == centered_s) && detectedI()) return;
-  else if ((state_4 == centering_s) && detectedI()) {
-    Serial.print("Found I\n");
-    // printState();
-    state_4 = centered_s;
-    turnForward();
-  }
-  else if ((state_4 == centered_s) && (detectedLeftDiagonal() || detectedRightDiagonal())) {
-    // printState();
+  if      ((state_4 == inchLeft_s) && centerSensorIR[0]) {
+    state_4 = inchRight_s;
     analogWrite(MOTOR_LEFT_FWD,  0);
-    analogWrite(MOTOR_LEFT_REV,  TURN_SPEED);
-    analogWrite(MOTOR_RIGHT_FWD, 0);
-    analogWrite(MOTOR_RIGHT_REV, TURN_SPEED);
-    if (detectedLeftDiagonal()) {
-      Serial.print("Backing up to left\n");
-      state_4 = backingUpLeft_s;
-    }
-    if (detectedRightDiagonal()) {
-      Serial.print("Backing up to right\n");
-      state_4 = backingUpRight_s;
-    }
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_REV, 0);
   }
-  else if (((state_4 == backingUpLeft_s) || (state_4 == backingUpRight_s)) && centerSensorIR[1]) {
-    printState();
-    if (state_4 == backingUpLeft_s) {
-        Serial.print("Correcting to left\n");
-        analogWrite(MOTOR_LEFT_FWD,  0);
-        analogWrite(MOTOR_LEFT_REV,  TURN_SPEED);
-        analogWrite(MOTOR_RIGHT_FWD, TURN_SPEED);
-        analogWrite(MOTOR_RIGHT_REV, 0);
-    }
-    else if (state_4 == backingUpRight_s) {
-        Serial.print("Correcting to Right\n");
-        analogWrite(MOTOR_LEFT_FWD,  TURN_SPEED);
-        analogWrite(MOTOR_LEFT_REV,  0);
-        analogWrite(MOTOR_RIGHT_FWD, 0);
-        analogWrite(MOTOR_RIGHT_REV, TURN_SPEED);
-    }
-    state_4 = centering_s;
+  else if ((state_4 == inchRight_s) && centerSensorIR[2]) {
+      state_3 = turningForeward_s;
+      state_4 = inchLeft_s;
+      analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+      analogWrite(MOTOR_LEFT_REV,  0);
+      analogWrite(MOTOR_RIGHT_FWD, 0);
+      analogWrite(MOTOR_RIGHT_REV, 0);
   }
 }
 
@@ -607,7 +581,7 @@ bool Robot::detectedRightDiagonal() {
  */
 bool Robot::readSensor_IR(uint8_t pinNum) {
   uint16_t value = analogRead(pinNum);
-  // Serial.println(value);
+  Serial.println(value);
   return value <= BLACK_THRESHOLD;
 }
 

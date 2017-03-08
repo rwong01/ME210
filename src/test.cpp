@@ -12,13 +12,13 @@
 
 #include "Robot.h"
 
-/***********************************  BOOT  ***********************************/
-Robot BISCUIT;
-int main() {
-  BISCUIT.init();
-/***********************************  MAIN  ***********************************/
-  while(true) {
-    BISCUIT.updateState();
-    delay(BUFFER_CLEAR_TIME);
-  }
-}
+// /***********************************  BOOT  ***********************************/
+// Robot BISCUIT;
+// int main() {
+//   BISCUIT.init();
+// /***********************************  MAIN  ***********************************/
+//   while(true) {
+//     BISCUIT.updateState();
+//     delay(BUFFER_CLEAR_TIME);
+//   }
+// }
