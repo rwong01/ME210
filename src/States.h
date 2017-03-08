@@ -72,12 +72,16 @@ static const char* states_teir_3_names[] = {
 };
 
 enum state_tier_4_t {
-  centering_s,
-  centered_s
+  centered_s,
+  backingUpLeft_s,
+  backingUpRight_s,
+  centering_s
 };
 static const char* states_teir_4_names[] = {
-  "centering_s",
-  "centered_s"
+  "centered_s",
+  "backingUpLeft_s",
+  "backingUpRight_s",
+  "centering_s"
 };
 
 #endif
