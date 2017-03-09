@@ -40,9 +40,11 @@ private:
   void           setPinModes();
   void           waitForStart();
 
-  void           checkTimer();
   void           updateSensors();
   void           printState();
+  void           checkTimer();
+  void           checkBumper();
+  void           center();
 
   bool           findLine();
   bool           orientLine();
@@ -56,14 +58,14 @@ private:
   void           turnForward();
   void           turnBackward();
 
-  void           center();
   bool           detectedI();
   bool           detectedLeft();
   bool           detectedRight();
   bool           detectedLeftOff();
   bool           detectedRightOff();
   bool           detectedS();
-  bool           detectedT();
+  bool           detectedPluss();
+  bool           detectedPlussCenter();
 
   bool           readSensor_IR(uint8_t pinNum);
   bool           readSensors_BUMP(uint8_t pinNum);
@@ -77,7 +79,7 @@ private:
   uint32_t       escapeTime;
   uint32_t       launchTime;
   uint32_t       centerTime;
-  bool           frontSensorsBump[2];
+  bool           frontSensorBump[2];
   bool           frontSensorIR[2];
   bool           leftSensorIR[3];
   bool           rightSensorIR[3];

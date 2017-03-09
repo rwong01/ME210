@@ -59,6 +59,7 @@ enum state_tier_3_t {
   turningRightTwo_s,
   turningForeward_s,
   turningBackward_s,
+  loadingEggs_s,
   launchingEggs_s
 };
 static const char* states_teir_3_names[] = {
@@ -68,6 +69,7 @@ static const char* states_teir_3_names[] = {
   "turningRightTwo_s",
   "turningForeward_s",
   "turningBackward_s",
+  "loadingEggs_s",
   "launchingEggs_s"
 };
 

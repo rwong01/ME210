@@ -42,10 +42,11 @@ state_tier_1_t Robot::getState() {
  * This function updates the values that are state indepndent.
  */
 void Robot::updateState() {
-  checkTimer();
   updateSensors();
-  center();
   printState();
+  checkTimer();
+  checkBumper();
+  center();
 }
 
 /*
@@ -94,9 +95,11 @@ void Robot::attackTower2() {
  */
 void Robot::hitBumper() {
   if      (state_3 == turningRightOne_s && detectedRightOff()) state_3 = turningRightTwo_s;
-  else if (state_3 == turningRightTwo_s && detectedT()) turnForward();
-  else if (state_3 == turningForeward_s &&
-    (frontSensorsBump[0] || frontSensorsBump[1])) state_1 = quit_s;
+  else if (state_3 == turningRightTwo_s && detectedPluss()){
+    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_REV, 0);}
 }
 
 /*
@@ -168,22 +171,13 @@ void Robot::waitForStart() {
 }
 
 /*
- * Function: checkTimer
- * -------------------
- * This function checks if the timer has expired.
- */
-void Robot::checkTimer() {
-  if((millis() - startTime) >= RUNTIME_TIMEOUT) state_1 = quit_s;
-}
-
-/*
  * Function: updateSensors
  * -------------------
  * This function get all the updated values for evaluating this state.
  */
 void Robot::updateSensors() {
-  frontSensorsBump[0] = readSensors_BUMP(BUMPER_LEFT);
-  frontSensorsBump[1] = readSensors_BUMP(BUMPER_RIGHT);
+  frontSensorBump[0] = readSensors_BUMP(BUMPER_LEFT);
+  frontSensorBump[1] = readSensors_BUMP(BUMPER_RIGHT);
 
   frontSensorIR[0]     = readSensor_IR(IR_IN_01);
   frontSensorIR[1]     = readSensor_IR(IR_IN_02);
@@ -218,9 +212,9 @@ void Robot::printState() {
   Serial.print(states_teir_4_names[state_4]);
 
   Serial.print('\n');
-  Serial.print(frontSensorsBump[0]);
+  Serial.print(frontSensorBump[0]);
   Serial.print("   ");
-  Serial.print(frontSensorsBump[1]);
+  Serial.print(frontSensorBump[1]);
   Serial.print('\n');
   Serial.print(" ");
   Serial.print(frontSensorIR[0]);
@@ -244,6 +238,48 @@ void Robot::printState() {
 }
 
 /*
+ * Function: checkTimer
+ * -------------------
+ * This function checks if the timer has expired.
+ */
+void Robot::checkTimer() {
+  if((millis() - startTime) >= RUNTIME_TIMEOUT) state_1 = quit_s;
+}
+
+/*
+ * Function: checkBumper
+ * -------------------
+ * This function checks if the bumpers have triggered.
+ */
+void Robot::checkBumper() {
+  if ((frontSensorBump[0] || frontSensorBump[1])) state_1 = quit_s;
+}
+
+/*
+ * Function: center
+ * -------------------
+ * This function self corrects to stay on line.
+ */
+void Robot::center() {
+  if      (state_3 != turningForeward_s) return;
+  else if ((state_4 == inchLeft_s) && frontSensorIR[1]) {
+    state_4 = inchRight_s;
+    analogWrite(MOTOR_LEFT_FWD,  0);
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_REV, 0);
+  }
+  else if ((state_4 == inchRight_s) && !frontSensorIR[1]) {
+    state_3 = turningForeward_s;
+    state_4 = inchLeft_s;
+    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, 0);
+    analogWrite(MOTOR_RIGHT_REV, 0);
+  }
+}
+
+/*
  * Function: findLine
  * -------------------
  * This function finds any line from the randomized start position.
@@ -258,7 +294,7 @@ bool Robot::findLine() {
     state_2 = orientingR_s;
     done = true;
   }
-  else if (frontSensorsBump[0] || frontSensorsBump[1]) {
+  else if (frontSensorBump[0] || frontSensorBump[1]) {
     escapeTime = millis();
     turnBackward();
   }
@@ -295,7 +331,7 @@ bool Robot::orientLine() {
 bool Robot::findStart() {
   bool done = false;
   if      (detectedS()) done = true;
-  else if (frontSensorsBump[0] || frontSensorsBump[1]) {
+  else if (frontSensorBump[0] || frontSensorBump[1]) {
     escapeTime = millis();
     turnBackward();
   }
@@ -316,23 +352,16 @@ bool Robot::findStart() {
 /*
  * Function: attackTower
  * -------------------
- * This function handles the algorythmic complexity of attacking a single tower
- * given a posotion directly before the first turn off the main road.
+ * This function handles the algorythmic complexity of attacking a single tower.
  */
 bool Robot::attackTower() {
   bool done = false;
-  if      (state_3 == turningForeward_s && state_2 == approaching_s && detectedT()) turnLeft();
-  else if (state_3 == turningLeftOne_s  && detectedLeftOff()) state_3 = turningLeftTwo_s;
-  else if (state_3 == turningLeftTwo_s  && detectedT()) {
+  if      (state_3 == turningForeward_s && detectedPluss()) state_3 = loadingEggs_s;
+  else if (state_3 == loadingEggs_s && detectedPlussCenter()) {
     state_2 = loading_s;
-    turnForward();
+    state_3 = launchingEggs_s;
   }
-  else if (state_3 == turningForeward_s && state_2 == loading_s   && detectedT()) launchEgg();
-  else if (state_3 == launchingEggs_s   && launchEgg()) turnBackward();
-  else if (state_3 == turningBackward_s && detectedT()) {
-    turnRight();
-    done = true;
-  }
+  else if (state_3 == launchingEggs_s && launchEgg()) done = true;
   return done;
 }
 
@@ -416,29 +445,6 @@ void Robot::turnBackward() {
   analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
   analogWrite(MOTOR_RIGHT_FWD, 0);
   analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
-}
-
-/*
- * Function: center
- * -------------------
- * This function self corrects to stay on line.
- */
-void Robot::center() {
-  if      ((state_4 == inchLeft_s) && frontSensorIR[1]) {
-    state_4 = inchRight_s;
-    analogWrite(MOTOR_LEFT_FWD,  0);
-    analogWrite(MOTOR_LEFT_REV,  0);
-    analogWrite(MOTOR_RIGHT_FWD, 0);
-    analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
-  }
-  else if ((state_4 == inchRight_s) && !frontSensorIR[1]) {
-      state_3 = turningForeward_s;
-      state_4 = inchLeft_s;
-      analogWrite(MOTOR_LEFT_FWD,  0);
-      analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
-      analogWrite(MOTOR_RIGHT_FWD, 0);
-      analogWrite(MOTOR_RIGHT_REV, 0);
-  }
 }
 
 /*
@@ -532,18 +538,56 @@ bool Robot::detectedS() {
 }
 
 /*
- * Function: detectedT
+ * Function: detectedPluss
  * -------------------
- * This function returns true when reaching a junction.
+ * This function returns true when reaching a pluss sign junction.
  */
-bool Robot::detectedT() {
-  if (
-                        !frontSensorIR[0]  &&                       !frontSensorIR[1]  &&
-    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
-     leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
-    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
+bool Robot::detectedPluss() {
+  if ((
+                                                                                           rightSensorIR[0] ||
+                                                                                           rightSensorIR[1] ||
+                                                                                           rightSensorIR[2]
+    ) && (
+     leftSensorIR[0] ||
+     leftSensorIR[1] ||
+     leftSensorIR[2])
   ) return true;
   return false;
+}
+
+bool Robot::detectedPlussCenter() {
+  bool done = false;
+  if      (
+     leftSensorIR[1] &&                                                                    rightSensorIR[1]
+  ) done = true;
+  else if (rightSensorIR[0]) {
+    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, 0);
+    analogWrite(MOTOR_RIGHT_REV, 0);
+  }
+
+  else if (rightSensorIR[2]) {
+    analogWrite(MOTOR_LEFT_FWD,  0);
+    analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_FWD, 0);
+    analogWrite(MOTOR_RIGHT_REV, 0);
+  }
+
+  else if (leftSensorIR[2]) {
+    analogWrite(MOTOR_LEFT_FWD,  0);
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_REV, 0);
+  }
+
+  else if (leftSensorIR[0]) {
+    analogWrite(MOTOR_LEFT_FWD,  0);
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, 0);
+    analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
+  }
+  return done;
 }
 
 /*
