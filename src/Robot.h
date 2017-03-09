@@ -45,6 +45,7 @@ private:
   bool           findBack();
   bool           orientBack();
   bool           findStart();
+  bool           leaveStart();
 
   bool           attackTower();
   bool           launchEgg();
@@ -75,10 +76,12 @@ private:
   uint32_t       USTime;
   uint32_t       startTime;
   uint32_t       escapeTime;
+  uint32_t       leavingTime;
   uint32_t       launchTime;
   uint32_t       centerTime;
   float          distance;
-  float          distanceShortest = US_THRESHOLD;
+  float          distanceShortest    = US_THRESHOLD;
+  float          distanceShortestNew = US_THRESHOLD;
   bool           frontSensorBump[2];
   bool           frontSensorIR[2];
   bool           leftSensorIR[3];

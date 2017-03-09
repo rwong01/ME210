@@ -53,9 +53,10 @@ void Robot::updateState() {
  * This function handles the algorythmic complexity of exiting the base.
  */
 void Robot::exitBase() {
-  if      (state_2 == searching_s && findBack()) orientBack();
+  if      (state_2 == searching_s   && findBack()) orientBack();
   else if ((state_2 == orienting_s) && orientBack()) findStart();
-  else if (state_2 == finding_s   && findStart()) {
+  else if (state_2 == finding_s     && findStart()) leaveStart();
+  else if ((state_2 == leaving_s)   && leaveStart()) {
     state_1 = attackTower1_s;
     state_2 = approaching_s;
   }
@@ -222,10 +223,13 @@ void Robot::printState() {
 
   Serial.print('\n');
   Serial.print(distance);
-  Serial.print(" inches");
+  Serial.print(" inches (raw)");
   Serial.print('\n');
   Serial.print(distanceShortest);
-  Serial.print(" inches");
+  Serial.print(" inches (short)");
+  Serial.print('\n');
+  Serial.print(distanceShortestNew);
+  Serial.print(" inches (new)");
   Serial.print('\n');
   Serial.print(frontSensorBump[0]);
   Serial.print("   ");
@@ -312,16 +316,13 @@ bool Robot::findBack() {
  */
 bool Robot::orientBack() {
   state_2 = orienting_s;
-  if (distance <= (1.2 * distanceShortest)) {
-    state_3 = turningForeward_s;
-    // analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
-    // analogWrite(MOTOR_LEFT_REV,  0);
-    // analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
-    // analogWrite(MOTOR_RIGHT_REV, 0);
+  if (distance <= distanceShortestNew) distanceShortestNew = distance;
+  if (distance <= (1.25 * distanceShortest)) {
     analogWrite(MOTOR_LEFT_FWD,  0);
     analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
     analogWrite(MOTOR_RIGHT_FWD, 0);
     analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
+    leavingTime = millis();
     return true;
   }
   return false;
@@ -335,6 +336,22 @@ bool Robot::orientBack() {
 bool Robot::findStart() {
   bool done = false;
   state_2 = finding_s;
+  if ((millis() - leavingTime) >= ESCAPE_TIMEOUT) {
+    state_3 = turningForeward_s;
+    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_REV, 0);
+    return true;
+  }
+  return false;
+  if (detectedPluss()) done = true;
+  return done;
+}
+
+bool Robot::leaveStart() {
+  bool done = false;
+  state_2 = leaving_s;
   if (detectedPluss()) done = true;
   return done;
 }
@@ -608,7 +625,7 @@ float Robot::readSensor_US() {
   delayMicroseconds(10);
   digitalWrite(US_TRIG, LOW);
   float distance = pulseIn(US_ECHO, HIGH, 10000);
-  if (distance == 0) return US_THRESHOLD;
+  if ((distance / 148.0) <= 1) return US_THRESHOLD;
   else return distance  / 148.0;
 }
 
