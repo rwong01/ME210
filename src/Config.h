@@ -17,7 +17,7 @@
 #include <stdint.h>
 
 /****************************  EDITABLE CONSTANTS  ****************************/
-static const uint16_t  BLACK_THRESHOLD         =               400;
+static const uint16_t  BLACK_THRESHOLD         =               300;
 static const uint16_t  DRIVE_SPEED             =               200;
 static const uint16_t  LAUNCH_SPEED            =              1023;
 static const uint16_t  LOADER_SPEED            =               255;
@@ -36,6 +36,8 @@ static const uint8_t   START_PIN               =                 1;
 
 static const uint8_t   BUMPER_LEFT             =                 7;
 static const uint8_t   BUMPER_RIGHT            =                 8;
+static const uint8_t   US_TRIG                 =                 9;
+static const uint8_t   US_ECHO                 =                10;
 
 static const uint8_t   IR_IN_01                =               A14;
 static const uint8_t   IR_IN_02                =                A9;
@@ -55,7 +57,7 @@ static const uint8_t   MOTOR_RIGHT_FWD         =                6;
 static const uint8_t   MOTOR_RIGHT_REV         =                5;
 static const uint8_t   MOTOR_FIRE_FWD          =               69;
 static const uint8_t   MOTOR_FIRE_REV          =               69;
-static const uint8_t   MOTOR_STEP_DIR          =               10;
-static const uint8_t   MOTOR_STEP_STEP         =                9;
+static const uint8_t   MOTOR_STEP_DIR          =               69;
+static const uint8_t   MOTOR_STEP_STEP         =               69;
 
 #endif

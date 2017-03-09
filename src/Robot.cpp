@@ -22,8 +22,8 @@ void Robot::init() {
   Serial.begin(9600);
   setPinModes();
   waitForStart();
-  stepper.setRPM(1);
-  stepper.setMicrostep(1);
+  // stepper.setRPM(1);
+  // stepper.setMicrostep(1);
 }
 
 /********************************  FUNCTIONS  *********************************/
@@ -95,11 +95,8 @@ void Robot::attackTower2() {
  */
 void Robot::hitBumper() {
   if      (state_3 == turningRightOne_s && detectedRightOff()) state_3 = turningRightTwo_s;
-  else if (state_3 == turningRightTwo_s && detectedPluss()){
-    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
-    analogWrite(MOTOR_LEFT_REV,  0);
-    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
-    analogWrite(MOTOR_RIGHT_REV, 0);}
+  else if (state_3 == turningRightTwo_s && detectedPluss()) turnForward();
+  else if ((state_3 == turningForeward_s) && detectedPluss()) state_3 = hittingBumper_s;
 }
 
 /*
@@ -125,7 +122,10 @@ void Robot::quit() {
  * This function sets the appropriate pinmodes.
  */
 void Robot::setPinModes() {
-  pinMode(START_PIN,        INPUT_PULLUP);;
+  pinMode(START_PIN,        INPUT_PULLUP);
+
+  pinMode(US_TRIG,          OUTPUT);
+  pinMode(US_ECHO,          INPUT);
 
   pinMode(BUMPER_LEFT,      INPUT_PULLUP);
   pinMode(BUMPER_RIGHT,     INPUT_PULLUP);
@@ -184,6 +184,8 @@ void Robot::updateSensors() {
   rightSensorIROLD[1] = rightSensorIR[1];
   rightSensorIROLD[2] = rightSensorIR[2];
 
+  distance            = readSensor_US();
+
   frontSensorBump[0]  = readSensors_BUMP(BUMPER_LEFT);
   frontSensorBump[1]  = readSensors_BUMP(BUMPER_RIGHT);
 
@@ -219,6 +221,9 @@ void Robot::printState() {
   Serial.print(" STATE 4 : ");
   Serial.print(states_teir_4_names[state_4]);
 
+  Serial.print('\n');
+  Serial.print(distance);
+  Serial.print(" inches");
   Serial.print('\n');
   Serial.print(frontSensorBump[0]);
   Serial.print("   ");
@@ -269,7 +274,7 @@ void Robot::checkBumper() {
  * This function self corrects to stay on line.
  */
 void Robot::center() {
-  if      (state_3 != turningForeward_s) return;
+  if      ((state_3 != turningForeward_s) && (state_3 != ignoringPluss_s)) return;
   else if ((state_4 == inchLeft_s) && frontSensorIR[1]) {
     state_4 = inchRight_s;
     analogWrite(MOTOR_LEFT_FWD,  0);
@@ -364,7 +369,8 @@ bool Robot::findStart() {
  */
 bool Robot::attackTower() {
   bool done = false;
-  if      (state_3 == turningForeward_s && detectedPluss()) state_3 = centeringPluss_s;
+  if      (state_3 == turningForeward_s && detectedPluss()) state_3 = ignoringPluss_s;
+  else if (state_3 == ignoringPluss_s && detectedPluss()) state_3 = centeringPluss_s;
   else if (state_3 == centeringPluss_s  && detectedPlussCenter()) {
     state_2 = loading_s;
     state_3 = launchingEggs_s;
@@ -384,13 +390,9 @@ bool Robot::launchEgg() {
     launchTime = millis();
     state_3 = launchingEggs_s;
     state_2 = attacking_s;
-    analogWrite(MOTOR_LEFT_FWD,  0);
-    analogWrite(MOTOR_RIGHT_FWD, 0);
-    analogWrite(MOTOR_LEFT_REV,  0);
-    analogWrite(MOTOR_RIGHT_REV, 0);
     analogWrite(MOTOR_FIRE_FWD, LAUNCH_SPEED);
     analogWrite(MOTOR_FIRE_REV, 0);
-    stepper.rotate(120);
+    // stepper.rotate(120);
   }
   if((millis() - launchTime) >= LAUNCH_TIMEOUT) {
     analogWrite(MOTOR_FIRE_FWD, 0);
@@ -569,43 +571,70 @@ bool Robot::detectedPlussCenter() {
   //    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
   //     leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
   //    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
-  // ) done = true;
+  // ) {
+  //   done = true;
+  //   analogWrite(MOTOR_LEFT_FWD,  0);
+  //   analogWrite(MOTOR_LEFT_REV,  0);
+  //   analogWrite(MOTOR_RIGHT_FWD, 0);
+  //   analogWrite(MOTOR_RIGHT_REV, 0);
+  // }
   if      (
       leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1]
-  ) done = true;
+  ) {
+    done = true;
+    analogWrite(MOTOR_LEFT_FWD,  0);
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, 0);
+    analogWrite(MOTOR_RIGHT_REV, 0);
+  }
   else if (state_4 == inchLeft_s) {
     if ((rightSensorIR[0] != rightSensorIROLD[0]) || (rightSensorIR[2] != rightSensorIROLD[2])) state_4 = inchRight_s;
     else if (rightSensorIR[0]) {
-      analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
-      analogWrite(MOTOR_LEFT_REV,  0);
-      analogWrite(MOTOR_RIGHT_FWD, 0);
-      analogWrite(MOTOR_RIGHT_REV, 0);
-    }
-
-    else if (rightSensorIR[2]) {
-      analogWrite(MOTOR_LEFT_FWD,  0);
-      analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
-      analogWrite(MOTOR_RIGHT_FWD, 0);
-      analogWrite(MOTOR_RIGHT_REV, 0);
-    }
-  }
-  else if (state_4 == inchRight_s) {
-    if ((leftSensorIR[0] != leftSensorIROLD[0]) || (leftSensorIR[2] != leftSensorIROLD[2])) state_4 = inchLeft_s;
-    else if (leftSensorIR[2]) {
       analogWrite(MOTOR_LEFT_FWD,  0);
       analogWrite(MOTOR_LEFT_REV,  0);
       analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
       analogWrite(MOTOR_RIGHT_REV, 0);
     }
-
-    else if (leftSensorIR[0]) {
+    else if (rightSensorIR[2]) {
       analogWrite(MOTOR_LEFT_FWD,  0);
       analogWrite(MOTOR_LEFT_REV,  0);
       analogWrite(MOTOR_RIGHT_FWD, 0);
       analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
     }
   }
+  else if (state_4 == inchRight_s) {
+    if ((leftSensorIR[0] != leftSensorIROLD[0]) || (leftSensorIR[2] != leftSensorIROLD[2])) state_4 = inchLeft_s;
+        else if (leftSensorIR[0]) {
+        analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+        analogWrite(MOTOR_LEFT_REV,  0);
+        analogWrite(MOTOR_RIGHT_FWD, 0);
+        analogWrite(MOTOR_RIGHT_REV, 0);
+        }
+    else if (leftSensorIR[2]) {
+      analogWrite(MOTOR_LEFT_FWD,  0);
+      analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
+      analogWrite(MOTOR_RIGHT_FWD, 0);
+      analogWrite(MOTOR_RIGHT_REV, 0);
+    }
+  }
   return done;
+}
+
+/*
+ * Function: readSensor_US
+ * -------------------
+ * This function handles the hardware abstraction of sensing distacne.
+ */
+float Robot::readSensor_US() {
+  digitalWrite(US_TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(US_TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(US_TRIG, LOW);
+  while (digitalRead(US_ECHO) == 0);
+  uint32_t t = micros();
+  while (digitalRead(US_ECHO) == 1);
+  return float(micros() - t)  / 148.0;
 }
 
 /*

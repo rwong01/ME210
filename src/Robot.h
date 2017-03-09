@@ -67,6 +67,7 @@ private:
   bool           detectedPluss();
   bool           detectedPlussCenter();
 
+  float          readSensor_US();
   bool           readSensor_IR(uint8_t pinNum);
   bool           readSensors_BUMP(uint8_t pinNum);
 
@@ -75,10 +76,12 @@ private:
   state_tier_2_t state_2;
   state_tier_3_t state_3;
   state_tier_4_t state_4;
+  uint32_t       USTime;
   uint32_t       startTime;
   uint32_t       escapeTime;
   uint32_t       launchTime;
   uint32_t       centerTime;
+  float          distance;
   bool           frontSensorBump[2];
   bool           frontSensorIR[2];
   bool           leftSensorIR[3];
