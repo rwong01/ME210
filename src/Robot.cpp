@@ -45,7 +45,7 @@ void Robot::updateState() {
   updateSensors();
   printState();
   checkTimer();
-  checkBumper();
+  // checkBumper();
   center();
 }
 
@@ -55,8 +55,8 @@ void Robot::updateState() {
  * This function handles the algorythmic complexity of exiting the base.
  */
 void Robot::exitBase() {
-  if      (state_2 == searching_s && findLine()) orientLine();
-  else if ((state_2 == orientingL_s ||  state_2 == orientingR_s) && orientLine()) findStart();
+  if      (state_2 == searching_s && findBack()) orientBack();
+  else if ((state_2 == orienting_s) && orientBack()) findStart();
   else if (state_2 == finding_s   && findStart()) {
     state_1 = attackTower1_s;
     state_2 = approaching_s;
@@ -165,9 +165,9 @@ void Robot::waitForStart() {
     delay(BUFFER_CLEAR_TIME);
   }
   startTime = millis();
-  state_1 = attackTower1_s;
-  state_2 = approaching_s;
-  turnForward();
+  state_1 = exitBase_s;
+  state_2 = searching_s;
+  turnRight();
 }
 
 /*
@@ -184,6 +184,7 @@ void Robot::updateSensors() {
   rightSensorIROLD[1] = rightSensorIR[1];
   rightSensorIROLD[2] = rightSensorIR[2];
 
+  distanceOld         = distance;
   distance            = readSensor_US();
 
   frontSensorBump[0]  = readSensors_BUMP(BUMPER_LEFT);
@@ -275,14 +276,14 @@ void Robot::checkBumper() {
  */
 void Robot::center() {
   if      ((state_3 != turningForeward_s) && (state_3 != ignoringPluss_s)) return;
-  else if ((state_4 == inchLeft_s) && frontSensorIR[1]) {
+  else if ((state_4 == inchLeft_s) && (frontSensorIR[0] || frontSensorIR[1])) {
     state_4 = inchRight_s;
     analogWrite(MOTOR_LEFT_FWD,  0);
     analogWrite(MOTOR_LEFT_REV,  0);
     analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
     analogWrite(MOTOR_RIGHT_REV, 0);
   }
-  else if ((state_4 == inchRight_s) && !frontSensorIR[1]) {
+  else if ((state_4 == inchRight_s) && (!frontSensorIR[0] || !frontSensorIR[1])) {
     state_3 = turningForeward_s;
     state_4 = inchLeft_s;
     analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
@@ -293,47 +294,32 @@ void Robot::center() {
 }
 
 /*
- * Function: findLine
+ * Function: findBack
  * -------------------
- * This function finds any line from the randomized start position.
+ * This function finds the back based on the shorted US distance.
  */
-bool Robot::findLine() {
-  bool done = false;
-  if      (leftSensorIR[0]) {
-    state_2 = orientingL_s;
-    done = true;
-  }
-  else if (rightSensorIR[0]) {
-    state_2 = orientingR_s;
-    done = true;
-  }
-  else if (frontSensorBump[0] || frontSensorBump[1]) {
-    escapeTime = millis();
-    turnBackward();
-  }
-  else if (state_3 == turningBackward_s && (millis() - escapeTime) >= ESCAPE_TIMEOUT) {
-    escapeTime = millis();
-    turnRight();
-  }
-  else if (state_3 == turningRightOne_s && (millis() - escapeTime) >= ESCAPE_TIMEOUT) turnForward();
-  return done;
+bool Robot::findBack() {
+  if (distance <= distanceOld) distanceShortest = distance;
+  if ((millis() - startTime) >= ESCAPE_TIMEOUT) return true;
+  return false;
 }
 
 /*
- * Function: orientLine
+ * Function: orientBack
  * -------------------
- * This function centers the robot onto the start line.
+ * This function aligns to the forward direction.
  */
-bool Robot::orientLine() {
-  bool done = false;
-  if      (state_2 == orientingL_s && state_3 == turningForeward_s && centerSensorIR[1]) turnRight();
-  else if (state_2 == orientingR_s && state_3 == turningForeward_s && centerSensorIR[1]) turnLeft();
-  else if ((state_3 == turningLeftOne_s || state_3 == turningRightOne_s) && detectedI()) {
-    state_2 = finding_s;
-    turnForward();
-    done = true;
+bool Robot::orientBack() {
+  state_2 = orienting_s;
+  if (distance <= (1.4 * distanceShortest)) {
+    state_3 = turningForeward_s;
+    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_REV, 0);
+    return true;
   }
-  return done;
+  return false;
 }
 
 /*
@@ -343,22 +329,8 @@ bool Robot::orientLine() {
  */
 bool Robot::findStart() {
   bool done = false;
-  if      (detectedS()) done = true;
-  else if (frontSensorBump[0] || frontSensorBump[1]) {
-    escapeTime = millis();
-    turnBackward();
-  }
-  else if (state_3 == turningBackward_s && (millis() - escapeTime) >= ESCAPE_TIMEOUT) turnRight();
-  else if (state_3 == turningRightOne_s && detectedRightOff()) state_3 = turningRightTwo_s;
-  else if (state_3 == turningRightTwo_s && detectedI()) turnForward();
-
-  else if (state_3 == turningForeward_s && detectedLeft()) turnLeft();
-  else if (state_3 == turningLeftOne_s  && detectedLeftOff()) state_3 = turningLeftTwo_s;
-  else if (state_3 == turningLeftTwo_s && detectedLeft()) turnForward();
-
-  else if (state_3 == turningForeward_s && detectedRight()) turnRight();
-  else if (state_3 == turningRightOne_s && detectedRightOff()) state_3 = turningRightTwo_s;
-  else if (state_3 == turningRightTwo_s && detectedRight()) turnForward();
+  state_2 = finding_s;
+  if (detectedPluss()) done = true;
   return done;
 }
 
@@ -631,7 +603,9 @@ float Robot::readSensor_US() {
   digitalWrite(US_TRIG, HIGH);
   delayMicroseconds(10);
   digitalWrite(US_TRIG, LOW);
-  return float(pulseIn(US_ECHO, HIGH, 10000))  / 148.0;
+  float distance = pulseIn(US_ECHO, HIGH, 10000);
+  if (distance == 0) return 1000;
+  else return distance  / 148.0;
 }
 
 /*

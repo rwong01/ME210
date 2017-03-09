@@ -35,8 +35,7 @@ static const char* states_teir_1_names[] = {
 
 enum state_tier_2_t {
   searching_s,
-  orientingL_s,
-  orientingR_s,
+  orienting_s,
   finding_s,
   approaching_s,
   loading_s,
@@ -44,8 +43,7 @@ enum state_tier_2_t {
 };
 static const char* states_teir_2_names[] = {
   "searching_s",
-  "orientingL_s",
-  "orientingR_s",
+  "orienting_s",
   "finding_s",
   "approaching_s",
   "loading_s",
