@@ -31,12 +31,12 @@ public:
   void           hitBumper();
   void           quit();
 
-  int plus_number  = 0;
-  bool plus_prev = false;
-  bool plus_curr = false;
-  int goal_plus = 0;
-  long plus_cooldown = 1*1000*100;
-  long plus_time = 0;
+  uint8_t  plus_number  = 0;
+  bool     plus_prev = false;
+  bool     plus_curr = false;
+  uint8_t  goal_plus = 0;
+  uint32_t plus_cooldown = 1*1000*100;
+  uint32_t plus_time = 0;
 private:
 /*********************************  HELPERS  **********************************/
   void           setPinModes();

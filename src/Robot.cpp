@@ -166,6 +166,8 @@ void Robot::waitForStart() {
     printState();
     delay(BUFFER_CLEAR_TIME);
   }
+  analogWrite(MOTOR_FIRE_FWD, DRIVE_SPEED);
+  analogWrite(MOTOR_FIRE_REV, 0);
   startTime = millis();
   state_1 = exitBase_s;
   state_2 = searching_s;
@@ -400,12 +402,8 @@ bool Robot::launchEgg() {
     launchTime = millis();
     state_3 = launchingEggs_s;
     state_2 = attacking_s;
-    analogWrite(MOTOR_FIRE_FWD, LAUNCH_SPEED);
-    analogWrite(MOTOR_FIRE_REV, 0);
   }
   if((millis() - launchTime) >= LAUNCH_TIMEOUT) {
-    analogWrite(MOTOR_FIRE_FWD, 0);
-    analogWrite(MOTOR_FIRE_REV, 0);
     done = true;
   }
   return done;
