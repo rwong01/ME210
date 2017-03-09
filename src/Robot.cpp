@@ -631,10 +631,7 @@ float Robot::readSensor_US() {
   digitalWrite(US_TRIG, HIGH);
   delayMicroseconds(10);
   digitalWrite(US_TRIG, LOW);
-  while (digitalRead(US_ECHO) == 0);
-  uint32_t t = micros();
-  while (digitalRead(US_ECHO) == 1);
-  return float(micros() - t)  / 148.0;
+  return float(pulseIn(US_ECHO, HIGH, 10000))  / 148.0;
 }
 
 /*
