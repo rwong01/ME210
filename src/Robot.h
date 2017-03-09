@@ -17,14 +17,10 @@
 #include "States.h"
 #include "Arduino.h"
 #include <MAX11643.h>
-#include <DRV8825.h>
 
 class Robot {
 public:
 /**********************************  SETUP  ***********************************/
-  Robot() :
-    stepper(MOTOR_STEP_STEPS, MOTOR_STEP_DIR, MOTOR_STEP_STEP, MOTOR_STEP_MODE0, MOTOR_STEP_MODE1, MOTOR_STEP_MODE2) {
-  }
   void           init();
 /********************************  FUNCTIONS  *********************************/
   state_tier_1_t getState();
@@ -90,7 +86,6 @@ private:
   bool           centerSensorIR[3];
   bool           leftSensorIROLD[3];
   bool           rightSensorIROLD[3];
-  DRV8825        stepper;
 };
 
 #endif

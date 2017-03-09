@@ -22,8 +22,6 @@ void Robot::init() {
   Serial.begin(9600);
   setPinModes();
   waitForStart();
-  // stepper.setRPM(1);
-  // stepper.setMicrostep(1);
 }
 
 /********************************  FUNCTIONS  *********************************/
@@ -371,7 +369,6 @@ bool Robot::launchEgg() {
     state_2 = attacking_s;
     analogWrite(MOTOR_FIRE_FWD, LAUNCH_SPEED);
     analogWrite(MOTOR_FIRE_REV, 0);
-    // stepper.rotate(120);
   }
   if((millis() - launchTime) >= LAUNCH_TIMEOUT) {
     analogWrite(MOTOR_FIRE_FWD, 0);

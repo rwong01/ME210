@@ -18,14 +18,14 @@
 
 /****************************  EDITABLE CONSTANTS  ****************************/
 static const uint16_t  BLACK_THRESHOLD         =               400;
-static const uint16_t  US_THRESHOLD            =              1000;
+static const uint16_t  US_THRESHOLD            =              2000;
 static const uint16_t  DRIVE_SPEED             =               200;
-static const uint16_t  LAUNCH_SPEED            =              1023;
+static const uint16_t  LAUNCH_SPEED            =              1000;
 static const uint16_t  LOADER_SPEED            =               255;
 static const uint32_t  RUNTIME_TIMEOUT         =            130000;
 static const uint32_t  ESCAPE_TIMEOUT          =              5000;
 static const uint32_t  LAUNCH_TIMEOUT          =             10000;
-static const uint32_t  BUFFER_CLEAR_TIME       =                50;
+static const uint32_t  BUFFER_CLEAR_TIME       =                25;
 
 static const uint8_t   MOTOR_STEP_STEPS        =               200;
 static const uint8_t   MOTOR_STEP_MODE0        =                10;
@@ -58,7 +58,7 @@ static const uint8_t   MOTOR_RIGHT_FWD         =                6;
 static const uint8_t   MOTOR_RIGHT_REV         =                5;
 static const uint8_t   MOTOR_FIRE_FWD          =               69;
 static const uint8_t   MOTOR_FIRE_REV          =               69;
-static const uint8_t   MOTOR_STEP_DIR          =               69;
-static const uint8_t   MOTOR_STEP_STEP         =               69;
+static const uint8_t   MOTOR_STEP_DIR          =               11;
+static const uint8_t   MOTOR_STEP_STEP         =               12;
 
 #endif
