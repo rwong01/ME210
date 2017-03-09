@@ -18,23 +18,25 @@ int main() {
   Serial.begin(9600);
   pinMode(MOTOR_STEP_DIR,   OUTPUT);
   pinMode(MOTOR_STEP_STEP,  OUTPUT);
-  pinMode(US_TRIG,          OUTPUT);
-  pinMode(US_ECHO,          INPUT);
   stepper.setMaxSpeed(LAUNCH_SPEED);
   stepper.setSpeed(LAUNCH_SPEED);
   uint32_t start = millis();
+  uint32_t startt;
+
+
 /***********************************  MAIN  ***********************************/
+  while ((millis() - start) <= 5000);
+  startt = millis();
   while(true) {
-    digitalWrite(US_TRIG, LOW);
-    delayMicroseconds(2);
-    digitalWrite(US_TRIG, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(US_TRIG, LOW);
-    float distance = pulseIn(US_ECHO, HIGH, 10000);
-    if (distance == 0) return US_THRESHOLD;
-    float inches =  distance  / 148.0;
-    Serial.println(inches);
-    if ((millis() - start) >= 5000) stepper.runSpeed();
+    if ((millis() - startt) <= 5000) {
+      stepper.runSpeed();
+    }
+    else {
+      // stepper.setSpeed(LAUNCH_SPEED / 2);
+      delay(5000);
+      startt = millis();
+    }
     delay(BUFFER_CLEAR_TIME);
   }
+
 }
