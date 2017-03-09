@@ -68,7 +68,8 @@ void Robot::exitBase() {
  * This function handles the algorythmic complexity of attacking a the first tower.
  */
 void Robot::attackTower1() {
-  if (detectedPluss()) state_1 = quit_s;
+  // if (detectedPluss()) state_1 = quit_s;
+  if (plus_number >=2) state_1 = quit_s;
   // if (attackTower()) {
   //   state_1 = attackTower2_s;
   //   state_2 = approaching_s;
@@ -167,7 +168,7 @@ void Robot::waitForStart() {
   startTime = millis();
   state_1 = exitBase_s;
   state_2 = searching_s;
-  turnRight();
+  turnLeft();
 }
 
 /*
@@ -204,6 +205,9 @@ void Robot::updateSensors() {
   centerSensorIR[1]   = readSensor_IR(IR_IN_10);
   centerSensorIR[2]   = readSensor_IR(IR_IN_11);
 
+  plus_prev = plus_curr;
+  plus_curr = detectedPluss();
+  if((state_1 != exitBase_s) && (!plus_prev && plus_curr)) plus_number++;
 }
 
 /*
@@ -254,6 +258,10 @@ void Robot::printState() {
   Serial.print("   ");
   Serial.print(rightSensorIR[2]);
   Serial.print('\n');
+
+  Serial.print("plus_number: ");
+  Serial.println(plus_number);
+
 }
 
 /*
@@ -281,14 +289,16 @@ void Robot::checkBumper() {
  */
 void Robot::center() {
   if      ((state_3 != turningForeward_s) && (state_3 != ignoringPluss_s)) return;
-  else if ((state_4 == inchLeft_s) && (frontSensorIR[0] || frontSensorIR[1])) {
+  //else if ((state_4 == inchLeft_s) && (frontSensorIR[0] || frontSensorIR[1])) {
+  else if ((state_4 == inchLeft_s) && (frontSensorIR[0])) {
     state_4 = inchRight_s;
     analogWrite(MOTOR_LEFT_FWD,  0);
     analogWrite(MOTOR_LEFT_REV,  0);
     analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
     analogWrite(MOTOR_RIGHT_REV, 0);
   }
-  else if ((state_4 == inchRight_s) && (!frontSensorIR[0] || !frontSensorIR[1])) {
+  //else if ((state_4 == inchRight_s) && (!frontSensorIR[0] || !frontSensorIR[1])) {
+  else if ((state_4 == inchRight_s) && (!frontSensorIR[0])) {
     state_3 = turningForeward_s;
     state_4 = inchLeft_s;
     analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
@@ -546,7 +556,11 @@ bool Robot::detectedS() {
  * This function returns true when reaching a pluss sign junction.
  */
 bool Robot::detectedPluss() {
-  if ((
+  if (
+    // ((leftSensorIR[0] && rightSensorIR[0]) || (leftSensorIR[1] && rightSensorIR[1])
+    // || (leftSensorIR[2] && rightSensorIR[2]))
+
+    (
                                                                                            rightSensorIR[0] ||
                                                                                            rightSensorIR[1] ||
                                                                                            rightSensorIR[2]

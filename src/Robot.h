@@ -31,6 +31,10 @@ public:
   void           hitBumper();
   void           quit();
 
+  int plus_number  = 0;
+  bool plus_prev = false;
+  bool plus_curr = false;
+
 private:
 /*********************************  HELPERS  **********************************/
   void           setPinModes();
