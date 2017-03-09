@@ -25,7 +25,7 @@ static const uint16_t  LOADER_SPEED            =               255;
 static const uint32_t  RUNTIME_TIMEOUT         =            130000;
 static const uint32_t  ESCAPE_TIMEOUT          =              5000;
 static const uint32_t  LAUNCH_TIMEOUT          =             10000;
-static const uint32_t  BUFFER_CLEAR_TIME       =                25;
+static const uint32_t  BUFFER_CLEAR_TIME       =                1;
 
 static const uint8_t   MOTOR_STEP_STEPS        =               200;
 static const uint8_t   MOTOR_STEP_MODE0        =                10;
