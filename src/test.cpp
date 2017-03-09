@@ -25,14 +25,16 @@ int main() {
 
 
 /***********************************  MAIN  ***********************************/
-  while ((millis() - start) <= 5000);
+  Serial.print("warming up...");
+  while ((millis() - start) <= LAUNCH_TIMEOUT);
   startt = millis();
   while(true) {
-    if ((millis() - startt) <= 5000) {
+    if ((millis() - startt) <= LAUNCH_TIMEOUT) {
+      Serial.print("Firing one...");
       stepper.runSpeed();
     }
     else {
-      // stepper.setSpeed(LAUNCH_SPEED / 2);
+      Serial.print("Firing two...");
       delay(5000);
       startt = millis();
     }

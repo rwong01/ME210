@@ -20,11 +20,11 @@
 static const uint16_t  BLACK_THRESHOLD         =               400;
 static const uint16_t  US_THRESHOLD            =              2000;
 static const uint16_t  DRIVE_SPEED             =               200;
-static const uint16_t  LAUNCH_SPEED            =              1000;
+static const uint16_t  LAUNCH_SPEED            =               750;
 static const uint16_t  LOADER_SPEED            =               255;
 static const uint32_t  RUNTIME_TIMEOUT         =            130000;
 static const uint32_t  ESCAPE_TIMEOUT          =              5000;
-static const uint32_t  LAUNCH_TIMEOUT          =             10000;
+static const uint32_t  LAUNCH_TIMEOUT          =              4000;
 static const uint32_t  BUFFER_CLEAR_TIME       =                1;
 
 static const uint8_t   MOTOR_STEP_STEPS        =               200;
