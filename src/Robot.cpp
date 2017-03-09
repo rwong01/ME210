@@ -69,12 +69,12 @@ void Robot::exitBase() {
  */
 void Robot::attackTower1() {
   // if (detectedPluss()) state_1 = quit_s;
-  if (plus_number >=2) state_1 = quit_s;
-  // if (attackTower()) {
-  //   state_1 = attackTower2_s;
-  //   state_2 = approaching_s;
-  //   turnForward();
-  // }
+  goal_plus = 1;
+  if (attackTower()) {
+    state_1 = attackTower2_s;
+    state_2 = approaching_s;
+    turnForward();
+  }
 }
 
 /*
@@ -83,6 +83,7 @@ void Robot::attackTower1() {
  * This function handles the algorythmic complexity of attacking a the second tower.
  */
 void Robot::attackTower2() {
+  goal_plus = 2;
   if (attackTower()) {
     state_1 = hitBumper_s;
     turnRight();
@@ -207,7 +208,12 @@ void Robot::updateSensors() {
 
   plus_prev = plus_curr;
   plus_curr = detectedPluss();
-  if((state_1 != exitBase_s) && (!plus_prev && plus_curr)) plus_number++;
+  if((state_1 != exitBase_s) && (!plus_prev && plus_curr)){
+    if( (micros()-plus_time)> plus_cooldown){
+      plus_number++;
+      plus_time = micros();
+    }
+  }
 }
 
 /*
@@ -373,7 +379,7 @@ bool Robot::leaveStart() {
  */
 bool Robot::attackTower() {
   bool done = false;
-  if      (state_3 == turningForeward_s && detectedPluss()) state_3 = ignoringPluss_s;
+  if     ( (goal_plus == plus_number) && (state_3 == turningForeward_s) && detectedPluss()) state_3 = ignoringPluss_s;
   else if (state_3 == ignoringPluss_s && detectedPluss()) state_3 = centeringPluss_s;
   else if (state_3 == centeringPluss_s  && detectedPlussCenter()) {
     state_2 = loading_s;
@@ -549,6 +555,42 @@ bool Robot::detectedS() {
   ) return true;
   return false;
 }
+/*
+ * Function: detectedPluss
+ * -------------------
+ * More accurate than detectedPluss
+ */
+bool Robot::detectedPlussStrict() {
+  if (
+    ((leftSensorIR[0] && rightSensorIR[0]) || (leftSensorIR[1] && rightSensorIR[1])
+     || (leftSensorIR[2] && rightSensorIR[2]))) return true;
+     // if      (
+     //    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
+     //     leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
+     //    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
+     // ) {
+     //   done = true;
+     //   analogWrite(MOTOR_LEFT_FWD,  0);
+     //   analogWrite(MOTOR_LEFT_REV,  0);
+     //   analogWrite(MOTOR_RIGHT_FWD, 0);
+     //   analogWrite(MOTOR_RIGHT_REV, 0);
+     // }
+
+
+/*
+
+    (
+                                                                                           rightSensorIR[0] ||
+                                                                                           rightSensorIR[1] ||
+                                                                                           rightSensorIR[2]
+    ) && (
+     leftSensorIR[0] ||
+     leftSensorIR[1] ||
+     leftSensorIR[2])
+  ) return true;
+*/
+  return false;
+}
 
 /*
  * Function: detectedPluss
@@ -568,7 +610,13 @@ bool Robot::detectedPluss() {
      leftSensorIR[0] ||
      leftSensorIR[1] ||
      leftSensorIR[2])
-  ) return true;
+  ){
+    //Within this if you are on a plus. Now check if its the one you want to
+    //stop on.
+    return true;
+    //if( state_1 == attackTower1 ) &&  ()
+
+  }
   return false;
 }
 
@@ -586,15 +634,15 @@ bool Robot::detectedPlussCenter() {
   //   analogWrite(MOTOR_RIGHT_REV, 0);
   // }
   if      (
-      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1]
-  ) {
+      detectedPlussStrict() ){
     done = true;
     analogWrite(MOTOR_LEFT_FWD,  0);
     analogWrite(MOTOR_LEFT_REV,  0);
     analogWrite(MOTOR_RIGHT_FWD, 0);
     analogWrite(MOTOR_RIGHT_REV, 0);
+    return done;
   }
-  else if (state_4 == inchLeft_s) {
+  if (state_4 == inchLeft_s) {
     if ((rightSensorIR[0] != rightSensorIROLD[0]) || (rightSensorIR[2] != rightSensorIROLD[2])) state_4 = inchRight_s;
     else if (rightSensorIR[0]) {
       analogWrite(MOTOR_LEFT_FWD,  0);

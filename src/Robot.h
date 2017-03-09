@@ -34,7 +34,9 @@ public:
   int plus_number  = 0;
   bool plus_prev = false;
   bool plus_curr = false;
-
+  int goal_plus = 0;
+  long plus_cooldown = 1*1000*100;
+  long plus_time = 0;
 private:
 /*********************************  HELPERS  **********************************/
   void           setPinModes();
@@ -66,6 +68,7 @@ private:
   bool           detectedRightOff();
   bool           detectedS();
   bool           detectedPluss();
+  bool           detectedPlussStrict();
   bool           detectedPlussCenter();
 
   float          readSensor_US();
