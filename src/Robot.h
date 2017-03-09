@@ -84,6 +84,8 @@ private:
   bool           leftSensorIR[3];
   bool           rightSensorIR[3];
   bool           centerSensorIR[3];
+  bool           leftSensorIROLD[3];
+  bool           rightSensorIROLD[3];
   DRV8825        stepper;
 };
 

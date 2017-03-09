@@ -176,11 +176,19 @@ void Robot::waitForStart() {
  * This function get all the updated values for evaluating this state.
  */
 void Robot::updateSensors() {
-  frontSensorBump[0] = readSensors_BUMP(BUMPER_LEFT);
-  frontSensorBump[1] = readSensors_BUMP(BUMPER_RIGHT);
+  leftSensorIROLD[0]  = leftSensorIR[0];
+  leftSensorIROLD[1]  = leftSensorIR[1];
+  leftSensorIROLD[2]  = leftSensorIR[2];
 
-  frontSensorIR[0]     = readSensor_IR(IR_IN_01);
-  frontSensorIR[1]     = readSensor_IR(IR_IN_02);
+  rightSensorIROLD[0] = rightSensorIR[0];
+  rightSensorIROLD[1] = rightSensorIR[1];
+  rightSensorIROLD[2] = rightSensorIR[2];
+
+  frontSensorBump[0]  = readSensors_BUMP(BUMPER_LEFT);
+  frontSensorBump[1]  = readSensors_BUMP(BUMPER_RIGHT);
+
+  frontSensorIR[0]    = readSensor_IR(IR_IN_01);
+  frontSensorIR[1]    = readSensor_IR(IR_IN_02);
 
   leftSensorIR[0]     = readSensor_IR(IR_IN_03);
   leftSensorIR[1]     = readSensor_IR(IR_IN_04);
@@ -557,35 +565,45 @@ bool Robot::detectedPluss() {
 
 bool Robot::detectedPlussCenter() {
   bool done = false;
+  // if      (
+  //    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
+  //     leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
+  //    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
+  // ) done = true;
   if      (
-     leftSensorIR[1] &&                                                                    rightSensorIR[1]
+      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1]
   ) done = true;
-  else if (rightSensorIR[0]) {
-    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
-    analogWrite(MOTOR_LEFT_REV,  0);
-    analogWrite(MOTOR_RIGHT_FWD, 0);
-    analogWrite(MOTOR_RIGHT_REV, 0);
-  }
+  else if (state_4 == inchLeft_s) {
+    if ((rightSensorIR[0] != rightSensorIROLD[0]) || (rightSensorIR[2] != rightSensorIROLD[2])) state_4 = inchRight_s;
+    else if (rightSensorIR[0]) {
+      analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+      analogWrite(MOTOR_LEFT_REV,  0);
+      analogWrite(MOTOR_RIGHT_FWD, 0);
+      analogWrite(MOTOR_RIGHT_REV, 0);
+    }
 
-  else if (rightSensorIR[2]) {
-    analogWrite(MOTOR_LEFT_FWD,  0);
-    analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
-    analogWrite(MOTOR_RIGHT_FWD, 0);
-    analogWrite(MOTOR_RIGHT_REV, 0);
+    else if (rightSensorIR[2]) {
+      analogWrite(MOTOR_LEFT_FWD,  0);
+      analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
+      analogWrite(MOTOR_RIGHT_FWD, 0);
+      analogWrite(MOTOR_RIGHT_REV, 0);
+    }
   }
+  else if (state_4 == inchRight_s) {
+    if ((leftSensorIR[0] != leftSensorIROLD[0]) || (leftSensorIR[2] != leftSensorIROLD[2])) state_4 = inchLeft_s;
+    else if (leftSensorIR[2]) {
+      analogWrite(MOTOR_LEFT_FWD,  0);
+      analogWrite(MOTOR_LEFT_REV,  0);
+      analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+      analogWrite(MOTOR_RIGHT_REV, 0);
+    }
 
-  else if (leftSensorIR[2]) {
-    analogWrite(MOTOR_LEFT_FWD,  0);
-    analogWrite(MOTOR_LEFT_REV,  0);
-    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
-    analogWrite(MOTOR_RIGHT_REV, 0);
-  }
-
-  else if (leftSensorIR[0]) {
-    analogWrite(MOTOR_LEFT_FWD,  0);
-    analogWrite(MOTOR_LEFT_REV,  0);
-    analogWrite(MOTOR_RIGHT_FWD, 0);
-    analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
+    else if (leftSensorIR[0]) {
+      analogWrite(MOTOR_LEFT_FWD,  0);
+      analogWrite(MOTOR_LEFT_REV,  0);
+      analogWrite(MOTOR_RIGHT_FWD, 0);
+      analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
+    }
   }
   return done;
 }
