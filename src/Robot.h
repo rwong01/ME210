@@ -82,8 +82,7 @@ private:
   uint32_t       launchTime;
   uint32_t       centerTime;
   float          distance;
-  float          distanceOld;
-  float          distanceShortest;
+  float          distanceShortest = US_THRESHOLD;
   bool           frontSensorBump[2];
   bool           frontSensorIR[2];
   bool           leftSensorIR[3];

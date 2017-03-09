@@ -69,11 +69,12 @@ void Robot::exitBase() {
  * This function handles the algorythmic complexity of attacking a the first tower.
  */
 void Robot::attackTower1() {
-  if (attackTower()) {
-    state_1 = attackTower2_s;
-    state_2 = approaching_s;
-    turnForward();
-  }
+  if (detectedPluss()) state_1 = quit_s;
+  // if (attackTower()) {
+  //   state_1 = attackTower2_s;
+  //   state_2 = approaching_s;
+  //   turnForward();
+  // }
 }
 
 /*
@@ -184,7 +185,6 @@ void Robot::updateSensors() {
   rightSensorIROLD[1] = rightSensorIR[1];
   rightSensorIROLD[2] = rightSensorIR[2];
 
-  distanceOld         = distance;
   distance            = readSensor_US();
 
   frontSensorBump[0]  = readSensors_BUMP(BUMPER_LEFT);
@@ -224,6 +224,9 @@ void Robot::printState() {
 
   Serial.print('\n');
   Serial.print(distance);
+  Serial.print(" inches");
+  Serial.print('\n');
+  Serial.print(distanceShortest);
   Serial.print(" inches");
   Serial.print('\n');
   Serial.print(frontSensorBump[0]);
@@ -299,7 +302,7 @@ void Robot::center() {
  * This function finds the back based on the shorted US distance.
  */
 bool Robot::findBack() {
-  if (distance <= distanceOld) distanceShortest = distance;
+  if (distance <= distanceShortest) distanceShortest = distance;
   if ((millis() - startTime) >= ESCAPE_TIMEOUT) return true;
   return false;
 }
@@ -311,12 +314,16 @@ bool Robot::findBack() {
  */
 bool Robot::orientBack() {
   state_2 = orienting_s;
-  if (distance <= (1.4 * distanceShortest)) {
+  if (distance <= (1.2 * distanceShortest)) {
     state_3 = turningForeward_s;
-    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
-    analogWrite(MOTOR_LEFT_REV,  0);
-    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
-    analogWrite(MOTOR_RIGHT_REV, 0);
+    // analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+    // analogWrite(MOTOR_LEFT_REV,  0);
+    // analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+    // analogWrite(MOTOR_RIGHT_REV, 0);
+    analogWrite(MOTOR_LEFT_FWD,  0);
+    analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_FWD, 0);
+    analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
     return true;
   }
   return false;
@@ -604,7 +611,7 @@ float Robot::readSensor_US() {
   delayMicroseconds(10);
   digitalWrite(US_TRIG, LOW);
   float distance = pulseIn(US_ECHO, HIGH, 10000);
-  if (distance == 0) return 1000;
+  if (distance == 0) return US_THRESHOLD;
   else return distance  / 148.0;
 }
 
