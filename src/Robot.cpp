@@ -356,8 +356,8 @@ bool Robot::findStart() {
  */
 bool Robot::attackTower() {
   bool done = false;
-  if      (state_3 == turningForeward_s && detectedPluss()) state_3 = loadingEggs_s;
-  else if (state_3 == loadingEggs_s && detectedPlussCenter()) {
+  if      (state_3 == turningForeward_s && detectedPluss()) state_3 = centeringPluss_s;
+  else if (state_3 == centeringPluss_s  && detectedPlussCenter()) {
     state_2 = loading_s;
     state_3 = launchingEggs_s;
   }
