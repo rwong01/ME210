@@ -232,9 +232,9 @@ void Robot::updateSensors() {
   plus_prev = plus_curr;
   plus_curr = detectedPluss();
   if((state_1 != exitBase_s) && (!plus_prev && plus_curr)){
-    if( (millis()-plus_time)> plus_cooldown){
+    if( (micros()-plus_time)> plus_cooldown){
       plus_number++;
-      plus_time = millis();
+      plus_time = micros();
     }
   }
 }
@@ -509,7 +509,7 @@ bool Robot::detectedPluss() {
 bool Robot::detectedPlussCenter() {
   bool done = false;
   if      (
-      !leftSensorIR[0] &&                                                                  !rightSensorIR[0] && //TODO?????????????
+      // !leftSensorIR[0] &&                                                                  !rightSensorIR[0] && //TODO?????????????
       leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
       !leftSensorIR[2] &&                                                                  !rightSensorIR[2]  // TODO?????????????
   ) {

@@ -75,7 +75,7 @@ private:
   bool           plus_prev      = false;
   bool           plus_curr      = false;
   uint8_t        goal_plus      = 0;
-  uint32_t       plus_cooldown  = 500;
+  uint32_t       plus_cooldown  = 100000;
   uint32_t       plus_time      = 0;
 
   float          distance       = 0;
