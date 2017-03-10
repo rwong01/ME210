@@ -227,7 +227,8 @@ void Robot::updateSensors() {
   centerSensorIR[2]   = readSensor_IR(IR_IN_11);
 
   avgDistOld          = (alpha * avgDist) + (1.0 - alpha) * avgDistOld;
-  avgDist             = (avgDist + distance) / 2;
+  // avgDist             = (avgDist + distance) / 2;
+  avgDist             = (alpha * distance) + (1.0 - alpha) * avgDist;
 
   plus_prev = plus_curr;
   plus_curr = detectedPluss();
@@ -435,7 +436,6 @@ bool Robot::launchEgg(uint16_t stepperSpeed) {
     LOOP_RATE = BUFFER_CLEAR_TIME_STEP;
     stepper.setSpeed(stepperSpeed);
     launchTime = millis();
-    state_3 = launchingEggsOne_s;
     state_2 = attacking_s;
   }
   stepper.runSpeed();

@@ -17,7 +17,7 @@
 #include <stdint.h>
 
 /****************************  EDITABLE CONSTANTS  ****************************/
-static const uint16_t  BLACK_THRESHOLD         =                            400;
+static const uint16_t  BLACK_THRESHOLD         =                            350;
 static const uint16_t  US_THRESHOLD            =                           2000;
 
 static const uint16_t  DRIVE_SPEED_LEFT        =                            200;
