@@ -30,7 +30,7 @@ static const uint16_t  LOADER_SPEED_FOUR       =                            400;
 
 static const uint32_t  RUNTIME_TIMEOUT         =                         130000;
 static const uint32_t  ESCAPE_TIMEOUT          =                           2000;
-static const uint32_t  LAUNCH_TIMEOUT          =                           2000;
+static const uint32_t  LAUNCH_TIMEOUT          =                           1700;
 static const uint32_t  LOAD_TIMEOUT            =                           3000;
 
 static const uint32_t  BUFFER_CLEAR_TIME_NORM  =                             20;

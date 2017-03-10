@@ -227,15 +227,14 @@ void Robot::updateSensors() {
   centerSensorIR[2]   = readSensor_IR(IR_IN_11);
 
   avgDistOld          = (alpha * avgDist) + (1.0 - alpha) * avgDistOld;
-  // avgDist             = (avgDist + distance) / 2;
   avgDist             = (beta * distance) + (1.0 - beta) * avgDist;
 
   plus_prev = plus_curr;
   plus_curr = detectedPluss();
   if((state_1 != exitBase_s) && (!plus_prev && plus_curr)){
-    if( (micros()-plus_time)> plus_cooldown){
+    if( (millis()-plus_time)> plus_cooldown){
       plus_number++;
-      plus_time = micros();
+      plus_time = millis();
     }
   }
 }

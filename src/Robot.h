@@ -75,7 +75,7 @@ private:
   bool           plus_prev      = false;
   bool           plus_curr      = false;
   uint8_t        goal_plus      = 0;
-  uint32_t       plus_cooldown  = 100000;
+  uint32_t       plus_cooldown  = 500;
   uint32_t       plus_time      = 0;
 
   float          distance       = 0;
@@ -86,7 +86,6 @@ private:
   bool           distDescending = false;
   float          alpha          = 0.01;
   float          beta           = 0.75;
-
 
   uint32_t       USTime;
   uint32_t       startTime;
