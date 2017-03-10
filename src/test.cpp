@@ -16,6 +16,7 @@
 // /***********************************  BOOT  ***********************************/
 // AccelStepper stepper(1, MOTOR_STEP_STEP, MOTOR_STEP_DIR);
 // int main() {
+//   uint16_t LOADER_SPEED = 400;
 //   Serial.begin(9600);
 //   pinMode(MOTOR_STEP_DIR,   OUTPUT);
 //   pinMode(MOTOR_STEP_STEP,  OUTPUT);
@@ -26,17 +27,11 @@
 //
 // /***********************************  MAIN  ***********************************/
 //   Serial.print("warming up...");
-//   while ((millis() - start) <= LAUNCH_TIMEOUT);
+//   while ((millis() - start) <= 5000);
 //   startt = millis();
 //   while(true) {
 //     if ((millis() - startt) <= LAUNCH_TIMEOUT) {
-//       Serial.print("Firing one...");
 //       stepper.runSpeed();
-//     }
-//     else {
-//       Serial.print("Firing two...");
-//       delay(5000);
-//       startt = millis();
 //     }
 //     delay(BUFFER_CLEAR_TIME_STEP);
 //   }
