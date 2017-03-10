@@ -60,7 +60,6 @@ enum state_tier_3_t {
   ignoringPluss_s,
   centeringPluss_s,
   launchingEggs_s,
-  hittingBumper_s
 };
 static const char* states_teir_3_names[] = {
   "turningLeftOne_s",
@@ -72,7 +71,6 @@ static const char* states_teir_3_names[] = {
   "ignoringPluss_s",
   "centeringPluss_s",
   "launchingEggs_s",
-  "hittingBumper_s"
 };
 
 enum state_tier_4_t {

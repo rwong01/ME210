@@ -43,7 +43,7 @@ void Robot::updateState() {
   updateSensors();
   printState();
   checkTimer();
-  checkBumper();
+  //checkBumper(); TODO*********************************************************
   center();
 }
 
@@ -108,10 +108,16 @@ void Robot::attackTower2() {
 void Robot::hitBumper() {
   // goal_plus = 4; TODO********************************************************
   goal_plus = 3;
-  if     ((goal_plus == plus_number) && (state_3 == turningRightOne_s) && detectedPluss()) turnForward();
-  // if      (state_3 == turningRightOne_s && detectedRightOff()) state_3 = turningRightTwo_s;
-  // else if (state_3 == turningRightTwo_s && detectedPluss()) turnForward();
-  // else if ((state_3 == turningForeward_s) && detectedPluss()) state_3 = hittingBumper_s;
+  if     ((goal_plus == plus_number) && (state_3 == turningRightOne_s) && detectedPluss()) {
+    goal_plus = 4;
+    turnForward();
+  }
+  else if ((goal_plus == plus_number) && (state_3 == turningForeward_s) && detectedPluss()) {
+    analogWrite(MOTOR_LEFT_FWD,   DRIVE_SPEED);
+    analogWrite(MOTOR_LEFT_REV,   0);
+    analogWrite(MOTOR_RIGHT_FWD,  DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_REV,  0);
+  }
 }
 
 /*
