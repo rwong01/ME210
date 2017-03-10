@@ -423,7 +423,6 @@ bool Robot::attackTower() {
   else if (state_3 == centeringPluss_s  && detectedPlussCenter()) {
     state_2 = loading_s;
     state_3 = launchingEggs_s;
-    LOOP_RATE = BUFFER_CLEAR_TIME_STEP;
   }
   else if (state_3 == launchingEggs_s && launchEgg()) done = true;
   return done;
@@ -436,7 +435,8 @@ bool Robot::attackTower() {
  */
 bool Robot::launchEgg() {
   bool done = false;
-  if (state_2 == loading_s) {
+  if (state_2 == loading_s) {  
+    LOOP_RATE = BUFFER_CLEAR_TIME_STEP;
     launchTime = millis();
     state_3 = launchingEggs_s;
     state_2 = attacking_s;
