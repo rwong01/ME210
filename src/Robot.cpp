@@ -216,7 +216,7 @@ void Robot::updateSensors() {
   centerSensorIR[1]   = readSensor_IR(IR_IN_10);
   centerSensorIR[2]   = readSensor_IR(IR_IN_11);
 
-  avgDistOld          = avgDist;
+  avgDistOld          = (avgDistOld + avgDist) / 2;
   avgDist             = (avgDist + distance) / 2;
 
   plus_prev           = plus_curr;
@@ -343,12 +343,12 @@ bool Robot::orientBack() {
     avgDist    = distance;
     avgDistOld = distance;
   }
-  else if(distDescending){ //We are getting closer. Continue until we pass the min
+  else if(distDescending){
     if ((1.1 * avgDist) < avgMin) {
       Serial.println("replacing min");
       avgMin = avgDist;
     }
-    else { //We were close, now we're further. Stop doing it.
+    else {
       done = true;
       analogWrite(MOTOR_LEFT_FWD,  0);
       analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
@@ -357,14 +357,9 @@ bool Robot::orientBack() {
       leavingTime = millis();
     }
   }
-  else if(avgMin > (1.1 * avgDist)){ //We're now closer. Set new min and start the descent.
+  else if(avgDistOld > (1.1 * avgDist)){
     avgMin = avgDist;
     distDescending = true;
-    // Serial.println("increasing");
-    // if((avgDist*1.1) < avgDistOld){ //We're now closer. Set new min and start the descent.
-    //   Serial.println("now distDescending");
-    //   avgMin = -1;
-    //   distDescending = true;
   }
   return done;
 }
