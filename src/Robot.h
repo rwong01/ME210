@@ -16,7 +16,6 @@
 #include "Config.h"
 #include "States.h"
 #include "Arduino.h"
-#include <MAX11643.h>
 
 class Robot {
 public:
@@ -25,7 +24,7 @@ public:
 /********************************  FUNCTIONS  *********************************/
   state_tier_1_t getState();
   void           updateState();
-  void           clearBuffer();
+  void           sleep();
 
   void           exitBase();
   void           attackTower1();
@@ -54,14 +53,9 @@ private:
   void           turnLeft();
   void           turnRight();
   void           turnForward();
-  void           turnBackward();
 
-  bool           detectedI();
-  bool           detectedLeft();
-  bool           detectedRight();
   bool           detectedLeftOff();
   bool           detectedRightOff();
-  bool           detectedS();
   bool           detectedPluss();
   bool           detectedPlussStrict();
   bool           detectedPlussCenter();
@@ -80,10 +74,12 @@ private:
   bool           plus_prev      = false;
   bool           plus_curr      = false;
   uint8_t        goal_plus      = 0;
-  uint32_t       plus_cooldown  = 1*1000*100;
+  uint32_t       plus_cooldown  = 100000;
   uint32_t       plus_time      = 0;
 
+  float          distance       = 0;
   float          avgDist        = 0;
+  float          avgDistOld     = 0;
   float          avgMin         = -1;
   bool           distDescending = false;
 
@@ -93,9 +89,6 @@ private:
   uint32_t       leavingTime;
   uint32_t       launchTime;
   uint32_t       centerTime;
-  float          distance;
-  float          distanceShortest    = US_THRESHOLD;
-  float          distanceShortestNew = US_THRESHOLD;
   uint32_t       LOOP_RATE = BUFFER_CLEAR_TIME_START;
 
   bool           frontSensorBump[2];

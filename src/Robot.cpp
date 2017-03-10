@@ -48,11 +48,11 @@ void Robot::updateState() {
 }
 
 /*
- * Function: clearBuffer
+ * Function: sleep
  * -------------------
  * This function clears the serial buffer so that we do not get flooded.
  */
-void Robot::clearBuffer() {
+void Robot::sleep() {
   delay(LOOP_RATE);
 }
 
@@ -121,7 +121,7 @@ void Robot::quit() {
   analogWrite(MOTOR_RIGHT_REV,  0);
   analogWrite(MOTOR_FIRE_FWD,   0);
   analogWrite(MOTOR_FIRE_REV,   0);
-  Serial.print("Done...");
+  Serial.print("I quit...");
   Serial.print('\n');
 }
 
@@ -216,15 +216,14 @@ void Robot::updateSensors() {
   centerSensorIR[1]   = readSensor_IR(IR_IN_10);
   centerSensorIR[2]   = readSensor_IR(IR_IN_11);
 
-  avgDist = (avgDist+ distance)/2;
+  avgDistOld          = avgDist;
+  avgDist             = (avgDist + distance) / 2;
 
-  plus_prev = plus_curr;
-  plus_curr = detectedPluss();
-  if ((state_1 != exitBase_s) && (!plus_prev && plus_curr)) {
-    if( (millis()-plus_time) > plus_cooldown) {
-      plus_number++;
-      plus_time = millis();
-    }
+  plus_prev           = plus_curr;
+  plus_curr           = detectedPluss();
+  if ((state_1 != exitBase_s) && (!plus_prev && plus_curr) && ((millis() - plus_time) >= plus_cooldown)) {
+    plus_number++;
+    plus_time = millis();
   }
 }
 
@@ -245,13 +244,7 @@ void Robot::printState() {
 
   Serial.print('\n');
   Serial.print(distance);
-  Serial.print(" inches (raw)");
-  Serial.print('\n');
-  Serial.print(distanceShortest);
-  Serial.print(" inches (short)");
-  Serial.print('\n');
-  Serial.print(distanceShortestNew);
-  Serial.print(" inches (new)");
+  Serial.print(" inches");
   Serial.print('\n');
   Serial.print(frontSensorBump[0]);
   Serial.print("   ");
@@ -282,6 +275,9 @@ void Robot::printState() {
   Serial.print('\n');
   Serial.print(avgDist);
   Serial.print("(avg distacne)");
+  Serial.print('\n');
+  Serial.print(avgDistOld);
+  Serial.print("(avg distacne old)");
   Serial.print('\n');
   Serial.print(avgMin);
   Serial.print("(avg min)");
@@ -342,31 +338,33 @@ void Robot::center() {
 bool Robot::orientBack() {
   bool done = false;
   state_2 = orienting_s;
-  if(avgMin < 0){
-    avgMin = distance;
-    avgDist = distance;
-    return false; //Dont set done here, return to set initial pattern.
+  if     (avgMin < 0){
+    avgMin     = distance;
+    avgDist    = distance;
+    avgDistOld = distance;
   }
-  if( distDescending){ //We are getting closer. Continue until we pass the min
-    if( avgMin > (1.1 * avgDist)){
+  else if(distDescending){ //We are getting closer. Continue until we pass the min
+    if ((1.1 * avgDist) < avgMin) {
+      Serial.println("replacing min");
       avgMin = avgDist;
-      }
-      else { //We were close, now we're further. Stop doing it.
-        done = true;
-      }
     }
-    else { //We are currently moving away.
-    if( avgMin > (1.1 * avgDist)){ //We're now closer. Set new min and start the descent.
-      avgMin = avgDist;
-      distDescending = true;
+    else { //We were close, now we're further. Stop doing it.
+      done = true;
+      analogWrite(MOTOR_LEFT_FWD,  0);
+      analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
+      analogWrite(MOTOR_RIGHT_FWD, 0);
+      analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
+      leavingTime = millis();
     }
   }
-  if(done) {
-    analogWrite(MOTOR_LEFT_FWD,  0);
-    analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
-    analogWrite(MOTOR_RIGHT_FWD, 0);
-    analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
-    leavingTime = millis();
+  else if(avgMin > (1.1 * avgDist)){ //We're now closer. Set new min and start the descent.
+    avgMin = avgDist;
+    distDescending = true;
+    // Serial.println("increasing");
+    // if((avgDist*1.1) < avgDistOld){ //We're now closer. Set new min and start the descent.
+    //   Serial.println("now distDescending");
+    //   avgMin = -1;
+    //   distDescending = true;
   }
   return done;
 }
@@ -392,6 +390,12 @@ bool Robot::findStart() {
   return done;
 }
 
+
+/*
+ * Function: leaveStart
+ * -------------------
+ * This function leaves the start zone.
+ */
 bool Robot::leaveStart() {
   bool done = false;
   state_2 = leaving_s;
@@ -406,7 +410,7 @@ bool Robot::leaveStart() {
  */
 bool Robot::attackTower() {
   bool done = false;
-  if     ( (goal_plus == plus_number) && (state_3 == turningForeward_s) && detectedPluss()) state_3 = ignoringPluss_s;
+  if     ((goal_plus == plus_number) && (state_3 == turningForeward_s) && detectedPluss()) state_3 = ignoringPluss_s;
   else if (state_3 == ignoringPluss_s && detectedPluss()) state_3 = centeringPluss_s;
   else if (state_3 == centeringPluss_s  && detectedPlussCenter()) {
     state_2 = loading_s;
@@ -476,65 +480,6 @@ void Robot::turnForward() {
 }
 
 /*
- * Function: turnBackward
- * -------------------
- * This function moves backward.
- */
-void Robot::turnBackward() {
-  state_3 = turningBackward_s;
-  state_4 = noLine_s;
-  analogWrite(MOTOR_LEFT_FWD,  0);
-  analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
-  analogWrite(MOTOR_RIGHT_FWD, 0);
-  analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
-}
-
-/*
- * Function: detectedI
- * -------------------
- * This function returns true when centered on a line.
- */
-bool Robot::detectedI() {
-  if (
-                        !frontSensorIR[0]  &&                       !frontSensorIR[1]  &&
-    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
-    !leftSensorIR[1] && !centerSensorIR[0] &&  centerSensorIR[1] && !centerSensorIR[2] && !rightSensorIR[1] &&
-    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
-  ) return true;
-  return false;
-}
-
-/*
- * Function: detectedLeft
- * -------------------
- * This function returns true when reaching a left junction.
- */
-bool Robot::detectedLeft() {
-  if (
-
-    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
-     leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] && !centerSensorIR[2] && !rightSensorIR[1] &&
-    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
-  ) return true;
-  return false;
-}
-
-/*
- * Function: detectedRight
- * -------------------
- * This function returns true when reaching a right junction.
- */
-bool Robot::detectedRight() {
-  if (
-
-    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
-    !leftSensorIR[1] && !centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
-    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
-  ) return true;
-  return false;
-}
-
-/*
  * Function: detectedLeftOff
  * -------------------
  * This function returns true when at the midpoint of a left turn.
@@ -564,20 +509,6 @@ bool Robot::detectedRightOff() {
   return false;
 }
 
-/*
- * Function: detectedS
- * -------------------
- * This function returns true when reaching the start.
- */
-bool Robot::detectedS() {
-  if (
-                        !frontSensorIR[0]  &&                      !frontSensorIR[1]   &&
-    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
-     leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
-    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
-  ) return true;
-  return false;
-}
 /*
  * Function: detectedPluss
  * -------------------
