@@ -228,7 +228,7 @@ void Robot::updateSensors() {
 
   avgDistOld          = (alpha * avgDist) + (1.0 - alpha) * avgDistOld;
   // avgDist             = (avgDist + distance) / 2;
-  avgDist             = (alpha * distance) + (1.0 - alpha) * avgDist;
+  avgDist             = (beta * distance) + (1.0 - beta) * avgDist;
 
   plus_prev = plus_curr;
   plus_curr = detectedPluss();
@@ -353,7 +353,7 @@ bool Robot::orientBack() {
       Serial.println("replacing min");
       avgMin = avgDist;
     }
-    else {
+    else if (avgDist < minDist){
       done = true;
       analogWrite(MOTOR_LEFT_FWD,  0);
       analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED_LEFT);
@@ -510,10 +510,9 @@ bool Robot::detectedPluss() {
 bool Robot::detectedPlussCenter() {
   bool done = false;
   if      (
-      !leftSensorIR[0] &&                                                              //     !rightSensorIR[0] && //TODO?????????????
+      !leftSensorIR[0] &&                                                                  !rightSensorIR[0] && //TODO?????????????
       leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
-      //!leftSensorIR[2] &&
-      !rightSensorIR[2]  // TODO?????????????
+      !leftSensorIR[2] &&                                                                  !rightSensorIR[2]  // TODO?????????????
   ) {
     done = true;
     analogWrite(MOTOR_LEFT_FWD,  0);
