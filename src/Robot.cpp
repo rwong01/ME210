@@ -24,7 +24,6 @@ void Robot::init() {
   stepper.setMaxSpeed(LOADER_SPEED);
   stepper.setSpeed(LOADER_SPEED);
   waitForStart();
-
 }
 
 /********************************  FUNCTIONS  *********************************/
@@ -115,9 +114,9 @@ void Robot::hitBumper() {
     turnForward();
   }
   else if ((goal_plus == plus_number) && (state_3 == turningForeward_s) && detectedPluss()) {
-    analogWrite(MOTOR_LEFT_FWD,   DRIVE_SPEED);
+    analogWrite(MOTOR_LEFT_FWD,   DRIVE_SPEED_LEFT);
     analogWrite(MOTOR_LEFT_REV,   0);
-    analogWrite(MOTOR_RIGHT_FWD,  DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_FWD,  DRIVE_SPEED_RIGHT);
     analogWrite(MOTOR_RIGHT_REV,  0);
   }
 }
@@ -187,8 +186,8 @@ void Robot::waitForStart() {
     printState();
     delay(BUFFER_CLEAR_TIME_NORM);
   }
-  analogWrite(MOTOR_FIRE_FWD, DRIVE_SPEED);
-  analogWrite(MOTOR_FIRE_REV, 0);
+  digitalWrite(MOTOR_FIRE_FWD, HIGH);
+  digitalWrite(MOTOR_FIRE_REV, LOW);
   startTime = millis();
   state_1 = exitBase_s;
   state_2 = orienting_s;
@@ -332,14 +331,14 @@ void Robot::center() {
     state_4 = inchRight_s;
     analogWrite(MOTOR_LEFT_FWD,  0);
     analogWrite(MOTOR_LEFT_REV,  0);
-    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED_RIGHT);
     analogWrite(MOTOR_RIGHT_REV, 0);
   }
   else if ((state_4 == inchRight_s) && (!frontSensorIR[0] || frontSensorIR[1])) {
   // else if ((state_4 == inchRight_s) && (!frontSensorIR[0])) { TODO???????????
     state_3 = turningForeward_s;
     state_4 = inchLeft_s;
-    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT);
     analogWrite(MOTOR_LEFT_REV,  0);
     analogWrite(MOTOR_RIGHT_FWD, 0);
     analogWrite(MOTOR_RIGHT_REV, 0);
@@ -367,9 +366,9 @@ bool Robot::orientBack() {
     else {
       done = true;
       analogWrite(MOTOR_LEFT_FWD,  0);
-      analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
+      analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED_LEFT);
       analogWrite(MOTOR_RIGHT_FWD, 0);
-      analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
+      analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED_RIGHT);
       leavingTime = millis();
     }
   }
@@ -390,9 +389,9 @@ bool Robot::findStart() {
   state_2 = finding_s;
   if ((millis() - leavingTime) >= ESCAPE_TIMEOUT) {
     state_3 = turningForeward_s;
-    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT);
     analogWrite(MOTOR_LEFT_REV,  0);
-    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+    analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED_RIGHT);
     analogWrite(MOTOR_RIGHT_REV, 0);
     done = true;
   }
@@ -435,7 +434,7 @@ bool Robot::attackTower() {
  */
 bool Robot::launchEgg() {
   bool done = false;
-  if (state_2 == loading_s) {  
+  if (state_2 == loading_s) {
     LOOP_RATE = BUFFER_CLEAR_TIME_STEP;
     launchTime = millis();
     state_3 = launchingEggs_s;
@@ -457,8 +456,8 @@ bool Robot::launchEgg() {
 void Robot::turnLeft() {
   state_3 = turningLeftOne_s;
   analogWrite(MOTOR_LEFT_FWD,  0);
-  analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
-  analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+  analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED_LEFT);
+  analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED_RIGHT);
   analogWrite(MOTOR_RIGHT_REV, 0);
 }
 
@@ -470,10 +469,10 @@ void Robot::turnLeft() {
 void Robot::turnRight() {
   state_3 = turningRightOne_s;
   state_4 = inchLeft_s;
-  analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+  analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT);
   analogWrite(MOTOR_LEFT_REV,  0);
   analogWrite(MOTOR_RIGHT_FWD, 0);
-  analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
+  analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED_RIGHT);
 }
 
 /*
@@ -484,7 +483,7 @@ void Robot::turnRight() {
 void Robot::turnForward() {
   state_3 = turningForeward_s;
   state_4 = inchLeft_s;
-  analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+  analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT);
   analogWrite(MOTOR_LEFT_REV,  0);
   analogWrite(MOTOR_RIGHT_FWD, 0);
   analogWrite(MOTOR_RIGHT_REV, 0);
@@ -528,27 +527,27 @@ bool Robot::detectedPlussCenter() {
     else if (rightSensorIR[0]) {
       analogWrite(MOTOR_LEFT_FWD,  0);
       analogWrite(MOTOR_LEFT_REV,  0);
-      analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+      analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED_RIGHT);
       analogWrite(MOTOR_RIGHT_REV, 0);
     }
     else if (rightSensorIR[2]) {
       analogWrite(MOTOR_LEFT_FWD,  0);
       analogWrite(MOTOR_LEFT_REV,  0);
       analogWrite(MOTOR_RIGHT_FWD, 0);
-      analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
+      analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED_RIGHT);
     }
   }
   else if (state_4 == inchRight_s) {
     if ((leftSensorIR[0] != leftSensorIROLD[0]) || (leftSensorIR[2] != leftSensorIROLD[2])) state_4 = inchLeft_s;
         else if (leftSensorIR[0]) {
-        analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
+        analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT);
         analogWrite(MOTOR_LEFT_REV,  0);
         analogWrite(MOTOR_RIGHT_FWD, 0);
         analogWrite(MOTOR_RIGHT_REV, 0);
         }
     else if (leftSensorIR[2]) {
       analogWrite(MOTOR_LEFT_FWD,  0);
-      analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
+      analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED_LEFT);
       analogWrite(MOTOR_RIGHT_FWD, 0);
       analogWrite(MOTOR_RIGHT_REV, 0);
     }

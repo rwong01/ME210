@@ -15,16 +15,16 @@
 // /***********************************  BOOT  ***********************************/
 // int main() {
 //   Serial.begin(9600);
-//   pinMode(MOTOR_RIGHT_FWD,   OUTPUT);
-//   pinMode(MOTOR_RIGHT_REV,  OUTPUT);
-//   pinMode(MOTOR_LEFT_FWD, OUTPUT);
-//   pinMode(MOTOR_LEFT_REV, OUTPUT);
+//   pinMode(MOTOR_RIGHT_FWD, OUTPUT);
+//   pinMode(MOTOR_RIGHT_REV, OUTPUT);
+//   pinMode(MOTOR_LEFT_FWD,  OUTPUT);
+//   pinMode(MOTOR_LEFT_REV,  OUTPUT);
 //
 // /***********************************  MAIN  ***********************************/
 //   Serial.print("vroom vroom...");
-//   analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
+//   analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT);
+//   analogWrite(MOTOR_LEFT_REV,  0);
+//   analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED_RIGHT);
 //   analogWrite(MOTOR_RIGHT_REV, 0);
-//   analogWrite(MOTOR_LEFT_FWD, DRIVE_SPEED);
-//   analogWrite(MOTOR_LEFT_REV, 0);
 //   delay(50);
 // }
