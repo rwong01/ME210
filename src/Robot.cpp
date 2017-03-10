@@ -219,11 +219,19 @@ void Robot::updateSensors() {
   avgDistOld          = (avgDistOld + avgDist) / 2;
   avgDist             = (avgDist + distance) / 2;
 
-  plus_prev           = plus_curr;
-  plus_curr           = detectedPluss();
-  if ((state_1 != exitBase_s) && (!plus_prev && plus_curr) && ((millis() - plus_time) >= plus_cooldown)) {
-    plus_number++;
-    plus_time = millis();
+  // plus_prev           = plus_curr;
+  // plus_curr           = detectedPluss();
+  // if ((state_1 != exitBase_s) && (!plus_prev && plus_curr) && ((millis() - plus_time) >= plus_cooldown)) {
+  //   plus_number++;
+  //   plus_time = millis();
+  // }
+  plus_prev = plus_curr;
+  plus_curr = detectedPluss();
+  if((state_1 != exitBase_s) && (!plus_prev && plus_curr)){
+    if( (micros()-plus_time)> plus_cooldown){
+      plus_number++;
+      plus_time = micros();
+    }
   }
 }
 
