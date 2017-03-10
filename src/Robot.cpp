@@ -21,7 +21,7 @@
 void Robot::init() {
   Serial.begin(9600);
   setPinModes();
-  stepper.setMaxSpeed(LOADER_SPEED_ONE);
+  stepper.setMaxSpeed(LOADER_SPEED_01);
   waitForStart();
 }
 
@@ -78,7 +78,7 @@ void Robot::exitBase() {
 void Robot::attackTower1() {
   // goal_plus = 2; TODO********************************************************
   goal_plus = 1;
-  if (attackTower(LOADER_SPEED_ONE, LOADER_SPEED_TWO)) {
+  if (attackTower(LOADER_SPEED_01, LOADER_SPEED_02, LOADER_SPEED_03, LOADER_SPEED_04, LOADER_SPEED_05, LOADER_SPEED_06)) {
     state_1 = attackTower2_s;
     state_2 = approaching_s;
     turnForward();
@@ -93,7 +93,7 @@ void Robot::attackTower1() {
 void Robot::attackTower2() {
   // goal_plus = 3; TODO********************************************************
   goal_plus = 2;
-  if (attackTower(LOADER_SPEED_THREE, LOADER_SPEED_FOUR)) {
+  if (attackTower(LOADER_SPEED_07, LOADER_SPEED_08, LOADER_SPEED_09, LOADER_SPEED_10, LOADER_SPEED_11, LOADER_SPEED_12)) {
     state_1 = hitBumper_s;
     turnRight();
   }
@@ -404,23 +404,55 @@ bool Robot::leaveStart() {
  * -------------------
  * This function handles the algorythmic complexity of attacking a single tower.
  */
-bool Robot::attackTower(uint16_t stepperTimeOne, uint16_t stepperTimeTwo) {
+bool Robot::attackTower(uint16_t stepperTime01, uint16_t stepperTime02, uint16_t stepperTime03, uint16_t stepperTime04, uint16_t stepperTime05, uint16_t stepperTime06) {
   bool done = false;
   if     ((goal_plus == plus_number) && (state_3 == turningForeward_s) && detectedPluss()) state_3 = ignoringPluss_s;
   else if (state_3 == ignoringPluss_s && detectedPluss()) state_3 = centeringPluss_s;
   else if (state_3 == centeringPluss_s  && detectedPlussCenter()) {
     state_2 = loading_s;
-    state_3 = launchingEggsOne_s;
+    state_3 = launchingEggs01_s;
   }
-  else if (state_3 == launchingEggsOne_s && launchEgg(stepperTimeOne)) {
-    state_3 = launchingEggsLoad_s;
+  else if (state_3 == launchingEggs01_s && launchEgg(stepperTime01)) {
+    state_3 = launchingEggsLoad01_s;
     loadTime = millis();
   }
-  else if ((state_3 == launchingEggsLoad_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
+  else if ((state_3 == launchingEggsLoad01_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
     state_2 = loading_s;
-    state_3 = launchingEggsTwo_s;
+    state_3 = launchingEggs02_s;
   }
-  else if (state_3 == launchingEggsTwo_s && launchEgg(stepperTimeTwo)) done = true;
+  else if (state_3 == launchingEggs02_s && launchEgg(stepperTime02)) {
+    state_3 = launchingEggsLoad02_s;
+    loadTime = millis();
+  }
+  else if ((state_3 == launchingEggsLoad02_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
+    state_2 = loading_s;
+    state_3 = launchingEggs03_s;
+  }
+  else if (state_3 == launchingEggs03_s && launchEgg(stepperTime03)) {
+    state_3 = launchingEggsLoad03_s;
+    loadTime = millis();
+  }
+  else if ((state_3 == launchingEggsLoad03_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
+    state_2 = loading_s;
+    state_3 = launchingEggs04_s;
+  }
+  else if (state_3 == launchingEggs04_s && launchEgg(stepperTime04)) {
+    state_3 = launchingEggsLoad04_s;
+    loadTime = millis();
+  }
+  else if ((state_3 == launchingEggsLoad04_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
+    state_2 = loading_s;
+    state_3 = launchingEggs05_s;
+  }
+  else if (state_3 == launchingEggs05_s && launchEgg(stepperTime05)) {
+    state_3 = launchingEggsLoad05_s;
+    loadTime = millis();
+  }
+  else if ((state_3 == launchingEggsLoad05_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
+    state_2 = loading_s;
+    state_3 = launchingEggs06_s;
+  }
+  else if (state_3 == launchingEggs06_s && launchEgg(stepperTime06)) done = true;
   return done;
 }
 

@@ -23,15 +23,23 @@ static const uint16_t  US_THRESHOLD            =                           2000;
 static const uint16_t  DRIVE_SPEED_LEFT        =                            200;
 static const uint16_t  DRIVE_SPEED_RIGHT       =        0.98 * DRIVE_SPEED_LEFT;
 
-static const uint16_t  LOADER_SPEED_ONE        =                            700;
-static const uint16_t  LOADER_SPEED_TWO        =                            560;
-static const uint16_t  LOADER_SPEED_THREE      =                            420;
-static const uint16_t  LOADER_SPEED_FOUR       =                            400;
+static const uint16_t  LOADER_SPEED_01         =                            400;
+static const uint16_t  LOADER_SPEED_02         =                            400;
+static const uint16_t  LOADER_SPEED_03         =                            400;
+static const uint16_t  LOADER_SPEED_04         =                            380;
+static const uint16_t  LOADER_SPEED_05         =                            350;
+static const uint16_t  LOADER_SPEED_06         =                            350;
+static const uint16_t  LOADER_SPEED_07         =                            350;
+static const uint16_t  LOADER_SPEED_08         =                            350;
+static const uint16_t  LOADER_SPEED_09         =                            350;
+static const uint16_t  LOADER_SPEED_10         =                            350;
+static const uint16_t  LOADER_SPEED_11         =                            350;
+static const uint16_t  LOADER_SPEED_12         =                            350;
 
 static const uint32_t  RUNTIME_TIMEOUT         =                         120000;
 static const uint32_t  ESCAPE_TIMEOUT          =                           2000;
-static const uint32_t  LAUNCH_TIMEOUT          =                           1700;
-static const uint32_t  LOAD_TIMEOUT            =                           3000;
+static const uint32_t  LAUNCH_TIMEOUT          =                            420;
+static const uint32_t  LOAD_TIMEOUT            =                            500;
 
 static const uint32_t  BUFFER_CLEAR_TIME_NORM  =                             20;
 static const uint32_t  BUFFER_CLEAR_TIME_STEP  =                              1;

@@ -50,7 +50,7 @@ private:
   bool           findStart();
   bool           leaveStart();
 
-  bool           attackTower(uint16_t stepperTimeOne, uint16_t stepperTimeTwo);
+  bool           attackTower(uint16_t stepperTime01, uint16_t stepperTime02, uint16_t stepperTime03, uint16_t stepperTime04, uint16_t stepperTime05, uint16_t stepperTime06);
   bool           launchEgg(uint16_t stepperSpeed);
 
   void           turnLeft();
