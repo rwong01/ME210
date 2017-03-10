@@ -68,7 +68,6 @@ void Robot::exitBase() {
   if      ((state_2 == orienting_s) && orientBack()) findStart();
   else if ((state_2  == finding_s)  && findStart()) leaveStart();
   else if ((state_2 == leaving_s)   && leaveStart()) {
-    LOOP_RATE = BUFFER_CLEAR_TIME_STEP; //TODO**********************************
     state_1 = attackTower1_s;
     state_2 = approaching_s;
   }
@@ -186,7 +185,7 @@ void Robot::waitForStart() {
     Serial.print("Ready...\n");
     updateSensors();
     printState();
-    delay(BUFFER_CLEAR_TIME_START);
+    delay(BUFFER_CLEAR_TIME_NORM);
   }
   analogWrite(MOTOR_FIRE_FWD, DRIVE_SPEED);
   analogWrite(MOTOR_FIRE_REV, 0);
@@ -424,6 +423,7 @@ bool Robot::attackTower() {
   else if (state_3 == centeringPluss_s  && detectedPlussCenter()) {
     state_2 = loading_s;
     state_3 = launchingEggs_s;
+    LOOP_RATE = BUFFER_CLEAR_TIME_STEP;
   }
   else if (state_3 == launchingEggs_s && launchEgg()) done = true;
   return done;
@@ -441,8 +441,9 @@ bool Robot::launchEgg() {
     state_3 = launchingEggs_s;
     state_2 = attacking_s;
   }
-  // stepper.runSpeed();
+  stepper.runSpeed();
   if((millis() - launchTime) >= LAUNCH_TIMEOUT) {
+    LOOP_RATE = BUFFER_CLEAR_TIME_NORM;
     done = true;
   }
   return done;

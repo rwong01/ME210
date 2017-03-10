@@ -92,7 +92,7 @@ private:
   uint32_t       leavingTime;
   uint32_t       launchTime;
   uint32_t       centerTime;
-  uint32_t       LOOP_RATE = BUFFER_CLEAR_TIME_START;
+  uint32_t       LOOP_RATE = BUFFER_CLEAR_TIME_NORM;
 
   bool           frontSensorBump[2];
   bool           frontSensorIR[2];
