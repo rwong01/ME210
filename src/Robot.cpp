@@ -106,10 +106,12 @@ void Robot::attackTower2() {
  * This function handles the algorythmic complexity of hitting the pressure pad.
  */
 void Robot::hitBumper() {
-  goal_plus = 4;
-  if      (state_3 == turningRightOne_s && detectedRightOff()) state_3 = turningRightTwo_s;
-  else if (state_3 == turningRightTwo_s && detectedPluss()) turnForward();
-  else if ((state_3 == turningForeward_s) && detectedPluss()) state_3 = hittingBumper_s;
+  // goal_plus = 4; TODO********************************************************
+  goal_plus = 3;
+  if     ((goal_plus == plus_number) && (state_3 == turningRightOne_s) && detectedPluss()) turnForward();
+  // if      (state_3 == turningRightOne_s && detectedRightOff()) state_3 = turningRightTwo_s;
+  // else if (state_3 == turningRightTwo_s && detectedPluss()) turnForward();
+  // else if ((state_3 == turningForeward_s) && detectedPluss()) state_3 = hittingBumper_s;
 }
 
 /*
