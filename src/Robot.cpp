@@ -21,7 +21,10 @@
 void Robot::init() {
   Serial.begin(9600);
   setPinModes();
+  stepper.setMaxSpeed(LOADER_SPEED);
+  stepper.setSpeed(LOADER_SPEED);
   waitForStart();
+
 }
 
 /********************************  FUNCTIONS  *********************************/
@@ -65,7 +68,7 @@ void Robot::exitBase() {
   if      ((state_2 == orienting_s) && orientBack()) findStart();
   else if ((state_2  == finding_s)  && findStart()) leaveStart();
   else if ((state_2 == leaving_s)   && leaveStart()) {
-    // LOOP_RATE = BUFFER_CLEAR_TIME_STEP; TODO*********************************
+    LOOP_RATE = BUFFER_CLEAR_TIME_STEP; //TODO**********************************
     state_1 = attackTower1_s;
     state_2 = approaching_s;
   }
@@ -438,6 +441,7 @@ bool Robot::launchEgg() {
     state_3 = launchingEggs_s;
     state_2 = attacking_s;
   }
+  // stepper.runSpeed();
   if((millis() - launchTime) >= LAUNCH_TIMEOUT) {
     done = true;
   }
