@@ -30,7 +30,7 @@ public:
   void           attackTower2();
   void           hitBumper();
   void           quit();
-
+  uint32_t       LOOP_RATE = BUFFER_CLEAR_TIME_START;
 private:
 /*********************************  HELPERS  **********************************/
   void           setPinModes();
@@ -82,7 +82,6 @@ private:
   uint32_t       plus_cooldown = 1*1000*100;
   uint32_t       plus_time = 0;
 
-  uint32_t       LOOP_RATE = BUFFER_CLEAR_TIME_START;
   uint32_t       USTime;
   uint32_t       startTime;
   uint32_t       escapeTime;
