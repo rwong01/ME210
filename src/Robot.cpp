@@ -43,7 +43,7 @@ void Robot::updateState() {
   updateSensors();
   printState();
   checkTimer();
-  // checkBumper();
+  checkBumper();
   center();
 }
 
@@ -57,6 +57,7 @@ void Robot::exitBase() {
   else if ((state_2 == orienting_s) && orientBack()) findStart();
   else if (state_2 == finding_s     && findStart()) leaveStart();
   else if ((state_2 == leaving_s)   && leaveStart()) {
+    LOOP_RATE = BUFFER_CLEAR_TIME_STEP;
     state_1 = attackTower1_s;
     state_2 = approaching_s;
   }
@@ -164,7 +165,7 @@ void Robot::waitForStart() {
     Serial.print("Ready...\n");
     updateSensors();
     printState();
-    delay(BUFFER_CLEAR_TIME);
+    delay(BUFFER_CLEAR_TIME_START);
   }
   analogWrite(MOTOR_FIRE_FWD, DRIVE_SPEED);
   analogWrite(MOTOR_FIRE_REV, 0);

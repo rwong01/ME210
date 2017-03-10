@@ -31,12 +31,6 @@ public:
   void           hitBumper();
   void           quit();
 
-  uint8_t  plus_number  = 0;
-  bool     plus_prev = false;
-  bool     plus_curr = false;
-  uint8_t  goal_plus = 0;
-  uint32_t plus_cooldown = 1*1000*100;
-  uint32_t plus_time = 0;
 private:
 /*********************************  HELPERS  **********************************/
   void           setPinModes();
@@ -80,6 +74,15 @@ private:
   state_tier_2_t state_2;
   state_tier_3_t state_3;
   state_tier_4_t state_4;
+
+  uint8_t        plus_number  = 0;
+  bool           plus_prev = false;
+  bool           plus_curr = false;
+  uint8_t        goal_plus = 0;
+  uint32_t       plus_cooldown = 1*1000*100;
+  uint32_t       plus_time = 0;
+
+  uint32_t       LOOP_RATE = BUFFER_CLEAR_TIME_START;
   uint32_t       USTime;
   uint32_t       startTime;
   uint32_t       escapeTime;
@@ -89,6 +92,7 @@ private:
   float          distance;
   float          distanceShortest    = US_THRESHOLD;
   float          distanceShortestNew = US_THRESHOLD;
+
   bool           frontSensorBump[2];
   bool           frontSensorIR[2];
   bool           leftSensorIR[3];
