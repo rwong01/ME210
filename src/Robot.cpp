@@ -216,15 +216,9 @@ void Robot::updateSensors() {
   centerSensorIR[1]   = readSensor_IR(IR_IN_10);
   centerSensorIR[2]   = readSensor_IR(IR_IN_11);
 
-  avgDistOld          = (avgDistOld + avgDist) / 2;
+  avgDistOld          = (alpha * avgDist) + (1.0 - alpha) * avgDistOld;
+  // avgDistOld          = (avgDist + avgDistOld)/2;
   avgDist             = (avgDist + distance) / 2;
-
-  // plus_prev           = plus_curr;
-  // plus_curr           = detectedPluss();
-  // if ((state_1 != exitBase_s) && (!plus_prev && plus_curr) && ((millis() - plus_time) >= plus_cooldown)) {
-  //   plus_number++;
-  //   plus_time = millis();
-  // }
   plus_prev = plus_curr;
   plus_curr = detectedPluss();
   if((state_1 != exitBase_s) && (!plus_prev && plus_curr)){
@@ -365,7 +359,7 @@ bool Robot::orientBack() {
       leavingTime = millis();
     }
   }
-  else if(avgDistOld > (1.1 * avgDist)){
+  else if(avgDistOld > (1.1*avgDist)){
     avgMin = avgDist;
     distDescending = true;
   }
@@ -576,26 +570,26 @@ bool Robot::detectedPluss() {
 
 bool Robot::detectedPlussCenter() {
   bool done = false;
-  // if      (
-  //    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
-  //     leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
-  //    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
-  // ) {
-  //   done = true;
-  //   analogWrite(MOTOR_LEFT_FWD,  0);
-  //   analogWrite(MOTOR_LEFT_REV,  0);
-  //   analogWrite(MOTOR_RIGHT_FWD, 0);
-  //   analogWrite(MOTOR_RIGHT_REV, 0);
-  // }
   if      (
-      detectedPlussStrict() ){
+     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
+      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
+     !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
+  ) {
     done = true;
     analogWrite(MOTOR_LEFT_FWD,  0);
     analogWrite(MOTOR_LEFT_REV,  0);
     analogWrite(MOTOR_RIGHT_FWD, 0);
     analogWrite(MOTOR_RIGHT_REV, 0);
-    return done;
   }
+  // if      (
+  //     detectedPlussStrict() ){
+  //   done = true;
+  //   analogWrite(MOTOR_LEFT_FWD,  0);
+  //   analogWrite(MOTOR_LEFT_REV,  0);
+  //   analogWrite(MOTOR_RIGHT_FWD, 0);
+  //   analogWrite(MOTOR_RIGHT_REV, 0);
+  //   return done;
+  // }
   if (state_4 == inchLeft_s) {
     if ((rightSensorIR[0] != rightSensorIROLD[0]) || (rightSensorIR[2] != rightSensorIROLD[2])) state_4 = inchRight_s;
     else if (rightSensorIR[0]) {

@@ -82,6 +82,7 @@ private:
   float          avgDistOld     = 0;
   float          avgMin         = -1;
   bool           distDescending = false;
+  float          alpha          = 0.01;
 
   uint32_t       USTime;
   uint32_t       startTime;
