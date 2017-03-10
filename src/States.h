@@ -7,7 +7,7 @@
 
   File: States.h
   --------------------------
-  Global defenition of states
+  Global defenition of states.
 */
 
 #ifndef STATES_H
@@ -15,7 +15,6 @@
 
 #include <Arduino.h>
 #include <stdint.h>
-
 
 /***********************************  DATA  ***********************************/
 enum state_tier_1_t {
@@ -59,7 +58,9 @@ enum state_tier_3_t {
   turningBackward_s,
   ignoringPluss_s,
   centeringPluss_s,
-  launchingEggs_s,
+  launchingEggsOne_s,
+  launchingEggsTwo_s,
+  launchingEggsLoad_s,
 };
 static const char* states_teir_3_names[] = {
   "turningLeftOne_s",
@@ -70,18 +71,18 @@ static const char* states_teir_3_names[] = {
   "turningBackward_s",
   "ignoringPluss_s",
   "centeringPluss_s",
-  "launchingEggs_s",
+  "launchingEggsOne_s",
+  "launchingEggsTwo_s",
+  "launchingEggsLoad_s",
 };
 
 enum state_tier_4_t {
   inchLeft_s,
-  inchRight_s,
-  noLine_s
+  inchRight_s
 };
 static const char* states_teir_4_names[] = {
   "inchLeft_s",
   "inchRight_s",
-  "noLine_s"
 };
 
 #endif

@@ -7,7 +7,7 @@
 
   File: Robot.cpp
   --------------------------
-  Implementation of Robot.h
+  Implementation of Robot.h.
 */
 
 #include "Robot.h"
@@ -21,8 +21,7 @@
 void Robot::init() {
   Serial.begin(9600);
   setPinModes();
-  stepper.setMaxSpeed(LOADER_SPEED);
-  stepper.setSpeed(LOADER_SPEED);
+  stepper.setMaxSpeed(LOADER_SPEED_ONE);
   waitForStart();
 }
 
@@ -45,7 +44,6 @@ void Robot::updateState() {
   updateSensors();
   printState();
   checkTimer();
-  //checkBumper(); TODO*********************************************************
   center();
 }
 
@@ -80,7 +78,7 @@ void Robot::exitBase() {
 void Robot::attackTower1() {
   // goal_plus = 2; TODO********************************************************
   goal_plus = 1;
-  if (attackTower()) {
+  if (attackTower(LOADER_SPEED_ONE, LOADER_SPEED_TWO)) {
     state_1 = attackTower2_s;
     state_2 = approaching_s;
     turnForward();
@@ -88,14 +86,14 @@ void Robot::attackTower1() {
 }
 
 /*
- * Function: attackTower1
+ * Function: attackTower2
  * -------------------
  * This function handles the algorythmic complexity of attacking a the second tower.
  */
 void Robot::attackTower2() {
   // goal_plus = 3; TODO********************************************************
   goal_plus = 2;
-  if (attackTower()) {
+  if (attackTower(LOADER_SPEED_THREE, LOADER_SPEED_FOUR)) {
     state_1 = hitBumper_s;
     turnRight();
   }
@@ -311,15 +309,6 @@ void Robot::checkTimer() {
 }
 
 /*
- * Function: checkBumper
- * -------------------
- * This function checks if the bumpers have triggered.
- */
-void Robot::checkBumper() {
-  if ((frontSensorBump[0] || frontSensorBump[1])) state_1 = quit_s;
-}
-
-/*
  * Function: center
  * -------------------
  * This function self corrects to stay on line.
@@ -415,15 +404,23 @@ bool Robot::leaveStart() {
  * -------------------
  * This function handles the algorythmic complexity of attacking a single tower.
  */
-bool Robot::attackTower() {
+bool Robot::attackTower(uint16_t stepperTimeOne, uint16_t stepperTimeTwo) {
   bool done = false;
   if     ((goal_plus == plus_number) && (state_3 == turningForeward_s) && detectedPluss()) state_3 = ignoringPluss_s;
   else if (state_3 == ignoringPluss_s && detectedPluss()) state_3 = centeringPluss_s;
   else if (state_3 == centeringPluss_s  && detectedPlussCenter()) {
     state_2 = loading_s;
-    state_3 = launchingEggs_s;
+    state_3 = launchingEggsOne_s;
   }
-  else if (state_3 == launchingEggs_s && launchEgg()) done = true;
+  else if (state_3 == launchingEggsOne_s && launchEgg(stepperTimeOne)) {
+    state_3 = launchingEggsLoad_s;
+    loadTime = millis();
+  }
+  else if ((state_3 == launchingEggsLoad_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
+    state_2 = loading_s;
+    state_3 = launchingEggsTwo_s;
+  }
+  else if (state_3 == launchingEggsTwo_s && launchEgg(stepperTimeTwo)) done = true;
   return done;
 }
 
@@ -432,12 +429,13 @@ bool Robot::attackTower() {
  * -------------------
  * This function launches eggs.
  */
-bool Robot::launchEgg() {
+bool Robot::launchEgg(uint16_t stepperSpeed) {
   bool done = false;
   if (state_2 == loading_s) {
     LOOP_RATE = BUFFER_CLEAR_TIME_STEP;
+    stepper.setSpeed(stepperSpeed);
     launchTime = millis();
-    state_3 = launchingEggs_s;
+    state_3 = launchingEggsOne_s;
     state_2 = attacking_s;
   }
   stepper.runSpeed();
@@ -514,7 +512,7 @@ bool Robot::detectedPlussCenter() {
   if      (
       !leftSensorIR[0] &&                                                              //     !rightSensorIR[0] && //TODO?????????????
       leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
-      //!leftSensorIR[2] &&                                                                   
+      //!leftSensorIR[2] &&
       !rightSensorIR[2]  // TODO?????????????
   ) {
     done = true;

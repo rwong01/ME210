@@ -44,15 +44,14 @@ private:
   void           updateSensors();
   void           printState();
   void           checkTimer();
-  void           checkBumper();
   void           center();
 
   bool           orientBack();
   bool           findStart();
   bool           leaveStart();
 
-  bool           attackTower();
-  bool           launchEgg();
+  bool           attackTower(uint16_t stepperTimeOne, uint16_t stepperTimeTwo);
+  bool           launchEgg(uint16_t stepperSpeed);
 
   void           turnLeft();
   void           turnRight();
@@ -91,6 +90,7 @@ private:
   uint32_t       escapeTime;
   uint32_t       leavingTime;
   uint32_t       launchTime;
+  uint32_t       loadTime;
   uint32_t       centerTime;
   uint32_t       LOOP_RATE = BUFFER_CLEAR_TIME_NORM;
 
