@@ -21,7 +21,8 @@
 void Robot::init() {
   Serial.begin(9600);
   setPinModes();
-  stepper.setMaxSpeed(LOADER_SPEED_01);
+  stepper.setMaxSpeed(LOADER_SPEED);
+  stepper.setSpeed(LOADER_SPEED);
   waitForStart();
 }
 
@@ -78,7 +79,7 @@ void Robot::exitBase() {
 void Robot::attackTower1() {
   // goal_plus = 2; TODO********************************************************
   goal_plus = 1;
-  if (attackTower(LOADER_SPEED_01, LOADER_SPEED_02, LOADER_SPEED_03, LOADER_SPEED_04, LOADER_SPEED_05, LOADER_SPEED_06)) {
+  if (attackTower()) {
     state_1 = attackTower2_s;
     state_2 = approaching_s;
     turnForward();
@@ -93,7 +94,7 @@ void Robot::attackTower1() {
 void Robot::attackTower2() {
   // goal_plus = 3; TODO********************************************************
   goal_plus = 2;
-  if (attackTower(LOADER_SPEED_07, LOADER_SPEED_08, LOADER_SPEED_09, LOADER_SPEED_10, LOADER_SPEED_11, LOADER_SPEED_12)) {
+  if (attackTower()) {
     state_1 = hitBumper_s;
     turnRight();
   }
@@ -348,10 +349,7 @@ bool Robot::orientBack() {
     avgDistOld = distance;
   }
   else if(distDescending){
-    if ((1.1 * avgDist) < avgMin) {
-      Serial.println("replacing min");
-      avgMin = avgDist;
-    }
+    if ((1.1 * avgDist) < avgMin) avgMin = avgDist;
     else if (avgDist < minDist){
       done = true;
       analogWrite(MOTOR_LEFT_FWD,  0);
@@ -404,7 +402,7 @@ bool Robot::leaveStart() {
  * -------------------
  * This function handles the algorythmic complexity of attacking a single tower.
  */
-bool Robot::attackTower(uint16_t stepperTime01, uint16_t stepperTime02, uint16_t stepperTime03, uint16_t stepperTime04, uint16_t stepperTime05, uint16_t stepperTime06) {
+bool Robot::attackTower() {
   bool done = false;
   if     ((goal_plus == plus_number) && (state_3 == turningForeward_s) && detectedPluss()) state_3 = ignoringPluss_s;
   else if (state_3 == ignoringPluss_s && detectedPluss()) {
@@ -415,7 +413,7 @@ bool Robot::attackTower(uint16_t stepperTime01, uint16_t stepperTime02, uint16_t
     state_2 = loading_s;
     state_3 = launchingEggs01_s;
   }
-  else if (state_3 == launchingEggs01_s && launchEgg(stepperTime01)) {
+  else if (state_3 == launchingEggs01_s && launchEgg()) {
     state_3 = launchingEggsLoad01_s;
     loadTime = millis();
   }
@@ -423,7 +421,7 @@ bool Robot::attackTower(uint16_t stepperTime01, uint16_t stepperTime02, uint16_t
     state_2 = loading_s;
     state_3 = launchingEggs02_s;
   }
-  else if (state_3 == launchingEggs02_s && launchEgg(stepperTime02)) {
+  else if (state_3 == launchingEggs02_s && launchEgg()) {
     state_3 = launchingEggsLoad02_s;
     loadTime = millis();
   }
@@ -431,7 +429,7 @@ bool Robot::attackTower(uint16_t stepperTime01, uint16_t stepperTime02, uint16_t
     state_2 = loading_s;
     state_3 = launchingEggs03_s;
   }
-  else if (state_3 == launchingEggs03_s && launchEgg(stepperTime03)) {
+  else if (state_3 == launchingEggs03_s && launchEgg()) {
     state_3 = launchingEggsLoad03_s;
     loadTime = millis();
   }
@@ -439,7 +437,7 @@ bool Robot::attackTower(uint16_t stepperTime01, uint16_t stepperTime02, uint16_t
     state_2 = loading_s;
     state_3 = launchingEggs04_s;
   }
-  else if (state_3 == launchingEggs04_s && launchEgg(stepperTime04)) {
+  else if (state_3 == launchingEggs04_s && launchEgg()) {
     state_3 = launchingEggsLoad04_s;
     loadTime = millis();
   }
@@ -447,7 +445,7 @@ bool Robot::attackTower(uint16_t stepperTime01, uint16_t stepperTime02, uint16_t
     state_2 = loading_s;
     state_3 = launchingEggs05_s;
   }
-  else if (state_3 == launchingEggs05_s && launchEgg(stepperTime05)) {
+  else if (state_3 == launchingEggs05_s && launchEgg()) {
     state_3 = launchingEggsLoad05_s;
     loadTime = millis();
   }
@@ -455,7 +453,7 @@ bool Robot::attackTower(uint16_t stepperTime01, uint16_t stepperTime02, uint16_t
     state_2 = loading_s;
     state_3 = launchingEggs06_s;
   }
-  else if (state_3 == launchingEggs06_s && launchEgg(stepperTime06)) done = true;
+  else if (state_3 == launchingEggs06_s && launchEgg()) done = true;
   return done;
 }
 
@@ -464,16 +462,15 @@ bool Robot::attackTower(uint16_t stepperTime01, uint16_t stepperTime02, uint16_t
  * -------------------
  * This function launches eggs.
  */
-bool Robot::launchEgg(uint16_t stepperSpeed) {
+bool Robot::launchEgg() {
   bool done = false;
   if (state_2 == loading_s) {
     LOOP_RATE = BUFFER_CLEAR_TIME_STEP;
-    stepper.setSpeed(stepperSpeed);
-    launchTime = millis();
+    stepper.move(LOADER_STEP);
     state_2 = attacking_s;
   }
-  stepper.runSpeed();
-  if((millis() - launchTime) >= LAUNCH_TIMEOUT) {
+  stepper.runSpeedToPosition();
+  if(stepper.distanceToGo() == 0) {
     LOOP_RATE = BUFFER_CLEAR_TIME_NORM;
     done = true;
   }

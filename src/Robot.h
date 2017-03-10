@@ -50,8 +50,8 @@ private:
   bool           findStart();
   bool           leaveStart();
 
-  bool           attackTower(uint16_t stepperTime01, uint16_t stepperTime02, uint16_t stepperTime03, uint16_t stepperTime04, uint16_t stepperTime05, uint16_t stepperTime06);
-  bool           launchEgg(uint16_t stepperSpeed);
+  bool           attackTower();
+  bool           launchEgg();
 
   void           turnLeft();
   void           turnRight();
@@ -91,7 +91,6 @@ private:
   uint32_t       startTime;
   uint32_t       escapeTime;
   uint32_t       leavingTime;
-  uint32_t       launchTime;
   uint32_t       loadTime;
   uint32_t       centerTime;
   uint32_t       plussTIme;

@@ -23,23 +23,12 @@ static const uint16_t  US_THRESHOLD            =                           2000;
 static const uint16_t  DRIVE_SPEED_LEFT        =                            200;
 static const uint16_t  DRIVE_SPEED_RIGHT       =        0.98 * DRIVE_SPEED_LEFT;
 
-static const uint16_t  LOADER_SPEED            =                            282;
-static const uint16_t  LOADER_SPEED_01         =                   LOADER_SPEED;
-static const uint16_t  LOADER_SPEED_02         =                   LOADER_SPEED;
-static const uint16_t  LOADER_SPEED_03         =                   LOADER_SPEED;
-static const uint16_t  LOADER_SPEED_04         =                   LOADER_SPEED;
-static const uint16_t  LOADER_SPEED_05         =                   LOADER_SPEED;
-static const uint16_t  LOADER_SPEED_06         =                   LOADER_SPEED;
-static const uint16_t  LOADER_SPEED_07         =                   LOADER_SPEED;
-static const uint16_t  LOADER_SPEED_08         =                   LOADER_SPEED;
-static const uint16_t  LOADER_SPEED_09         =                   LOADER_SPEED;
-static const uint16_t  LOADER_SPEED_10         =                   LOADER_SPEED;
-static const uint16_t  LOADER_SPEED_11         =                   LOADER_SPEED;
-static const uint16_t  LOADER_SPEED_12         =                   LOADER_SPEED;
+static const uint16_t  LOADER_SPEED            =                            100;
+static const uint16_t  LOADER_STEP             =                             45;
+static const uint16_t  LOADER_SLEEP            =                           3000;
 
 static const uint32_t  RUNTIME_TIMEOUT         =                         120000;
 static const uint32_t  ESCAPE_TIMEOUT          =                           2000;
-static const uint32_t  LAUNCH_TIMEOUT          =                            420;
 static const uint32_t  LOAD_TIMEOUT            =                           3000;
 static const uint32_t  PLUSS_TIMEOUT           =                          10000;
 
