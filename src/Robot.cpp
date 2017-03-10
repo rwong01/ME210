@@ -407,8 +407,11 @@ bool Robot::leaveStart() {
 bool Robot::attackTower(uint16_t stepperTime01, uint16_t stepperTime02, uint16_t stepperTime03, uint16_t stepperTime04, uint16_t stepperTime05, uint16_t stepperTime06) {
   bool done = false;
   if     ((goal_plus == plus_number) && (state_3 == turningForeward_s) && detectedPluss()) state_3 = ignoringPluss_s;
-  else if (state_3 == ignoringPluss_s && detectedPluss()) state_3 = centeringPluss_s;
-  else if (state_3 == centeringPluss_s  && detectedPlussCenter()) {
+  else if (state_3 == ignoringPluss_s && detectedPluss()) {
+    state_3 = centeringPluss_s;
+    plussTIme = millis();
+  }
+  else if (state_3 == centeringPluss_s  && (detectedPlussCenter() || (millis() - plussTIme >= PLUSS_TIMEOUT))) {
     state_2 = loading_s;
     state_3 = launchingEggs01_s;
   }

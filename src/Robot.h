@@ -94,6 +94,7 @@ private:
   uint32_t       launchTime;
   uint32_t       loadTime;
   uint32_t       centerTime;
+  uint32_t       plussTIme;
   uint32_t       LOOP_RATE = BUFFER_CLEAR_TIME_NORM;
 
   bool           frontSensorBump[2];
