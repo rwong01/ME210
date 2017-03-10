@@ -512,9 +512,10 @@ bool Robot::detectedPluss() {
 bool Robot::detectedPlussCenter() {
   bool done = false;
   if      (
-    //  !leftSensorIR[0] &&                                                                   !rightSensorIR[0] && TODO?????????????
-      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] //&&
-    //  !leftSensorIR[2] &&                                                                   !rightSensorIR[2] TODO?????????????
+      !leftSensorIR[0] &&                                                              //     !rightSensorIR[0] && //TODO?????????????
+      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
+      //!leftSensorIR[2] &&                                                                   
+      !rightSensorIR[2]  // TODO?????????????
   ) {
     done = true;
     analogWrite(MOTOR_LEFT_FWD,  0);
@@ -527,27 +528,27 @@ bool Robot::detectedPlussCenter() {
     else if (rightSensorIR[0]) {
       analogWrite(MOTOR_LEFT_FWD,  0);
       analogWrite(MOTOR_LEFT_REV,  0);
-      analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED_RIGHT);
+      analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED_RIGHT * 0.9);
       analogWrite(MOTOR_RIGHT_REV, 0);
     }
     else if (rightSensorIR[2]) {
       analogWrite(MOTOR_LEFT_FWD,  0);
       analogWrite(MOTOR_LEFT_REV,  0);
       analogWrite(MOTOR_RIGHT_FWD, 0);
-      analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED_RIGHT);
+      analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED_RIGHT * 0.9);
     }
   }
   else if (state_4 == inchRight_s) {
     if ((leftSensorIR[0] != leftSensorIROLD[0]) || (leftSensorIR[2] != leftSensorIROLD[2])) state_4 = inchLeft_s;
         else if (leftSensorIR[0]) {
-        analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT);
+        analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT * 0.9);
         analogWrite(MOTOR_LEFT_REV,  0);
         analogWrite(MOTOR_RIGHT_FWD, 0);
         analogWrite(MOTOR_RIGHT_REV, 0);
         }
     else if (leftSensorIR[2]) {
       analogWrite(MOTOR_LEFT_FWD,  0);
-      analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED_LEFT);
+      analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED_LEFT * 0.9);
       analogWrite(MOTOR_RIGHT_FWD, 0);
       analogWrite(MOTOR_RIGHT_REV, 0);
     }
