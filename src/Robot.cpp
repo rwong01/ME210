@@ -63,7 +63,7 @@ void Robot::sleep() {
  */
 void Robot::exitBase() {
   if      ((state_2 == orienting_s) && orientBack()) findStart();
-  else if (state_2 == finding_s     && findStart()) leaveStart();
+  else if ((state_2  == finding_s)  && findStart()) leaveStart();
   else if ((state_2 == leaving_s)   && leaveStart()) {
     LOOP_RATE = BUFFER_CLEAR_TIME_STEP;
     state_1 = attackTower1_s;
@@ -383,13 +383,10 @@ bool Robot::findStart() {
     analogWrite(MOTOR_LEFT_REV,  0);
     analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
     analogWrite(MOTOR_RIGHT_REV, 0);
-    return true;
+    done = true;
   }
-  return false;
-  if (detectedPluss()) done = true;
   return done;
 }
-
 
 /*
  * Function: leaveStart
