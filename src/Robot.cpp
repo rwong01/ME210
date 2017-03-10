@@ -112,9 +112,9 @@ void Robot::hitBumper() {
     turnForward();
   }
   else if ((goal_plus == plus_number) && (state_3 == turningForeward_s) && detectedPluss()) {
-    analogWrite(MOTOR_LEFT_FWD,   DRIVE_SPEED_LEFT);
+    analogWrite(MOTOR_LEFT_FWD,   DRIVE_SPEED_LEFT * 4);
     analogWrite(MOTOR_LEFT_REV,   0);
-    analogWrite(MOTOR_RIGHT_FWD,  DRIVE_SPEED_RIGHT);
+    analogWrite(MOTOR_RIGHT_FWD,  DRIVE_SPEED_RIGHT * 4);
     analogWrite(MOTOR_RIGHT_REV,  0);
   }
 }

@@ -23,12 +23,12 @@ static const uint16_t  US_THRESHOLD            =                           2000;
 static const uint16_t  DRIVE_SPEED_LEFT        =                            200;
 static const uint16_t  DRIVE_SPEED_RIGHT       =        0.98 * DRIVE_SPEED_LEFT;
 
-static const uint16_t  LOADER_SPEED_ONE        =                            750;
+static const uint16_t  LOADER_SPEED_ONE        =                            700;
 static const uint16_t  LOADER_SPEED_TWO        =                            560;
 static const uint16_t  LOADER_SPEED_THREE      =                            420;
 static const uint16_t  LOADER_SPEED_FOUR       =                            400;
 
-static const uint32_t  RUNTIME_TIMEOUT         =                         130000;
+static const uint32_t  RUNTIME_TIMEOUT         =                         120000;
 static const uint32_t  ESCAPE_TIMEOUT          =                           2000;
 static const uint32_t  LAUNCH_TIMEOUT          =                           1700;
 static const uint32_t  LOAD_TIMEOUT            =                           3000;
@@ -61,7 +61,7 @@ static const uint8_t   MOTOR_LEFT_FWD          =                             4;
 static const uint8_t   MOTOR_LEFT_REV          =                             3;
 static const uint8_t   MOTOR_RIGHT_FWD         =                             6;
 static const uint8_t   MOTOR_RIGHT_REV         =                             5;
-static const uint8_t   MOTOR_FIRE_FWD          =                            69;
+static const uint8_t   MOTOR_FIRE_FWD          =                             0;
 static const uint8_t   MOTOR_FIRE_REV          =                            69;
 static const uint8_t   MOTOR_STEP_DIR          =                            11;
 static const uint8_t   MOTOR_STEP_STEP         =                            12;
