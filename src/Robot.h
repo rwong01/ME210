@@ -31,6 +31,10 @@ public:
   void           hitBumper();
   void           quit();
   uint32_t       LOOP_RATE = BUFFER_CLEAR_TIME_START;
+
+  float          ave_dist = 0;
+  float          ave_min  = -1;
+  bool           dist_descending = false;
 private:
 /*********************************  HELPERS  **********************************/
   void           setPinModes();
@@ -81,6 +85,10 @@ private:
   uint8_t        goal_plus = 0;
   uint32_t       plus_cooldown = 1*1000*100;
   uint32_t       plus_time = 0;
+
+  // float          ave_dist = 0;
+  // float          ave_min  = -1;
+  // bool           dist_descending = false;
 
   uint32_t       USTime;
   uint32_t       startTime;
