@@ -20,7 +20,7 @@
 //   pinMode(MOTOR_FIRE_FWD,   OUTPUT);
 //   pinMode(MOTOR_STEP_DIR,   OUTPUT);
 //   pinMode(MOTOR_STEP_STEP,  OUTPUT);
-//   // digitalWrite(MOTOR_FIRE_FWD, HIGH);
+//   digitalWrite(MOTOR_FIRE_FWD, HIGH);
 //   stepper.setMaxSpeed(LOADER_SPEED);
 //   stepper.setSpeed(LOADER_SPEED);
 //

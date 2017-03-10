@@ -23,8 +23,8 @@ static const uint16_t  US_THRESHOLD            =                           2000;
 static const uint16_t  DRIVE_SPEED_LEFT        =                            200;
 static const uint16_t  DRIVE_SPEED_RIGHT       =        0.98 * DRIVE_SPEED_LEFT;
 
-static const uint16_t  LOADER_SPEED            =                            100;
-static const uint16_t  LOADER_STEP             =                             45;
+static const uint16_t  LOADER_SPEED            =                             50;
+static const uint16_t  LOADER_STEP             =                             17;
 static const uint16_t  LOADER_SLEEP            =                           3000;
 
 static const uint32_t  RUNTIME_TIMEOUT         =                         120000;
