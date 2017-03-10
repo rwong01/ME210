@@ -65,7 +65,7 @@ void Robot::exitBase() {
   if      ((state_2 == orienting_s) && orientBack()) findStart();
   else if ((state_2  == finding_s)  && findStart()) leaveStart();
   else if ((state_2 == leaving_s)   && leaveStart()) {
-    LOOP_RATE = BUFFER_CLEAR_TIME_STEP;
+    // LOOP_RATE = BUFFER_CLEAR_TIME_STEP; TODO*********************************
     state_1 = attackTower1_s;
     state_2 = approaching_s;
   }
@@ -77,6 +77,7 @@ void Robot::exitBase() {
  * This function handles the algorythmic complexity of attacking a the first tower.
  */
 void Robot::attackTower1() {
+  // goal_plus = 2; TODO********************************************************
   goal_plus = 1;
   if (attackTower()) {
     state_1 = attackTower2_s;
@@ -91,6 +92,7 @@ void Robot::attackTower1() {
  * This function handles the algorythmic complexity of attacking a the second tower.
  */
 void Robot::attackTower2() {
+  // goal_plus = 3; TODO********************************************************
   goal_plus = 2;
   if (attackTower()) {
     state_1 = hitBumper_s;
@@ -104,6 +106,7 @@ void Robot::attackTower2() {
  * This function handles the algorythmic complexity of hitting the pressure pad.
  */
 void Robot::hitBumper() {
+  goal_plus = 4;
   if      (state_3 == turningRightOne_s && detectedRightOff()) state_3 = turningRightTwo_s;
   else if (state_3 == turningRightTwo_s && detectedPluss()) turnForward();
   else if ((state_3 == turningForeward_s) && detectedPluss()) state_3 = hittingBumper_s;
@@ -217,8 +220,8 @@ void Robot::updateSensors() {
   centerSensorIR[2]   = readSensor_IR(IR_IN_11);
 
   avgDistOld          = (alpha * avgDist) + (1.0 - alpha) * avgDistOld;
-  // avgDistOld          = (avgDist + avgDistOld)/2;
   avgDist             = (avgDist + distance) / 2;
+
   plus_prev = plus_curr;
   plus_curr = detectedPluss();
   if((state_1 != exitBase_s) && (!plus_prev && plus_curr)){
@@ -275,17 +278,18 @@ void Robot::printState() {
   Serial.print("plus_number: ");
   Serial.println(plus_number);
   Serial.print('\n');
-  Serial.print(avgDist);
-  Serial.print("(avg distacne)");
-  Serial.print('\n');
-  Serial.print(avgDistOld);
-  Serial.print("(avg distacne old)");
-  Serial.print('\n');
-  Serial.print(avgMin);
-  Serial.print("(avg min)");
-  Serial.print('\n');
-  Serial.print(distDescending);
-  Serial.print("(dist_descending)");
+
+  // Serial.print(avgDist);
+  // Serial.print("(avg distacne)");
+  // Serial.print('\n');
+  // Serial.print(avgDistOld);
+  // Serial.print("(avg distacne old)");
+  // Serial.print('\n');
+  // Serial.print(avgMin);
+  // Serial.print("(avg min)");
+  // Serial.print('\n');
+  // Serial.print(distDescending);
+  // Serial.print("(dist_descending)");
 }
 
 /*
@@ -313,16 +317,16 @@ void Robot::checkBumper() {
  */
 void Robot::center() {
   if      ((state_3 != turningForeward_s) && (state_3 != ignoringPluss_s)) return;
-  //else if ((state_4 == inchLeft_s) && (frontSensorIR[0] || frontSensorIR[1])) {
-  else if ((state_4 == inchLeft_s) && (frontSensorIR[0])) {
+  else if ((state_4 == inchLeft_s) && (frontSensorIR[0] || !frontSensorIR[1])) {
+  // else if ((state_4 == inchLeft_s) && (frontSensorIR[0])) { TODO?????????????
     state_4 = inchRight_s;
     analogWrite(MOTOR_LEFT_FWD,  0);
     analogWrite(MOTOR_LEFT_REV,  0);
     analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED);
     analogWrite(MOTOR_RIGHT_REV, 0);
   }
-  //else if ((state_4 == inchRight_s) && (!frontSensorIR[0] || !frontSensorIR[1])) {
-  else if ((state_4 == inchRight_s) && (!frontSensorIR[0])) {
+  else if ((state_4 == inchRight_s) && (!frontSensorIR[0] || frontSensorIR[1])) {
+  // else if ((state_4 == inchRight_s) && (!frontSensorIR[0])) { TODO???????????
     state_3 = turningForeward_s;
     state_4 = inchLeft_s;
     analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED);
@@ -547,9 +551,6 @@ bool Robot::detectedPlussStrict() {
  */
 bool Robot::detectedPluss() {
   if (
-    // ((leftSensorIR[0] && rightSensorIR[0]) || (leftSensorIR[1] && rightSensorIR[1])
-    // || (leftSensorIR[2] && rightSensorIR[2]))
-
     (
                                                                                            rightSensorIR[0] ||
                                                                                            rightSensorIR[1] ||
@@ -558,22 +559,16 @@ bool Robot::detectedPluss() {
      leftSensorIR[0] ||
      leftSensorIR[1] ||
      leftSensorIR[2])
-  ){
-    //Within this if you are on a plus. Now check if its the one you want to
-    //stop on.
-    return true;
-    //if( state_1 == attackTower1 ) &&  ()
-
-  }
+  ) return true;
   return false;
 }
 
 bool Robot::detectedPlussCenter() {
   bool done = false;
   if      (
-     !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
-      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
-     !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
+    //  !leftSensorIR[0] &&                                                                   !rightSensorIR[0] && TODO?????????????
+      leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] //&&
+    //  !leftSensorIR[2] &&                                                                   !rightSensorIR[2] TODO?????????????
   ) {
     done = true;
     analogWrite(MOTOR_LEFT_FWD,  0);
@@ -581,16 +576,7 @@ bool Robot::detectedPlussCenter() {
     analogWrite(MOTOR_RIGHT_FWD, 0);
     analogWrite(MOTOR_RIGHT_REV, 0);
   }
-  // if      (
-  //     detectedPlussStrict() ){
-  //   done = true;
-  //   analogWrite(MOTOR_LEFT_FWD,  0);
-  //   analogWrite(MOTOR_LEFT_REV,  0);
-  //   analogWrite(MOTOR_RIGHT_FWD, 0);
-  //   analogWrite(MOTOR_RIGHT_REV, 0);
-  //   return done;
-  // }
-  if (state_4 == inchLeft_s) {
+  else if (state_4 == inchLeft_s) {
     if ((rightSensorIR[0] != rightSensorIROLD[0]) || (rightSensorIR[2] != rightSensorIROLD[2])) state_4 = inchRight_s;
     else if (rightSensorIR[0]) {
       analogWrite(MOTOR_LEFT_FWD,  0);

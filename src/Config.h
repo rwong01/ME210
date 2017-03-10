@@ -17,14 +17,14 @@
 #include <stdint.h>
 
 /****************************  EDITABLE CONSTANTS  ****************************/
-static const uint16_t  BLACK_THRESHOLD         =               400;
+static const uint16_t  BLACK_THRESHOLD         =               350;
 static const uint16_t  US_THRESHOLD            =              2000;
 static const uint16_t  DRIVE_SPEED             =               200;
 static const uint16_t  LOADER_SPEED            =               750;
 static const uint32_t  RUNTIME_TIMEOUT         =            130000;
 static const uint32_t  ESCAPE_TIMEOUT          =              4000;
 static const uint32_t  LAUNCH_TIMEOUT          =              4000;
-static const uint32_t  BUFFER_CLEAR_TIME_START =                15;
+static const uint32_t  BUFFER_CLEAR_TIME_START =                50;
 static const uint32_t  BUFFER_CLEAR_TIME_STEP  =                 1;
 
 static const uint8_t   MOTOR_STEP_STEPS        =               200;
