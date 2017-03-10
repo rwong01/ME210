@@ -54,10 +54,7 @@ private:
   void           turnRight();
   void           turnForward();
 
-  bool           detectedLeftOff();
-  bool           detectedRightOff();
   bool           detectedPluss();
-  bool           detectedPlussStrict();
   bool           detectedPlussCenter();
 
   float          readSensor_US();

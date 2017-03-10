@@ -281,17 +281,17 @@ void Robot::printState() {
   Serial.println(plus_number);
   Serial.print('\n');
 
-  // Serial.print(avgDist);
-  // Serial.print("(avg distacne)");
-  // Serial.print('\n');
-  // Serial.print(avgDistOld);
-  // Serial.print("(avg distacne old)");
-  // Serial.print('\n');
-  // Serial.print(avgMin);
-  // Serial.print("(avg min)");
-  // Serial.print('\n');
-  // Serial.print(distDescending);
-  // Serial.print("(dist_descending)");
+  Serial.print(avgDist);
+  Serial.print("(avg distacne)");
+  Serial.print('\n');
+  Serial.print(avgDistOld);
+  Serial.print("(avg distacne old)");
+  Serial.print('\n');
+  Serial.print(avgMin);
+  Serial.print("(avg min)");
+  Serial.print('\n');
+  Serial.print(distDescending);
+  Serial.print("(dist_descending)");
 }
 
 /*
@@ -479,72 +479,6 @@ void Robot::turnForward() {
   analogWrite(MOTOR_RIGHT_REV, 0);
 }
 
-/*
- * Function: detectedLeftOff
- * -------------------
- * This function returns true when at the midpoint of a left turn.
- */
-bool Robot::detectedLeftOff() {
-  if (
-
-     leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
-    !leftSensorIR[1] &&                        centerSensorIR[1] &&                       !rightSensorIR[1] &&
-    !leftSensorIR[2] &&                                                                    rightSensorIR[2]
-  ) return true;
-  return false;
-}
-
-/*
- * Function: detectedRightOff
- * -------------------
- * This function returns true when at the midpoint of a right turn.
- */
-bool Robot::detectedRightOff() {
-  if (
-
-    !leftSensorIR[0] &&                                                                    rightSensorIR[0] &&
-    !leftSensorIR[1] &&                        centerSensorIR[1] &&                       !rightSensorIR[1] &&
-     leftSensorIR[2] &&                                                                   !rightSensorIR[2]
-  ) return true;
-  return false;
-}
-
-/*
- * Function: detectedPluss
- * -------------------
- * More accurate than detectedPluss
- */
-bool Robot::detectedPlussStrict() {
-  if (
-    ((leftSensorIR[0] && rightSensorIR[0]) || (leftSensorIR[1] && rightSensorIR[1])
-     || (leftSensorIR[2] && rightSensorIR[2]))) return true;
-     // if      (
-     //    !leftSensorIR[0] &&                                                                   !rightSensorIR[0] &&
-     //     leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
-     //    !leftSensorIR[2] &&                                                                   !rightSensorIR[2]
-     // ) {
-     //   done = true;
-     //   analogWrite(MOTOR_LEFT_FWD,  0);
-     //   analogWrite(MOTOR_LEFT_REV,  0);
-     //   analogWrite(MOTOR_RIGHT_FWD, 0);
-     //   analogWrite(MOTOR_RIGHT_REV, 0);
-     // }
-
-
-/*
-
-    (
-                                                                                           rightSensorIR[0] ||
-                                                                                           rightSensorIR[1] ||
-                                                                                           rightSensorIR[2]
-    ) && (
-     leftSensorIR[0] ||
-     leftSensorIR[1] ||
-     leftSensorIR[2])
-  ) return true;
-*/
-  return false;
-}
 
 /*
  * Function: detectedPluss
