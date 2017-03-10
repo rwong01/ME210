@@ -48,12 +48,20 @@ void Robot::updateState() {
 }
 
 /*
+ * Function: clearBuffer
+ * -------------------
+ * This function clears the serial buffer so that we do not get flooded.
+ */
+void Robot::clearBuffer() {
+  delay(LOOP_RATE);
+}
+
+/*
  * Function: exitBase
  * -------------------
  * This function handles the algorythmic complexity of exiting the base.
  */
 void Robot::exitBase() {
-  // if      (state_2 == searching_s   && findBack()) orientBack();
   if      ((state_2 == orienting_s) && orientBack()) findStart();
   else if (state_2 == finding_s     && findStart()) leaveStart();
   else if ((state_2 == leaving_s)   && leaveStart()) {
@@ -69,7 +77,6 @@ void Robot::exitBase() {
  * This function handles the algorythmic complexity of attacking a the first tower.
  */
 void Robot::attackTower1() {
-  // if (detectedPluss()) state_1 = quit_s;
   goal_plus = 1;
   if (attackTower()) {
     state_1 = attackTower2_s;
@@ -171,7 +178,6 @@ void Robot::waitForStart() {
   analogWrite(MOTOR_FIRE_REV, 0);
   startTime = millis();
   state_1 = exitBase_s;
-  // state_2 = searching_s;
   state_2 = orienting_s;
   turnLeft();
 }
@@ -210,14 +216,14 @@ void Robot::updateSensors() {
   centerSensorIR[1]   = readSensor_IR(IR_IN_10);
   centerSensorIR[2]   = readSensor_IR(IR_IN_11);
 
-  ave_dist = (ave_dist+ distance)/2;
+  avgDist = (avgDist+ distance)/2;
 
   plus_prev = plus_curr;
   plus_curr = detectedPluss();
-  if((state_1 != exitBase_s) && (!plus_prev && plus_curr)){
-    if( (micros()-plus_time)> plus_cooldown){
+  if ((state_1 != exitBase_s) && (!plus_prev && plus_curr)) {
+    if( (millis()-plus_time) > plus_cooldown) {
       plus_number++;
-      plus_time = micros();
+      plus_time = millis();
     }
   }
 }
@@ -274,13 +280,13 @@ void Robot::printState() {
   Serial.print("plus_number: ");
   Serial.println(plus_number);
   Serial.print('\n');
-  Serial.print(ave_dist);
+  Serial.print(avgDist);
   Serial.print("(avg distacne)");
   Serial.print('\n');
-  Serial.print(ave_min);
+  Serial.print(avgMin);
   Serial.print("(avg min)");
   Serial.print('\n');
-  Serial.print(dist_descending);
+  Serial.print(distDescending);
   Serial.print("(dist_descending)");
 }
 
@@ -329,59 +335,33 @@ void Robot::center() {
 }
 
 /*
- * Function: findBack
- * -------------------
- * This function finds the back based on the shorted US distance.
- */
-bool Robot::findBack() {
-  if (distance <= distanceShortest) distanceShortest = distance;
-  if ((millis() - startTime) >= ESCAPE_TIMEOUT) return true;
-  return false;
-}
-
-/*
  * Function: orientBack
  * -------------------
  * This function aligns to the forward direction.
  */
 bool Robot::orientBack() {
-  // state_2 = orienting_s;
-  // if (distance <= distanceShortestNew) distanceShortestNew = distance;
-  // if (distance <= (1.25 * distanceShortest)) {
-  //   analogWrite(MOTOR_LEFT_FWD,  0);
-  //   analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
-  //   analogWrite(MOTOR_RIGHT_FWD, 0);
-  //   analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED);
-  //   leavingTime = millis();
-  //   return true;
-  // }
-  // return false;
-
-
   bool done = false;
   state_2 = orienting_s;
-  if(ave_min < 0){
-    Serial.println("here");
-    ave_min = distance;
-    ave_dist = distance;
+  if(avgMin < 0){
+    avgMin = distance;
+    avgDist = distance;
     return false; //Dont set done here, return to set initial pattern.
   }
-  if( dist_descending){ //We are getting closer. Continue until we pass the min
-  if( ave_min > 1.1*ave_dist){
-    ave_min = ave_dist;
+  if( distDescending){ //We are getting closer. Continue until we pass the min
+    if( avgMin > (1.1 * avgDist)){
+      avgMin = avgDist;
+      }
+      else { //We were close, now we're further. Stop doing it.
+        done = true;
+      }
     }
-    else { //We were close, now we're further. Stop doing it.
-      done = true;
+    else { //We are currently moving away.
+    if( avgMin > (1.1 * avgDist)){ //We're now closer. Set new min and start the descent.
+      avgMin = avgDist;
+      distDescending = true;
     }
   }
-  else {
-  //We are currently moving away.
-  if( ave_min > 1.1*ave_dist){ //We're now closer. Set new min and start the descent.
-             ave_min = ave_dist;
-       dist_descending = true;        }
-   }
-
-  if(done){
+  if(done) {
     analogWrite(MOTOR_LEFT_FWD,  0);
     analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED);
     analogWrite(MOTOR_RIGHT_FWD, 0);

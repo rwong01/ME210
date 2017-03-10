@@ -25,16 +25,14 @@ public:
 /********************************  FUNCTIONS  *********************************/
   state_tier_1_t getState();
   void           updateState();
+  void           clearBuffer();
+
   void           exitBase();
   void           attackTower1();
   void           attackTower2();
   void           hitBumper();
   void           quit();
-  uint32_t       LOOP_RATE = BUFFER_CLEAR_TIME_START;
 
-  float          ave_dist = 0;
-  float          ave_min  = -1;
-  bool           dist_descending = false;
 private:
 /*********************************  HELPERS  **********************************/
   void           setPinModes();
@@ -46,7 +44,6 @@ private:
   void           checkBumper();
   void           center();
 
-  bool           findBack();
   bool           orientBack();
   bool           findStart();
   bool           leaveStart();
@@ -79,16 +76,16 @@ private:
   state_tier_3_t state_3;
   state_tier_4_t state_4;
 
-  uint8_t        plus_number  = 0;
-  bool           plus_prev = false;
-  bool           plus_curr = false;
-  uint8_t        goal_plus = 0;
-  uint32_t       plus_cooldown = 1*1000*100;
-  uint32_t       plus_time = 0;
+  uint8_t        plus_number    = 0;
+  bool           plus_prev      = false;
+  bool           plus_curr      = false;
+  uint8_t        goal_plus      = 0;
+  uint32_t       plus_cooldown  = 1*1000*100;
+  uint32_t       plus_time      = 0;
 
-  // float          ave_dist = 0;
-  // float          ave_min  = -1;
-  // bool           dist_descending = false;
+  float          avgDist        = 0;
+  float          avgMin         = -1;
+  bool           distDescending = false;
 
   uint32_t       USTime;
   uint32_t       startTime;
@@ -99,6 +96,7 @@ private:
   float          distance;
   float          distanceShortest    = US_THRESHOLD;
   float          distanceShortestNew = US_THRESHOLD;
+  uint32_t       LOOP_RATE = BUFFER_CLEAR_TIME_START;
 
   bool           frontSensorBump[2];
   bool           frontSensorIR[2];
