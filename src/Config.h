@@ -25,7 +25,6 @@ static const uint16_t  DRIVE_SPEED_RIGHT       =        0.98 * DRIVE_SPEED_LEFT;
 
 static const uint16_t  LOADER_SPEED            =                             50;
 static const uint16_t  LOADER_STEP             =                             17;
-static const uint16_t  LOADER_SLEEP            =                           8000;
 
 static const uint32_t  RUNTIME_TIMEOUT         =                         120000;
 static const uint32_t  ESCAPE_TIMEOUT          =                           2000;

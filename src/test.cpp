@@ -31,6 +31,6 @@
 //       stepper.runSpeedToPosition();
 //       delay(BUFFER_CLEAR_TIME_STEP);
 //     }
-//     delay(LOADER_SLEEP);
+//     delay(LOAD_TIMEOUT);
 //   }
 // }
