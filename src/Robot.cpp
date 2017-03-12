@@ -421,17 +421,7 @@ bool Robot::attackTower() {
   }
   else if (state_3 == centeringPluss_s  && (detectedPlussCenter() || (millis() - plussTIme >= PLUSS_TIMEOUT))) {
     hammer(true);
-    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT);
-    analogWrite(MOTOR_LEFT_REV,  0);
-    analogWrite(MOTOR_RIGHT_FWD, 0);
-    analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED_LEFT);
-    state_3 = centeringBeackon_s;
-  }
-  else if (state_3 == centeringBeackon_s  && beackon) {
-    analogWrite(MOTOR_LEFT_FWD,  0);
-    analogWrite(MOTOR_LEFT_REV,  0);
-    analogWrite(MOTOR_RIGHT_FWD, 0);
-    analogWrite(MOTOR_RIGHT_REV, 0);
+    if(!beackon) hammer(false);
     state_2 = loading_s;
     state_3 = launchingEggs01_s;
   }
