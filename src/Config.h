@@ -17,11 +17,11 @@
 #include <stdint.h>
 
 /****************************  EDITABLE CONSTANTS  ****************************/
-static const uint16_t  BLACK_THRESHOLD         =                            400;
+static const uint16_t  BLACK_THRESHOLD         =                            300;
 static const uint16_t  US_THRESHOLD            =                           2000;
 
 static const uint16_t  DRIVE_SPEED_LEFT        =                            200;
-static const uint16_t  DRIVE_SPEED_RIGHT       =        0.98 * DRIVE_SPEED_LEFT;
+static const uint16_t  DRIVE_SPEED_RIGHT       =                            200;
 
 static const uint16_t  LOADER_SPEED            =                             50;
 static const uint16_t  LOADER_STEP             =                             17;
@@ -30,6 +30,8 @@ static const uint32_t  RUNTIME_TIMEOUT         =                         120000;
 static const uint32_t  ESCAPE_TIMEOUT          =                           2000;
 static const uint32_t  LOAD_TIMEOUT            =                           3000;
 static const uint32_t  PLUSS_TIMEOUT           =                          10000;
+static const uint32_t  FIX_TIMEOUT             =                             80;
+static const uint32_t  SWEEP_TIMEOUT           =                             50;
 
 static const uint32_t  BUFFER_CLEAR_TIME_NORM  =                             20;
 static const uint32_t  BUFFER_CLEAR_TIME_STEP  =                              1;

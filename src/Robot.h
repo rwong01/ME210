@@ -60,6 +60,8 @@ private:
   bool           detectedPluss();
   bool           detectedPlussCenter();
 
+  void           hammer(bool left);
+
   float          readSensor_US();
   bool           readSensor_IR(uint8_t pinNum);
   bool           readSensors_BUMP(uint8_t pinNum);

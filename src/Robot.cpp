@@ -113,9 +113,10 @@ void Robot::hitBumper() {
     turnForward();
   }
   else if ((goal_plus == plus_number) && (state_3 == turningForeward_s) && detectedPluss()) {
-    analogWrite(MOTOR_LEFT_FWD,   DRIVE_SPEED_LEFT * 4);
+    state_3 =   byebye_s;
+    analogWrite(MOTOR_LEFT_FWD,   255);
     analogWrite(MOTOR_LEFT_REV,   0);
-    analogWrite(MOTOR_RIGHT_FWD,  DRIVE_SPEED_RIGHT * 4);
+    analogWrite(MOTOR_RIGHT_FWD,  255);
     analogWrite(MOTOR_RIGHT_REV,  0);
   }
 }
@@ -410,6 +411,7 @@ bool Robot::attackTower() {
     plussTIme = millis();
   }
   else if (state_3 == centeringPluss_s  && (detectedPlussCenter() || (millis() - plussTIme >= PLUSS_TIMEOUT))) {
+    hammer(true);
     state_2 = loading_s;
     state_3 = launchingEggs01_s;
   }
@@ -418,6 +420,7 @@ bool Robot::attackTower() {
     loadTime = millis();
   }
   else if ((state_3 == launchingEggsLoad01_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
+    hammer(false);
     state_2 = loading_s;
     state_3 = launchingEggs02_s;
   }
@@ -426,6 +429,7 @@ bool Robot::attackTower() {
     loadTime = millis();
   }
   else if ((state_3 == launchingEggsLoad02_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
+    hammer(false);
     state_2 = loading_s;
     state_3 = launchingEggs03_s;
   }
@@ -434,6 +438,7 @@ bool Robot::attackTower() {
     loadTime = millis();
   }
   else if ((state_3 == launchingEggsLoad03_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
+    hammer(false);
     state_2 = loading_s;
     state_3 = launchingEggs04_s;
   }
@@ -442,6 +447,7 @@ bool Robot::attackTower() {
     loadTime = millis();
   }
   else if ((state_3 == launchingEggsLoad04_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
+    hammer(false);
     state_2 = loading_s;
     state_3 = launchingEggs05_s;
   }
@@ -450,6 +456,7 @@ bool Robot::attackTower() {
     loadTime = millis();
   }
   else if ((state_3 == launchingEggsLoad05_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
+    hammer(false);
     state_2 = loading_s;
     state_3 = launchingEggs06_s;
   }
@@ -582,6 +589,32 @@ bool Robot::detectedPlussCenter() {
     }
   }
   return done;
+}
+
+/*
+ * Function: hammer
+ * -------------------
+ * This function is because we suck.
+ */
+void Robot::hammer(bool left) {
+  if (left) {
+    analogWrite(MOTOR_LEFT_FWD,  0);
+    analogWrite(MOTOR_LEFT_REV,  255);
+    analogWrite(MOTOR_RIGHT_FWD, 255);
+    analogWrite(MOTOR_RIGHT_REV, 0);
+    delay(SWEEP_TIMEOUT);
+  }
+  else {
+    analogWrite(MOTOR_LEFT_FWD,  255);
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, 0);
+    analogWrite(MOTOR_RIGHT_REV, 255);
+    delay(SWEEP_TIMEOUT);
+  }
+  analogWrite(MOTOR_LEFT_FWD,  0);
+  analogWrite(MOTOR_LEFT_REV,  0);
+  analogWrite(MOTOR_RIGHT_FWD, 0);
+  analogWrite(MOTOR_RIGHT_REV, 0);
 }
 
 /*

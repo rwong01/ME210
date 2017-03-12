@@ -19,12 +19,12 @@
 //   pinMode(MOTOR_RIGHT_REV, OUTPUT);
 //   pinMode(MOTOR_LEFT_FWD,  OUTPUT);
 //   pinMode(MOTOR_LEFT_REV,  OUTPUT);
-//
-// /***********************************  MAIN  ***********************************/
-//   Serial.print("vroom vroom...");
 //   analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT);
 //   analogWrite(MOTOR_LEFT_REV,  0);
 //   analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED_RIGHT);
 //   analogWrite(MOTOR_RIGHT_REV, 0);
-//   delay(50);
+//
+// /***********************************  MAIN  ***********************************/
+//   Serial.print("vroom vroom...");
+//   delay(1);
 // }
