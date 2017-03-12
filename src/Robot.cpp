@@ -637,7 +637,7 @@ void Robot::hammer(bool left) {
     analogWrite(MOTOR_LEFT_REV,  255);
     analogWrite(MOTOR_RIGHT_FWD, 255);
     analogWrite(MOTOR_RIGHT_REV, 0);
-    delay(SWEEP_TIMEOUT);
+    delay(FIX_TIMEOUT);
   }
   else {
     analogWrite(MOTOR_LEFT_FWD,  255);
