@@ -17,7 +17,8 @@
 #include <stdint.h>
 
 /****************************  EDITABLE CONSTANTS  ****************************/
-static const uint16_t  BLACK_THRESHOLD         =                            300;
+static const uint64_t  BAUD_RATE               =                         115200;
+static const uint16_t  BLACK_THRESHOLD         =                            350;
 static const uint16_t  US_THRESHOLD            =                           2000;
 
 static const uint16_t  DRIVE_SPEED_LEFT        =                            200;
@@ -32,6 +33,7 @@ static const uint32_t  LOAD_TIMEOUT            =                           3000;
 static const uint32_t  PLUSS_TIMEOUT           =                          10000;
 static const uint32_t  FIX_TIMEOUT             =                            175;
 static const uint32_t  SWEEP_TIMEOUT           =                             30;
+static const uint32_t  QUIT_TIMEOUT            =                           5000;
 
 static const uint32_t  BUFFER_CLEAR_TIME_NORM  =                             20;
 static const uint32_t  BUFFER_CLEAR_TIME_STEP  =                              1;

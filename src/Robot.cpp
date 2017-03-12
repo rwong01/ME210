@@ -19,7 +19,7 @@
  * This function initializes the main robot hardware.
  */
 void Robot::init() {
-  Serial.begin(9600);
+  Serial.begin(BAUD_RATE);
   setPinModes();
   stepper.setMaxSpeed(LOADER_SPEED);
   stepper.setSpeed(LOADER_SPEED);
@@ -117,7 +117,9 @@ void Robot::hitBumper() {
     analogWrite(MOTOR_LEFT_REV,   0);
     analogWrite(MOTOR_RIGHT_FWD,  255);
     analogWrite(MOTOR_RIGHT_REV,  0);
+    quitTime = millis();
   }
+  else if ((state_3 == byebye_s) && (millis() - quitTime) >= QUIT_TIMEOUT) state_1 = quit_s;
 }
 
 /*
@@ -212,20 +214,20 @@ void Robot::updateSensors() {
   frontSensorBump[0]  = readSensors_BUMP(BUMPER_LEFT);
   frontSensorBump[1]  = readSensors_BUMP(BUMPER_RIGHT);
 
-  frontSensorIR[0]    = readSensor_IR(IR_IN_01);
-  frontSensorIR[1]    = readSensor_IR(IR_IN_02);
+  frontSensorIR[0]    = readSensor_IR(IR_IN_01, &raw01);
+  frontSensorIR[1]    = readSensor_IR(IR_IN_02, &raw02);
 
-  leftSensorIR[0]     = readSensor_IR(IR_IN_03);
-  leftSensorIR[1]     = readSensor_IR(IR_IN_04);
-  leftSensorIR[2]     = readSensor_IR(IR_IN_05);
+  leftSensorIR[0]     = readSensor_IR(IR_IN_03, &raw03);
+  leftSensorIR[1]     = readSensor_IR(IR_IN_04, &raw04);
+  leftSensorIR[2]     = readSensor_IR(IR_IN_05, &raw05);
 
-  rightSensorIR[0]    = readSensor_IR(IR_IN_06);
-  rightSensorIR[1]    = readSensor_IR(IR_IN_07);
-  rightSensorIR[2]    = readSensor_IR(IR_IN_08);
+  rightSensorIR[0]    = readSensor_IR(IR_IN_06, &raw06);
+  rightSensorIR[1]    = readSensor_IR(IR_IN_07, &raw07);
+  rightSensorIR[2]    = readSensor_IR(IR_IN_08, &raw08);
 
-  centerSensorIR[0]   = readSensor_IR(IR_IN_09);
-  centerSensorIR[1]   = readSensor_IR(IR_IN_10);
-  centerSensorIR[2]   = readSensor_IR(IR_IN_11);
+  centerSensorIR[0]   = readSensor_IR(IR_IN_09, &raw09);
+  centerSensorIR[1]   = readSensor_IR(IR_IN_10, &raw10);
+  centerSensorIR[2]   = readSensor_IR(IR_IN_11, &raw11);
 
   avgDistOld          = (alpha * avgDist) + (1.0 - alpha) * avgDistOld;
   avgDist             = (beta * distance) + (1.0 - beta) * avgDist;
@@ -639,10 +641,13 @@ float Robot::readSensor_US() {
  * -------------------
  * This function handles the hardware abstraction of sensing a line.
  */
-bool Robot::readSensor_IR(uint8_t pinNum) {
+bool Robot::readSensor_IR(uint8_t pinNum, float* val) {
   uint16_t value = analogRead(pinNum);
   Serial.println(value);
-  return value <= BLACK_THRESHOLD;
+  float temp = *val;
+  temp = (beta * value) + (1.0 - beta) * temp;
+  *val = temp;
+  return temp <= BLACK_THRESHOLD;
 }
 
 /*

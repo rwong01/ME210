@@ -63,7 +63,7 @@ private:
   void           hammer(bool left);
 
   float          readSensor_US();
-  bool           readSensor_IR(uint8_t pinNum);
+  bool           readSensor_IR(uint8_t pinNum, float* val);
   bool           readSensors_BUMP(uint8_t pinNum);
 
 /*********************************  OBJECTS  **********************************/
@@ -96,6 +96,7 @@ private:
   uint32_t       loadTime;
   uint32_t       centerTime;
   uint32_t       plussTIme;
+  uint32_t       quitTime;
   uint32_t       LOOP_RATE = BUFFER_CLEAR_TIME_NORM;
 
   bool           frontSensorBump[2];
@@ -105,6 +106,19 @@ private:
   bool           centerSensorIR[3];
   bool           leftSensorIROLD[3];
   bool           rightSensorIROLD[3];
+
+  float          raw01;
+  float          raw02;
+  float          raw03;
+  float          raw04;
+  float          raw05;
+  float          raw06;
+  float          raw07;
+  float          raw08;
+  float          raw09;
+  float          raw10;
+  float          raw11;
+
 };
 
 #endif
