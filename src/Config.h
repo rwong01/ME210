@@ -30,8 +30,8 @@ static const uint32_t  RUNTIME_TIMEOUT         =                         120000;
 static const uint32_t  ESCAPE_TIMEOUT          =                           2000;
 static const uint32_t  LOAD_TIMEOUT            =                           3000;
 static const uint32_t  PLUSS_TIMEOUT           =                          10000;
-static const uint32_t  FIX_TIMEOUT             =                             80;
-static const uint32_t  SWEEP_TIMEOUT           =                             50;
+static const uint32_t  FIX_TIMEOUT             =                            175;
+static const uint32_t  SWEEP_TIMEOUT           =                             30;
 
 static const uint32_t  BUFFER_CLEAR_TIME_NORM  =                             20;
 static const uint32_t  BUFFER_CLEAR_TIME_STEP  =                              1;

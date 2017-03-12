@@ -77,9 +77,10 @@ void Robot::exitBase() {
  * This function handles the algorythmic complexity of attacking a the first tower.
  */
 void Robot::attackTower1() {
-  // goal_plus = 2; TODO********************************************************
-  goal_plus = 1;
+  goal_plus = 2;
   if (attackTower()) {
+    hammer(true);
+    hammer(true);
     state_1 = attackTower2_s;
     state_2 = approaching_s;
     turnForward();
@@ -92,8 +93,7 @@ void Robot::attackTower1() {
  * This function handles the algorythmic complexity of attacking a the second tower.
  */
 void Robot::attackTower2() {
-  // goal_plus = 3; TODO********************************************************
-  goal_plus = 2;
+  goal_plus = 3;
   if (attackTower()) {
     state_1 = hitBumper_s;
     turnRight();
@@ -106,8 +106,7 @@ void Robot::attackTower2() {
  * This function handles the algorythmic complexity of hitting the pressure pad.
  */
 void Robot::hitBumper() {
-  // goal_plus = 4; TODO********************************************************
-  goal_plus = 3;
+  goal_plus = 4;
   if     ((goal_plus == plus_number) && (state_3 == turningRightOne_s) && detectedPluss()) {
     goal_plus = 4;
     turnForward();
@@ -460,7 +459,9 @@ bool Robot::attackTower() {
     state_2 = loading_s;
     state_3 = launchingEggs06_s;
   }
-  else if (state_3 == launchingEggs06_s && launchEgg()) done = true;
+  else if (state_3 == launchingEggs06_s && launchEgg()) {
+    done = true;
+  }
   return done;
 }
 
