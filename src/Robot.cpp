@@ -551,9 +551,9 @@ bool Robot::detectedPluss() {
 bool Robot::detectedPlussCenter() {
   bool done = false;
   if      (
-      // !leftSensorIR[0] &&                                                                  !rightSensorIR[0] && //TODO?????????????
+      !frontSensorIR[0] &&                                                                  !frontSensorIR[1] &&
       leftSensorIR[1] &&  centerSensorIR[0] &&  centerSensorIR[1] &&  centerSensorIR[2] &&  rightSensorIR[1] &&
-      !leftSensorIR[2] &&                                                                  !rightSensorIR[2]  // TODO?????????????
+      !leftSensorIR[2] &&                                                                  !rightSensorIR[2]
   ) {
     done = true;
     analogWrite(MOTOR_LEFT_FWD,  0);
