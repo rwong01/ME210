@@ -65,6 +65,7 @@ private:
   float          readSensor_US();
   bool           readSensor_IR(uint8_t pinNum, float* val);
   bool           readSensors_BUMP(uint8_t pinNum);
+  bool           readSensors_BEACKON();
 
 /*********************************  OBJECTS  **********************************/
   AccelStepper stepper;
@@ -106,6 +107,7 @@ private:
   bool           centerSensorIR[3];
   bool           leftSensorIROLD[3];
   bool           rightSensorIROLD[3];
+  bool           beackon;
 
   float          raw01;
   float          raw02;

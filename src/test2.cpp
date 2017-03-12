@@ -14,7 +14,7 @@
 
 // /***********************************  BOOT  ***********************************/
 // int main() {
-//   Serial.begin(9600);
+//   Serial.begin(BAUD_RATE);
 //   pinMode(MOTOR_RIGHT_FWD, OUTPUT);
 //   pinMode(MOTOR_RIGHT_REV, OUTPUT);
 //   pinMode(MOTOR_LEFT_FWD,  OUTPUT);
@@ -26,5 +26,5 @@
 //
 // /***********************************  MAIN  ***********************************/
 //   Serial.print("vroom vroom...");
-//   delay(1);
+//   delay(BUFFER_CLEAR_TIME_NORM);
 // }

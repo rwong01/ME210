@@ -150,6 +150,8 @@ void Robot::setPinModes() {
   pinMode(US_TRIG,          OUTPUT);
   pinMode(US_ECHO,          INPUT);
 
+  pinMode(BEACKON_PIN,      INPUT);
+
   pinMode(BUMPER_LEFT,      INPUT_PULLUP);
   pinMode(BUMPER_RIGHT,     INPUT_PULLUP);
 
@@ -229,6 +231,8 @@ void Robot::updateSensors() {
   centerSensorIR[1]   = readSensor_IR(IR_IN_10, &raw10);
   centerSensorIR[2]   = readSensor_IR(IR_IN_11, &raw11);
 
+  beackon             = readSensors_BEACKON();
+
   avgDistOld          = (alpha * avgDist) + (1.0 - alpha) * avgDistOld;
   avgDist             = (beta * distance) + (1.0 - beta) * avgDist;
 
@@ -283,6 +287,10 @@ void Robot::printState() {
   Serial.print(leftSensorIR[2]);
   Serial.print("   ");
   Serial.print(rightSensorIR[2]);
+  Serial.print('\n');
+
+  Serial.print("beackon: ");
+  Serial.println(beackon);
   Serial.print('\n');
 
   Serial.print("plus_number: ");
@@ -413,6 +421,17 @@ bool Robot::attackTower() {
   }
   else if (state_3 == centeringPluss_s  && (detectedPlussCenter() || (millis() - plussTIme >= PLUSS_TIMEOUT))) {
     hammer(true);
+    analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT);
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, 0);
+    analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED_LEFT);
+    state_3 = centeringBeackon_s;
+  }
+  else if (state_3 == centeringBeackon_s  && beackon) {
+    analogWrite(MOTOR_LEFT_FWD,  0);
+    analogWrite(MOTOR_LEFT_REV,  0);
+    analogWrite(MOTOR_RIGHT_FWD, 0);
+    analogWrite(MOTOR_RIGHT_REV, 0);
     state_2 = loading_s;
     state_3 = launchingEggs01_s;
   }
@@ -658,4 +677,15 @@ bool Robot::readSensor_IR(uint8_t pinNum, float* val) {
 bool Robot::readSensors_BUMP(uint8_t pinNum) {
   uint16_t value = digitalRead(pinNum);
   return (!value);
+}
+
+
+/*
+ * Function: readSensors_BEACKON
+ * -------------------
+ * This function handles the hardware abstraction of sensing a beackon.
+ */
+bool Robot::readSensors_BEACKON() {
+  uint16_t value = analogRead(BEACKON_PIN);
+  return (value >= BEACKON_THRESHOLD);
 }
