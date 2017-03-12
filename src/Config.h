@@ -32,8 +32,9 @@ static const uint32_t  RUNTIME_TIMEOUT         =                         120000;
 static const uint32_t  ESCAPE_TIMEOUT          =                           2000;
 static const uint32_t  LOAD_TIMEOUT            =                           3000;
 static const uint32_t  PLUSS_TIMEOUT           =                          10000;
-static const uint32_t  FIX_TIMEOUT             =                            125;
+static const uint32_t  FIX_TIMEOUT             =                            160;
 static const uint32_t  SWEEP_TIMEOUT           =                             30;
+static const uint32_t  HAMMER_TIMEOUT          =                             50;
 static const uint32_t  QUIT_TIMEOUT            =                           5000;
 
 static const uint32_t  BUFFER_CLEAR_TIME_NORM  =                             20;

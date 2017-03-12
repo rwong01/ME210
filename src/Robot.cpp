@@ -576,6 +576,11 @@ bool Robot::detectedPlussCenter() {
       analogWrite(MOTOR_LEFT_FWD,  0);
       analogWrite(MOTOR_LEFT_REV,  0);
       analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED_RIGHT * 0.9);
+      delay(HAMMER_TIMEOUT);
+      analogWrite(MOTOR_RIGHT_REV, 0);
+      analogWrite(MOTOR_LEFT_FWD,  0);
+      analogWrite(MOTOR_LEFT_REV,  0);
+      analogWrite(MOTOR_RIGHT_FWD, 0);
       analogWrite(MOTOR_RIGHT_REV, 0);
     }
     else if (rightSensorIR[2]) {
@@ -583,6 +588,12 @@ bool Robot::detectedPlussCenter() {
       analogWrite(MOTOR_LEFT_REV,  0);
       analogWrite(MOTOR_RIGHT_FWD, 0);
       analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED_RIGHT * 0.9);
+      delay(HAMMER_TIMEOUT);
+      analogWrite(MOTOR_RIGHT_REV, 0);
+      analogWrite(MOTOR_LEFT_FWD,  0);
+      analogWrite(MOTOR_LEFT_REV,  0);
+      analogWrite(MOTOR_RIGHT_FWD, 0);
+      analogWrite(MOTOR_RIGHT_REV, 0);
     }
   }
   else if (state_4 == inchRight_s) {
@@ -592,10 +603,22 @@ bool Robot::detectedPlussCenter() {
         analogWrite(MOTOR_LEFT_REV,  0);
         analogWrite(MOTOR_RIGHT_FWD, 0);
         analogWrite(MOTOR_RIGHT_REV, 0);
+        delay(HAMMER_TIMEOUT);
+        analogWrite(MOTOR_RIGHT_REV, 0);
+        analogWrite(MOTOR_LEFT_FWD,  0);
+        analogWrite(MOTOR_LEFT_REV,  0);
+        analogWrite(MOTOR_RIGHT_FWD, 0);
+        analogWrite(MOTOR_RIGHT_REV, 0);
         }
     else if (leftSensorIR[2]) {
       analogWrite(MOTOR_LEFT_FWD,  0);
       analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED_LEFT * 0.9);
+      analogWrite(MOTOR_RIGHT_FWD, 0);
+      analogWrite(MOTOR_RIGHT_REV, 0);
+      delay(HAMMER_TIMEOUT);
+      analogWrite(MOTOR_RIGHT_REV, 0);
+      analogWrite(MOTOR_LEFT_FWD,  0);
+      analogWrite(MOTOR_LEFT_REV,  0);
       analogWrite(MOTOR_RIGHT_FWD, 0);
       analogWrite(MOTOR_RIGHT_REV, 0);
     }
