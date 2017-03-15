@@ -630,7 +630,6 @@ bool Robot::readSensors_BUMP(uint8_t pinNum) {
   return (!value);
 }
 
-
 /*
  * Function: readSensors_BEACKON
  * -------------------
