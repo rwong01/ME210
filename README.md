@@ -1,7 +1,7 @@
 # ME210:
-###The Risky Biscuits
+### The Risky Biscuits
 
-#events States:
+# Events States:
 The robot uses an Event Driven model in order to clearly transition between states of operation.
 
 #### States
@@ -22,7 +22,7 @@ The robot uses an Event Driven model in order to clearly transition between stat
 6. Quit
  - 6a. System Shutdown
 
-#Code Architecture:
+# Code Architecture:
 The robot attack software operates on a read-eval loop in order to change states and respond to its environment.
 
 The robot attack software was written in compliance with NASA JPL's  Safety-Critical Code standards.
@@ -39,10 +39,10 @@ The robot attack software was written in compliance with NASA JPL's  Safety-Crit
 
 `MAX11643` - SPI library for MAX11643 analog multiplexer.
 
-#Implementation Details:
+# Implementation Details:
 Here is the current status of the code:
 
-####Robot Critical Systems
+#### Robot Critical Systems
 1. IR values from 11 independent sensors.
 3. Distance values from ultrasonic sensor.
 2. Collision detection from front bumpers.
@@ -50,5 +50,5 @@ Here is the current status of the code:
 4. Robot actuation of firing mechanism.
 3. Timer based state transitions vs hanging code.
 
-####Useful Robot Features
+#### Useful Robot Features
 1. Feedback control for line based navigation.
