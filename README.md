@@ -9,14 +9,15 @@ The robot uses an Event Driven model in order to clearly transition between stat
  - 1a. System Initialization
 2. Exit base
  - 2a. Find Shortest Distance
- - 2b. Drive Forward Until Crossing Line
+ - 2b. Center Against Back
+ - 2c. Drive Forward
 3. Attack Tower 1
  - 3a. Approach Tower
  - 3b. Attack Tower
 4. Attack Tower 2
  - 4a. Approach Tower
  - 4b. Attack Tower
-5. Hit Bumper
+5. Hit Pad
  - 5a. Turn Right
  - 5b. Approach Pad
 6. Quit
@@ -25,7 +26,7 @@ The robot uses an Event Driven model in order to clearly transition between stat
 # Code Architecture:
 The robot attack software operates on a read-eval loop in order to change states and respond to its environment.
 
-The robot attack software was written in compliance with NASA JPL's  Safety-Critical Code standards.
+The robot attack software was written in compliance with NASA JPL's Safety-Critical Code standards.
 
 #### Files
 `main.cpp` - Start point of robot controller.

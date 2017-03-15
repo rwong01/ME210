@@ -79,8 +79,6 @@ void Robot::exitBase() {
 void Robot::attackTower1() {
   goal_plus = 2;
   if (attackTower()) {
-    hammer(true);
-    hammer(true);
     state_1 = attackTower2_s;
     state_2 = approaching_s;
     turnForward();
@@ -327,7 +325,6 @@ void Robot::checkTimer() {
 void Robot::center() {
   if      ((state_3 != turningForeward_s) && (state_3 != ignoringPluss_s)) return;
   else if ((state_4 == inchLeft_s) && (frontSensorIR[0] || !frontSensorIR[1])) {
-  // else if ((state_4 == inchLeft_s) && (frontSensorIR[0])) { TODO?????????????
     state_4 = inchRight_s;
     analogWrite(MOTOR_LEFT_FWD,  0);
     analogWrite(MOTOR_LEFT_REV,  0);
@@ -335,7 +332,6 @@ void Robot::center() {
     analogWrite(MOTOR_RIGHT_REV, 0);
   }
   else if ((state_4 == inchRight_s) && (!frontSensorIR[0] || frontSensorIR[1])) {
-  // else if ((state_4 == inchRight_s) && (!frontSensorIR[0])) { TODO???????????
     state_3 = turningForeward_s;
     state_4 = inchLeft_s;
     analogWrite(MOTOR_LEFT_FWD,  DRIVE_SPEED_LEFT);
@@ -420,8 +416,6 @@ bool Robot::attackTower() {
     plussTIme = millis();
   }
   else if (state_3 == centeringPluss_s  && (detectedPlussCenter() || (millis() - plussTIme >= PLUSS_TIMEOUT))) {
-    hammer(true);
-    if(!beackon) hammer(false);
     state_2 = loading_s;
     state_3 = launchingEggs01_s;
   }
@@ -430,7 +424,6 @@ bool Robot::attackTower() {
     loadTime = millis();
   }
   else if ((state_3 == launchingEggsLoad01_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
-    hammer(false);
     state_2 = loading_s;
     state_3 = launchingEggs02_s;
   }
@@ -439,7 +432,6 @@ bool Robot::attackTower() {
     loadTime = millis();
   }
   else if ((state_3 == launchingEggsLoad02_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
-    hammer(false);
     state_2 = loading_s;
     state_3 = launchingEggs03_s;
   }
@@ -448,7 +440,6 @@ bool Robot::attackTower() {
     loadTime = millis();
   }
   else if ((state_3 == launchingEggsLoad03_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
-    hammer(false);
     state_2 = loading_s;
     state_3 = launchingEggs04_s;
   }
@@ -457,7 +448,6 @@ bool Robot::attackTower() {
     loadTime = millis();
   }
   else if ((state_3 == launchingEggsLoad04_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
-    hammer(false);
     state_2 = loading_s;
     state_3 = launchingEggs05_s;
   }
@@ -466,12 +456,10 @@ bool Robot::attackTower() {
     loadTime = millis();
   }
   else if ((state_3 == launchingEggsLoad05_s) && ((millis() - loadTime) >= LOAD_TIMEOUT)) {
-    hammer(false);
     state_2 = loading_s;
     state_3 = launchingEggs06_s;
   }
   else if (state_3 == launchingEggs06_s && launchEgg()) {
-    done = true;
   }
   return done;
 }
@@ -576,24 +564,12 @@ bool Robot::detectedPlussCenter() {
       analogWrite(MOTOR_LEFT_FWD,  0);
       analogWrite(MOTOR_LEFT_REV,  0);
       analogWrite(MOTOR_RIGHT_FWD, DRIVE_SPEED_RIGHT * 0.9);
-      delay(HAMMER_TIMEOUT);
-      analogWrite(MOTOR_RIGHT_REV, 0);
-      analogWrite(MOTOR_LEFT_FWD,  0);
-      analogWrite(MOTOR_LEFT_REV,  0);
-      analogWrite(MOTOR_RIGHT_FWD, 0);
-      analogWrite(MOTOR_RIGHT_REV, 0);
     }
     else if (rightSensorIR[2]) {
       analogWrite(MOTOR_LEFT_FWD,  0);
       analogWrite(MOTOR_LEFT_REV,  0);
       analogWrite(MOTOR_RIGHT_FWD, 0);
       analogWrite(MOTOR_RIGHT_REV, DRIVE_SPEED_RIGHT * 0.9);
-      delay(HAMMER_TIMEOUT);
-      analogWrite(MOTOR_RIGHT_REV, 0);
-      analogWrite(MOTOR_LEFT_FWD,  0);
-      analogWrite(MOTOR_LEFT_REV,  0);
-      analogWrite(MOTOR_RIGHT_FWD, 0);
-      analogWrite(MOTOR_RIGHT_REV, 0);
     }
   }
   else if (state_4 == inchRight_s) {
@@ -603,53 +579,15 @@ bool Robot::detectedPlussCenter() {
         analogWrite(MOTOR_LEFT_REV,  0);
         analogWrite(MOTOR_RIGHT_FWD, 0);
         analogWrite(MOTOR_RIGHT_REV, 0);
-        delay(HAMMER_TIMEOUT);
-        analogWrite(MOTOR_RIGHT_REV, 0);
-        analogWrite(MOTOR_LEFT_FWD,  0);
-        analogWrite(MOTOR_LEFT_REV,  0);
-        analogWrite(MOTOR_RIGHT_FWD, 0);
-        analogWrite(MOTOR_RIGHT_REV, 0);
         }
     else if (leftSensorIR[2]) {
       analogWrite(MOTOR_LEFT_FWD,  0);
       analogWrite(MOTOR_LEFT_REV,  DRIVE_SPEED_LEFT * 0.9);
       analogWrite(MOTOR_RIGHT_FWD, 0);
       analogWrite(MOTOR_RIGHT_REV, 0);
-      delay(HAMMER_TIMEOUT);
-      analogWrite(MOTOR_RIGHT_REV, 0);
-      analogWrite(MOTOR_LEFT_FWD,  0);
-      analogWrite(MOTOR_LEFT_REV,  0);
-      analogWrite(MOTOR_RIGHT_FWD, 0);
-      analogWrite(MOTOR_RIGHT_REV, 0);
     }
   }
   return done;
-}
-
-/*
- * Function: hammer
- * -------------------
- * This function is because we suck.
- */
-void Robot::hammer(bool left) {
-  if (left) {
-    analogWrite(MOTOR_LEFT_FWD,  0);
-    analogWrite(MOTOR_LEFT_REV,  255);
-    analogWrite(MOTOR_RIGHT_FWD, 255);
-    analogWrite(MOTOR_RIGHT_REV, 0);
-    delay(FIX_TIMEOUT);
-  }
-  else {
-    analogWrite(MOTOR_LEFT_FWD,  255);
-    analogWrite(MOTOR_LEFT_REV,  0);
-    analogWrite(MOTOR_RIGHT_FWD, 0);
-    analogWrite(MOTOR_RIGHT_REV, 255);
-    delay(SWEEP_TIMEOUT);
-  }
-  analogWrite(MOTOR_LEFT_FWD,  0);
-  analogWrite(MOTOR_LEFT_REV,  0);
-  analogWrite(MOTOR_RIGHT_FWD, 0);
-  analogWrite(MOTOR_RIGHT_REV, 0);
 }
 
 /*
